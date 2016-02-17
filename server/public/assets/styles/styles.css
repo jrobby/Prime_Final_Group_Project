@@ -1,3 +1,10 @@
+.logo{
+    height: 84px;
+    width: 310px;
+    display: block;
+    margin: auto;
+}
+
 h1 {
     text-align: center;
 }
@@ -6,10 +13,29 @@ h3{
     text-align: center;
 }
 
-.col-md-3, .col-md-6{
+.totalsTable {
+    float: left;
     border: 2px solid black;
     border-radius: 4px;
     height: 450px;
+    width: 23%;
+    margin-left: 1%;
+}
+.dataArea{
+    float: left;
+    border: 2px solid black;
+    border-radius: 4px;
+    height: 450px;
+    margin-left: 1%;
+    width: 50%;
+}
+.controlPanel{
+    float: left;
+    border: 2px solid black;
+    border-radius: 4px;
+    height: 450px;
+    width: 23%;
+    margin: 0 1% 0 1%;
 }
 
 .footer{
