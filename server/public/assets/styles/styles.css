@@ -45,9 +45,20 @@ h1, h3, h5 {
 .tableRow{
     border-top: 1px solid black;
     padding: 0;
-    height: 50px;
+    height: 40px;
 }
 
+.btn-success{
+    margin: 1px;
+}
+.btn-info{
+    display: block;
+    margin: auto;
+}
+select{
+    display: block;
+    margin: auto;
+}
 .footer{
     text-align: center;
     color: gray;
