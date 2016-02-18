@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="myApp">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -9,7 +9,7 @@
     <script src="vendor/angular-route/angular-route.min.js"></script>
     <script src="assets/scripts/client.min.js"></script>
 </head>
-<body>
+<body ng-controller="MainController">
     <img src="../assets/img/CITFF_LogoWithTag.jpg" alt="CITFF_Logo" class="logo"><br>
 
         <div class="totalsTable">
@@ -52,9 +52,10 @@
             <h5 class="avgWageHeading">Average Current Wage:</h5>
 
             <ul class="nav nav-tabs nav-justified">
-                <li class="active"><a href="#">Retention Rates</a></li>
-                <li><a href="#">Salary Calculator</a></li>
-                <li><a href="#">Top 5 Employers</a></li>
+<!--These aren't supposed to be ng-views, are they?-->
+                <li class="active">Retention Rates</li>
+                <li>Salary Calculator</li>
+                <li>Top 5 Employers</li>
             </ul>
             <div class="nav-content">
                 <h5>Retention Rate Over Time</h5>
@@ -68,7 +69,7 @@
 
         <div class="dataArea">
             <h5>Data Visualization Area</h5>
-            <!--<div class="ng-view">ng-View for charts appears Here</div>-->
+            <div class="ng-view">ng-View for charts appears Here</div>
 
             <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon"><br>
 
@@ -76,12 +77,12 @@
 
         <div class="controlPanel">
             <h5>Control Panel</h5>
-            <button class="graphButton">Pie Chart</button>
-            <button class="graphButton">Line Graph</button>
+            <button class="graphButton"> <a href="#/"> Pie Chart</a></button>
+            <button class="graphButton"> <a href="#/lineGraph">Line Graph</a></button>
 
             <br><br><br><br>
 
-            <select class="demographicDropdown">
+            <select class="demographicDropdown" ng-model="demographics">
                 <option>Demographic Dropdown</option>
                 <option>Data</option>
                 <option>Data</option>
@@ -90,7 +91,7 @@
 
             <br><br><br><br>
 
-            <select class="progressDropdown">
+            <select class="progressDropdown" ng-model="progress">
                 <option>Program Progress Dropdown</option>
                 <option>Data</option>
                 <option>Data</option>
@@ -99,7 +100,7 @@
 
             <br><br><br><br>
 
-            <button class="genButton">Generate Charts</button>
+            <button ng-click="genCharts(demographics, progress)" class="genButton">Generate Charts</button>
 
         </div>
 
