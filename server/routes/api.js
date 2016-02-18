@@ -15,7 +15,14 @@ router.use(bodyParser.json());
 router.get('/', function(request, response){
   smartsheet.sheets.listSheets()
     .then(function(data){
-      response.send(JSON.stringify(data));
+      var sheetId = data.data[0].id;
+      var idObject = { id: sheetId };
+      smartsheet.sheets.getSheet(idObject)
+        .then(function(sheetData){
+          response.send(JSON.stringify(sheetData));
+        }).catch(function(error){
+          console.log(error);
+        });
     }).catch(function(error){
       console.log(error);
     });
