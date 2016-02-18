@@ -11,6 +11,7 @@ app.config(['$routeProvider', function($routeProvider){
             templateUrl: 'views/pieChart.html',
             controller: 'pieChartController'
         })
+        .when('/pie')
         .when('/lineGraph',{
             templateUrl: 'views/lineGraph.html',
             controller: 'lineGraphController'
@@ -36,6 +37,18 @@ app.controller('lineGraphController',['$scope','$http', function($scope,$http){
 }])
 
 
+//
+//app.controller('TabController', function () {
+//    this.tab = 1;
+//
+//    this.setTab = function (tabId) {
+//        this.tab = tabId;
+//    };
+//
+//    this.isSet = function (tabId) {
+//        return this.tab === tabId;
+//    };
+//});
 
 //app.factory('SomeService', ['$http', '$scope', function($http, $scope){
 //

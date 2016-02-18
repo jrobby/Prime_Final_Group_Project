@@ -9,7 +9,7 @@
     <script src="vendor/angular-route/angular-route.min.js"></script>
     <script src="assets/scripts/client.min.js"></script>
 </head>
-<body ng-controller="MainController">
+<body ng-controller="MainController as main">
     <img src="../assets/img/CITFF_LogoWithTag.jpg" alt="CITFF_Logo" class="logo"><br>
 
         <div class="totalsTable">
@@ -52,32 +52,44 @@
             <h5 class="avgWageHeading">Average Current Wage:</h5>
 
             <ul class="nav nav-tabs nav-justified">
-<!--These aren't supposed to be ng-views, are they?-->
-                <li class="active" ng-click="showRates = ">Retention Rates</li>
-                <li>Salary Calculator</li>
-                <li>Top 5 Employers</li>
+                <li ><a href="javascript:void(0);" ng-class="{selected: tab=='a'}" ng-click="tab = tab=='a'? null: 'a'">Retention Rates</a></li>
+                <li>  <a href="javascript:void(0); " ng-class="{selected: tab=='b'}" ng-click="tab = tab=='b'? null: 'b' ">Salary Calculator</a></li>
+                <li >  <a href="javascript:void(0);" ng-class="{selected: tab=='c'}" ng-click="tab = tab=='c'? null: 'c' ">Top 5 Employers</a></li>
             </ul>
 
-            <!--<div class="cb" ng-click="showDetails = ! showDetails">tab 1</div>-->
-            <!--<div class="cb" ng-click="showDetails = ! showDetails">tab 2</div>-->
-            <!--<div ng-hide="showDetails">-->
-                <!--<p>first</p>-->
-            <!--</div>-->
-            <!--<div ng-show="showDetails">-->
-                <!--<p>second</p>-->
-            <!--</div>-->
 
-            <div class="nav-content">
+            <div class="retention" ng-show="tab == 'a'">
                 <h5>Retention Rate Over Time</h5>
+                <p>Retention Scroll Test</p>
                 <p>Scroll Test</p>
                 <p>Scroll Test</p>
                 <p>Scroll Test</p>
-                <p>Scroll Test</p>
-                <p>Scroll Test</p>
+                <p>Retention Scroll Test</p>
+
             </div>
+
+            <div class="salary" ng-show="tab == 'b'">
+                <h5>Salary Calculator</h5>
+                <p>Salary Scroll Test</p>
+                <p>Salary Scroll Test</p>
+                <p>Salary Scroll Test</p>
+                <p>Salary Scroll Test</p>
+                <p>Salary Scroll Test</p>
+            </div>
+
+            <div class="employers" ng-show="tab == 'c'">
+                <h5>Top Five Employers</h5>
+                <p>Employers Scroll Test</p>
+                <p>Employers Scroll Test</p>
+                <p>Employers Scroll Test</p>
+                <p>Employers Scroll Test</p>
+                <p>Employers Scroll Test</p>
+            </div>
+
+
         </div>
 
-        <div class="dataArea">
+        <div class="dataArea" >
             <h5>Data Visualization Area</h5>
             <div class="ng-view">ng-View for charts appears Here</div>
 
