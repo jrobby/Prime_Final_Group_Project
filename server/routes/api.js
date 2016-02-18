@@ -5,8 +5,8 @@ var https = require('https');
 var requestPromise = require('request-promise');
 var client = require('smartsheet');
 
-var TEMP_API_KEY = require('../../key').key;
-var smartsheet = client.createClient({ accessToken: TEMP_API_KEY });
+//var TEMP_API_KEY = require('../../key').key;
+//var smartsheet = client.createClient({ accessToken: TEMP_API_KEY });
 
 var router = express.Router();
 router.use(bodyParser.json());

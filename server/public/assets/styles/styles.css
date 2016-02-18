@@ -2,7 +2,15 @@
     height: 84px;
     width: 310px;
     display: block;
-    margin: auto;
+    margin-left: 5%;
+    float: left;
+}
+.dateForm{
+    text-align: center;
+    margin-right: 10%;
+}
+p{
+    margin-bottom: .5%;
 }
 h1, h3, h5 {
     text-align: center;
@@ -56,7 +64,7 @@ h1, h3, h5 {
     width: 64px;
     display: block;
     margin-left: auto;
-    margin-top: 380px;
+    /*margin-top: 380px;*/
 }
 
 .controlPanel{
@@ -75,7 +83,7 @@ h1, h3, h5 {
 select{
     display: block;
     margin: auto;
-    width: 95%;
+    width: 98%;
 }
 
 .footer{
