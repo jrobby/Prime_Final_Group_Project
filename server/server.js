@@ -6,8 +6,9 @@ var app = express();
 
 app.use(express.static('server/public'));
 
-app.use('/', index);
 app.use('/api', api);
+app.use('/', index);
+
 
 app.use(express.static('server/public'));
 
