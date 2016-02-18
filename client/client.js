@@ -11,7 +11,6 @@ app.config(['$routeProvider', function($routeProvider){
             templateUrl: 'views/pieChart.html',
             controller: 'pieChartController'
         })
-        .when('/pie')
         .when('/lineGraph',{
             templateUrl: 'views/lineGraph.html',
             controller: 'lineGraphController'
@@ -20,9 +19,12 @@ app.config(['$routeProvider', function($routeProvider){
 
 
 app.controller('MainController', [ '$scope', function($scope){
-    $scope.thing = 'blah';
-    $scope.genCharts = function(demographics, progress){
+    $scope.generateCharts = function(demographics, progress){
         console.log('demographics, progress', demographics, progress);
+
+        //I figure this will be structured thusly:
+
+
     }
 
 }]);
@@ -35,6 +37,8 @@ app.controller('pieChartController',['$scope','$http', function($scope,$http){
 app.controller('lineGraphController',['$scope','$http', function($scope,$http){
     $scope.line = "this line Graph view is controlled";
 }])
+
+
 
 
 //
