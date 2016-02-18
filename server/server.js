@@ -6,8 +6,9 @@ var app = express();
 
 app.use(express.static('server/public'));
 
-app.use('/', index);
 app.use('/api', api);
+app.use('/', index);
+
 
 var server = app.listen(process.env.PORT || 3000, function(){
     var port = server.address().port;
