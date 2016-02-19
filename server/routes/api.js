@@ -19,7 +19,8 @@ router.get('/', function(request, response){
       var IdObject = { id: sheetId };
       smartsheet.sheets.getSheet(IdObject)
         .then(function(sheetData){
-          response.send(buildRow(sheetData.rows[0], fetchAllCols(sheetData)));
+          response.send(assembleRows(sheetData));
+          // response.send(buildRow(sheetData.rows[0], fetchAllCols(sheetData)));
           // response.send(JSON.stringify(sheetData));
         }).catch(function(error){
           console.log(error);
@@ -30,14 +31,57 @@ router.get('/', function(request, response){
 });
 
 
-/*Condenses a row object from the smartsheet API into meaningful, named key/data pairs
-to be used and interpreted by this application.*/
-function buildRow(rowData, colIds){
+
+//***temporarily, this builds verbose rows for testing purposes...
+function assembleRows(worksheetData){
+  var rowList = [];
+  for (var i = 0; i < worksheetData.rows.length; i++){
+    rowList.push(buildRowVerbose(worksheetData.rows[i], fetchAllCols(worksheetData)));
+  }
+  return rowList;
+}
+
+
+
+function condenseRow(verboseRow){
+  var condensedRow = {};
+  var keys = Object.keys(verboseRow);
+
+  condensedRow.classStart = verboseRow.classStart;
+  condensedRow.gradDate = verboseRow.gradDate;
+  condensedRow.certDate = verboseRow.certDate;
+  condensedRow.wages = verboseRow.wages;
+  condensedRow.ITYesNo = verboseRow.ITYesNo;
+
+  //assemble *DISTINCT* employers/contract agencies into one property
+
+
+  /*
+  class-start-date, grad-date, cert-date,
+  wage: [number], employment-type: [string],
+  IT-position: true/false, distinct-employers: [string],
+  placed-FT: true/false,
+  first-employement: date *or* null,
+  end-of-employment: date *or* null,
+  certifications: [date *or* null] - define order convention...
+  veteran: true/false,
+  female: true/false,
+  ethnicity: true/false,
+  age @start date: true/false
+  */
+
+  return condensedRow;
+}
+
+
+
+/*Translates a row object from the smartsheet API into meaningful, named key/data pairs
+(to be condensed into final row form by condenseRow()).*/
+function buildRowVerbose(rowData, colIds){
   var verboseRow = { };
   var keys = Object.keys(colIds);
   for (var i = 0; i < keys.length; i++){
     verboseRow[keys[i]] = [];
-    console.log('colId', keys[i], ":" , colIds[keys[i]]);
     for (var j = 0; j < colIds[keys[i]].length; j++){
       var temp = getRowVal(rowData, colIds[keys[i]][j]);
       if (temp) verboseRow[keys[i]].push(temp);

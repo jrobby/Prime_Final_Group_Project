@@ -27,22 +27,24 @@ app.controller('MainController', [ '$scope', function($scope){
 
     $scope.generateCharts = function(demographics, progress){
         console.log('demographics, progress', demographics, progress);
-    }
+    };
 
     $scope.showAverageSalary = function(){
         $scope.averageShow = true;
-    }
+    };
+
     $scope.hideAverageSalary = function (){
         $scope.averageShow = false;
-    }
+    };
 
 }]);
 
-app.controller('pieChartController',['$scope','$http', function($scope,$http){
+app.controller('pieChartController',['$scope', function($scope){
     $scope.pie = "this pie chart view is controlled";
-}])
+}]);
 
 
-app.controller('lineGraphController',['$scope','$http', function($scope,$http){
+app.controller('lineGraphController',['$scope', function($scope){
+
     $scope.line = "this line Graph view is controlled";
-}])
+}]);
