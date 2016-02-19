@@ -20,19 +20,17 @@ app.config(['$routeProvider', function($routeProvider){
 
 app.controller('MainController', [ '$scope', function($scope){
     $scope.tab = 'a';
+    $scope.averageShow = false;
 
     $scope.generateCharts = function(demographics, progress){
         console.log('demographics, progress', demographics, progress);
+    }
 
-
-
-        //I figure this will be structured thusly:
-    //    If (pie){
-     //     makePieChart() }
-    //    else { makeLineChart()}
-    //
-
-
+    $scope.showAverageSalary = function(){
+        $scope.averageShow = true;
+    }
+    $scope.hideAverageSalary = function (){
+        $scope.averageShow = false;
     }
 
 }]);

@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
     <link rel="stylesheet" href="assets/styles/styles.css">
     <script src="vendor/angular/angular.min.js"></script>
     <script src="vendor/angular-route/angular-route.min.js"></script>
@@ -96,7 +97,11 @@
             <h5>Data Visualization Area</h5>
             <div class="ng-view"></div>
 
-            <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon"><br>
+            <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
+
+            <div ng-show="averageShow">
+                Congratulations: You've moused over an icon!
+            </div>
 
         </div>
 
