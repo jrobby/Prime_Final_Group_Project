@@ -13,7 +13,6 @@ module.exports = function(grunt) {
                 expand: true,
                 cwd: "node_modules/",
                 src: [
-                    "bootstrap/dist/css/bootstrap.min.css",
                     "angular/angular.min.js",
                     "angular/angular.min.js.map",
 					          "angular/angular-csp.css",
