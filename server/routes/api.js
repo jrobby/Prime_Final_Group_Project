@@ -19,8 +19,8 @@ router.get('/', function(request, response){
       var IdObject = { id: sheetId };
       smartsheet.sheets.getSheet(IdObject)
         .then(function(sheetData){
-          // response.send(fetchAllCols(sheetData));
-          response.send(JSON.stringify(sheetData));
+          response.send(buildRow(sheetData.rows[0], fetchAllCols(sheetData)));
+          // response.send(JSON.stringify(sheetData));
         }).catch(function(error){
           console.log(error);
         });
@@ -30,14 +30,27 @@ router.get('/', function(request, response){
 });
 
 
-
+/*Condenses a row object from the smartsheet API into meaningful, named key/data pairs
+to be used and interpreted by this application.*/
 function buildRow(rowData, colIds){
-  var row = { };
-
-
-
-  return row;
+  var verboseRow = { };
+  var keys = Object.keys(colIds);
+  for (var i = 0; i < keys.length; i++){
+    verboseRow[keys[i]] = [];
+    console.log('colId', keys[i], ":" , colIds[keys[i]]);
+    for (var j = 0; j < colIds[keys[i]].length; j++){
+      var temp = getRowVal(rowData, colIds[keys[i]][j]);
+      if (temp) verboseRow[keys[i]].push(temp);
+    }
+  }
+  return verboseRow;
 }
+
+
+// var colIds = {'classStart': [], 'gradDate': [], 'certDate': [], 'wages': [],
+//               'employType': [], 'ITYesNo': [], 'employers': [], 'staffingFirms': [],
+//               'FTYesNo': [], 'otherCerts': [], 'veteran': [], 'female': [],
+//               'ethnicity': [], 'DOB': [], 'employStart': [], 'employEnd': [], 'retainedYesNo': []};
 
 
 /*Given a single row object from the "rows" array in the Smartsheet data, returns the value
@@ -94,7 +107,7 @@ function fetchAllCols(worksheetData){
 
   var keys = Object.keys(colIds);
   for (var i = 0; i < keys.length; i++){
-    colIds[keys[i]].push(fetchCols(searchStrings[keys[i]], searchExclusions[keys[i]], worksheetData.columns));
+    colIds[keys[i]] = (fetchCols(searchStrings[keys[i]], searchExclusions[keys[i]], worksheetData.columns));
   }
 
   return colIds;
