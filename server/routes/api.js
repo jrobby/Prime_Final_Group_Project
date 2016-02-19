@@ -16,14 +16,11 @@ router.get('/', function(request, response){
   smartsheet.sheets.listSheets()
     .then(function(data){
       var sheetId = data.data[0].id;
-      var idObject = { id: sheetId };
-      smartsheet.sheets.getSheet(idObject)
+      var IdObject = { id: sheetId };
+      smartsheet.sheets.getSheet(IdObject)
         .then(function(sheetData){
-          response.send(fetchAllCols(sheetData));
-          // console.log('class start:', fetchCols([['class'],['start'],['date']], [null], sheetData.columns));
-          // response.send('blah');
-          // response.send(fetchCols([['date'], ['start', 'placed']], 'class', sheetData.columns));
-          // response.send(JSON.stringify(sheetData));
+          // response.send(fetchAllCols(sheetData));
+          response.send(JSON.stringify(sheetData));
         }).catch(function(error){
           console.log(error);
         });
@@ -32,8 +29,45 @@ router.get('/', function(request, response){
     });
 });
 
-function buildRows(rawData){
 
+
+function buildRow(rowData, colIds){
+  var row = { };
+
+
+
+  return row;
+}
+
+
+/*Given a single row object from the "rows" array in the Smartsheet data, returns the value
+corresponding to the column ID being sought.  Returns null if no such value exists.*/
+function getRowVal(oneSmartsheetRow, colId){
+  var cells = oneSmartsheetRow.cells;
+  for (var i = 0; i < cells.length; i++){
+    if (cells[i].columnId == colId) return cells[i].value;
+  }
+  return null;
+}
+
+
+/*Returns an object representing a single person's estimated employment timeline.
+If 'start' is null, the individual has not been placed.
+If 'start' has a date value, and 'end' is null, the individual continues to be employed.
+If both fields have date values, the individual was placed, but is not currently employed.*/
+function employmentHistory(startDatesArray, endDatesArray){
+  var employStartEnd = { 'start': null, 'end': null };
+  if (startDatesArray.length > 0){
+    if (Object.prototype.toString.call(startDatesArray[0]) === '[object Date]'){
+      employStartEnd.start = startDatesArray[0];
+    }
+    if (endDatesArray.length >= startDatesArray.length){
+      if (Object.prototype.toString.call(endDatesArray[endDatesArray.length - 1]) === '[object Date]'){
+        employStartEnd.end = endDatesArray[endDatesArray.length - 1];
+      }
+    }
+  }
+  return employStartEnd;
 }
 
 
@@ -42,7 +76,7 @@ to search for, and strings to exclude, when determining a match for each case.*/
 function fetchAllCols(worksheetData){
   //***IMPORTANT: THIS FUNCTION WILL BREAK IF THE THREE OBJECTS BELOW (colIDs, searchStrings, and searchExclusions)
   //DO NOT HAVE THE SAME KEYS!!***
-  var colIDs = {'classStart': [], 'gradDate': [], 'certDate': [], 'wages': [],
+  var colIds = {'classStart': [], 'gradDate': [], 'certDate': [], 'wages': [],
                 'employType': [], 'ITYesNo': [], 'employers': [], 'staffingFirms': [],
                 'FTYesNo': [], 'otherCerts': [], 'veteran': [], 'female': [],
                 'ethnicity': [], 'DOB': [], 'employStart': [], 'employEnd': [], 'retainedYesNo': []};
@@ -58,12 +92,12 @@ function fetchAllCols(worksheetData){
                 'FTYesNo':'', 'otherCerts':'', 'veteran':'', 'female':'',
                 'ethnicity':'', 'DOB':'', 'employStart':'class', 'employEnd':'class', 'retainedYesNo':'date'};
 
-  var keys = Object.keys(colIDs);
+  var keys = Object.keys(colIds);
   for (var i = 0; i < keys.length; i++){
-    colIDs[keys[i]].push(fetchCols(searchStrings[keys[i]], searchExclusions[keys[i]], worksheetData.columns));
+    colIds[keys[i]].push(fetchCols(searchStrings[keys[i]], searchExclusions[keys[i]], worksheetData.columns));
   }
 
-  return colIDs;
+  return colIds;
 }
 
 
@@ -72,16 +106,16 @@ index of testNameArray (an array of String arrays).
 Example: say we want to search for a start date column.  testNameArray might be...
   [['date'], ['start', 'placed']] //NEED TO EXCLUDE 'CLASS'
 In this example, any ID of a column matching 'date' && ('start' || 'placed') will
-be pushed to the matchingIDs array and returned.*/
+be pushed to the matchingIds array and returned.*/
 function fetchCols(testNameArray, nameToExclude, colArray){
-  var matchingIDs = [];
+  var matchingIds = [];
   for (var i = 0; i < colArray.length; i++){
     for (var j = 0; j < testNameArray.length; j++){
       if (!colMatch(testNameArray[j], nameToExclude, colArray[i])) break;
-      if (j >= (testNameArray.length - 1)) matchingIDs.push(colArray[i].id);
+      if (j >= (testNameArray.length - 1)) matchingIds.push(colArray[i].id);
     }
   }
-  return matchingIDs;
+  return matchingIds;
 }
 
 
