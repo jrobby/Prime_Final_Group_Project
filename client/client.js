@@ -19,12 +19,21 @@ app.config(['$routeProvider', function($routeProvider){
 
 
 app.controller('MainController', [ '$scope', function($scope){
+
+    $scope.endDate = new Date();
+
+    $scope.tab = 'a';
+    $scope.averageShow = false;
+
     $scope.generateCharts = function(demographics, progress){
         console.log('demographics, progress', demographics, progress);
+    }
 
-        //I figure this will be structured thusly:
-
-
+    $scope.showAverageSalary = function(){
+        $scope.averageShow = true;
+    }
+    $scope.hideAverageSalary = function (){
+        $scope.averageShow = false;
     }
 
 }]);
@@ -37,29 +46,3 @@ app.controller('pieChartController',['$scope','$http', function($scope,$http){
 app.controller('lineGraphController',['$scope','$http', function($scope,$http){
     $scope.line = "this line Graph view is controlled";
 }])
-
-
-
-
-//
-//app.controller('TabController', function () {
-//    this.tab = 1;
-//
-//    this.setTab = function (tabId) {
-//        this.tab = tabId;
-//    };
-//
-//    this.isSet = function (tabId) {
-//        return this.tab === tabId;
-//    };
-//});
-
-//app.factory('SomeService', ['$http', '$scope', function($http, $scope){
-//
-//
-//    $http.get('/SomeService').then(function(res){
-//            $scope.SomeServiceProduct = res;
-//
-//        });
-//}]);
-
