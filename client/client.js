@@ -19,6 +19,9 @@ app.config(['$routeProvider', function($routeProvider){
 
 
 app.controller('MainController', [ '$scope', function($scope){
+
+    $scope.endDate = new Date();
+
     $scope.tab = 'a';
     $scope.averageShow = false;
 
@@ -43,6 +46,3 @@ app.controller('pieChartController',['$scope','$http', function($scope,$http){
 app.controller('lineGraphController',['$scope','$http', function($scope,$http){
     $scope.line = "this line Graph view is controlled";
 }])
-
-
-

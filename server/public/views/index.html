@@ -14,9 +14,8 @@
     <img src="../assets/img/CITFF_LogoWithTag.jpg" alt="CITFF_Logo" class="logo"><br><br><br>
 
     <form class="dateForm">
-        <p>Start Date: <input type="date" value="2012-05-07"> End Date: <input type="date" value=""><button class="dateSelect">Select</button></p>
+        <p>Start Date: <input type="date" value="2012-05-07"> End Date: <input type="date" value="{{endDate | date: 'yyyy-MM-dd'}}"><button class="dateSelect">Select</button></p>
     </form>
-
         <div class="totalsTable">
             <div class="tableMain">
                 <div class="tableColumn">
