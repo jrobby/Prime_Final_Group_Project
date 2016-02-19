@@ -12,7 +12,7 @@
 p{
     margin-bottom: .5%;
 }
-h1, h3, h5 {
+h1, h3, h4, h5 {
     text-align: center;
 }
 .avgWageHeading{
@@ -57,14 +57,14 @@ h1, h3, h5 {
 }
 .dataArea{
     margin-left: .5%;
-    width: 49%;
+    width: 50%;
 }
 .plusIcon{
     height: 64px;
     width: 64px;
     display: block;
     margin-left: auto;
-    margin-top: 380px;
+    /*margin-top: 380px;*/
 }
 
 .controlPanel{
@@ -83,7 +83,7 @@ h1, h3, h5 {
 select{
     display: block;
     margin: auto;
-    width: 95%;
+    width: 98%;
 }
 
 .footer{
