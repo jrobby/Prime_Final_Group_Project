@@ -5,7 +5,7 @@
 var app = angular.module('myApp', ['ngRoute']);
 console.log('client.js is connected to index.html');
 
-app.config(['$routeProvider', function($routeProvider){
+app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
     $routeProvider
         .when('/', {
             templateUrl: 'views/pieChart.html',
@@ -15,10 +15,12 @@ app.config(['$routeProvider', function($routeProvider){
             templateUrl: 'views/lineGraph.html',
             controller: 'lineGraphController'
         });
+
+    $locationProvider.html5Mode(true);
 }]);
 
 
-app.controller('MainController', [ '$scope', function($scope){
+app.controller('MainController', [ '$scope', '$location', function($scope, $location){
 
     $scope.endDate = new Date();
 
@@ -39,12 +41,12 @@ app.controller('MainController', [ '$scope', function($scope){
 
 }]);
 
-app.controller('pieChartController',['$scope', function($scope){
+app.controller('pieChartController',['$scope', '$location', function($scope, $location){
     $scope.pie = "this pie chart view is controlled";
 }]);
 
 
-app.controller('lineGraphController',['$scope', function($scope){
+app.controller('lineGraphController',['$scope', '$location', function($scope, $location){
 
     $scope.line = "this line Graph view is controlled";
 }]);
