@@ -59,12 +59,17 @@ h1, h3, h4, h5 {
     margin-left: .5%;
     width: 50%;
 }
+svg{
+    display: block;
+    margin: auto;
+    text-align: center;
+}
 .plusIcon{
     height: 64px;
     width: 64px;
     display: block;
     margin-left: auto;
-    /*margin-top: 380px;*/
+    margin-top: -68px;
 }
 
 .controlPanel{

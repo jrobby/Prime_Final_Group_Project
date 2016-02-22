@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
-    <!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/styles/styles.css">
     <script src="vendor/angular/angular.min.js"></script>
     <script src="vendor/angular-route/angular-route.min.js"></script>
@@ -95,7 +94,6 @@
         </div>
 
         <div class="dataArea" >
-            <h5>Data Visualization Area</h5>
             <div class="ng-view"></div>
 
             <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
@@ -108,25 +106,19 @@
 
         <div class="controlPanel">
             <h5>Control Panel</h5>
-            <button class="graphButton"> <a href="/"> Pie Chart</a></button>
-            <button class="graphButton"> <a href="/lineGraph">Line Graph</a></button>
+            <button class="graphButton"><a href="/"> Pie Chart</a></button>
+            <button class="graphButton"><a href="/lineGraph">Line Graph</a></button>
 
-            <br><br><br><br>
-
+            <br><br><br>
+            <h5>Demographic Data</h5>
             <select class="demographicDropdown" ng-model="demographics">
-                <option>Demographic Dropdown</option>
-                <option>Data</option>
-                <option>Data</option>
-                <option>Data</option>
+                <option ng-repeat="demographic in demographics" value="{{demographic}}">{{demographic}}</option>
             </select>
 
-            <br><br><br><br>
-
+            <br><br><br>
+            <h5>Program Progress</h5>
             <select class="progressDropdown" ng-model="progress">
-                <option>Program Progress Dropdown</option>
-                <option>Data</option>
-                <option>Data</option>
-                <option>Data</option>
+                <option ng-repeat="progress in progresses" value="{{progress}}">{{progress}}</option>
             </select>
 
             <br><br><br><br>
@@ -141,5 +133,3 @@
 
 </body>
 </html>
-
-<!--Can Robby do stuff and things?-->
