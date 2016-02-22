@@ -20,7 +20,7 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 }]);
 
 
-app.controller('MainController', [ '$scope', '$location', function($scope, $location){
+app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', function($scope, $location, SmartSheetService){
 
     $scope.endDate = new Date();
 
@@ -42,7 +42,18 @@ app.controller('MainController', [ '$scope', '$location', function($scope, $loca
         $scope.averageShow = false;
     };
 
+    //Test function to do the call to get all the Smartsheet data
+    //returns an array of objects with the columns we need
+    $scope.getSmartSheetData = function(){
+      SmartSheetService.getSmartSheetData().then(function(response){
+        $scope.smartSheetData = response.data;
+        console.log($scope.smartSheetData);
+      });
+    };
+
+
 }]);
+
 
 app.controller('pieChartController',['$scope', '$location', function($scope, $location){
     $scope.pie = "this pie chart view is controlled";
@@ -52,4 +63,16 @@ app.controller('pieChartController',['$scope', '$location', function($scope, $lo
 app.controller('lineGraphController',['$scope', '$location', function($scope, $location){
 
     $scope.line = "this line Graph view is controlled";
+}]);
+
+//[][][] Factory to get Smartsheet data [][][][[[[[]]]]]
+app.factory('SmartSheetService', ['$http', function($http){
+
+  var getSmartSheetData = function(){
+    return $http.get('/api');
+  };
+
+  return {
+    getSmartSheetData: getSmartSheetData,
+  };
 }]);
