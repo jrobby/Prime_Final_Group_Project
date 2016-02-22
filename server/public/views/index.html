@@ -15,7 +15,7 @@
     <img src="../assets/img/CITFF_LogoWithTag.jpg" alt="CITFF_Logo" class="logo"><br><br><br>
 
     <form class="dateForm">
-        <p>Start Date: <input type="date" value="2012-05-07"> End Date: <input type="date" value="{{endDate | date: 'yyyy-MM-dd'}}"><button class="dateSelect">Select</button></p>
+        <p>Start Date: <input type="date" ng-model="startDate" ng-value="{{startDate | date: 'yyyy-MM-dd'}}"> End Date: <input type="date" ng-model="endDate" ng-value="{{endDate | date: 'yyyy-MM-dd'}}"><button class="dateSelect" ng-click="submitDate()">Select</button></p>
     </form>
         <div class="totalsTable">
             <div class="tableMain">
@@ -125,8 +125,6 @@
 
             <button ng-click="generateCharts(demographics, progress)" class="genButton">Generate Charts</button>
 
-            <!-- just added this to test the call to get the Smartsheet Data -->
-            <button ng-click="getSmartSheetData()" class="genData">Get SmartSheet Data</button>
 
         </div>
 
