@@ -24,8 +24,8 @@ app.controller('MainController', [ '$scope', '$location', function($scope, $loca
 
     $scope.endDate = new Date();
 
-    $scope.demographics = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
-    $scope.progresses = ['3mo', '6mo', '1yr', '2yr', '3yr', '4yr', '5yr'];
+    $scope.demographicList = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
+    $scope.progressList = ['3mo', '6mo', '1yr', '2yr', '3yr', '4yr', '5yr'];
 
     $scope.tab = 'a';
     $scope.averageShow = false;
