@@ -32,8 +32,7 @@ router.get('/', function(request, response){
 
 
 
-//***temporarily, this builds verbose rows for testing purposes...
-//might switch this back and forth during testing...
+//might switch this back and forth between "condensed" and "verbose" rows during testing...
 function assembleRows(worksheetData){
   var rowList = [];
   for (var i = 0; i < worksheetData.rows.length; i++){
@@ -48,13 +47,11 @@ function assembleRows(worksheetData){
 /*Creates an array property fieldName in condensedRow, to match an existing such property in verboseRow.
 Pushes the entries from verboseRow to condensedRow, but stops doing this as soon as a false-y value is found.*/
 function condenseArrayField(condensedRow, verboseRow, fieldName){
+  condensedRow[fieldName] = [];
   var temp;
   for (var i = 0; i < verboseRow[fieldName].length; i++){
     temp = verboseRow[fieldName][i];
-    if (temp) {
-      if (i == 0) condensedRow[fieldName] = [];
-      condensedRow[fieldName].push(temp);
-    }
+    if (temp) condensedRow[fieldName].push(temp);
     else return;
   }
 }
@@ -62,13 +59,12 @@ function condenseArrayField(condensedRow, verboseRow, fieldName){
 
 /*Creates a matching date property [fieldName] in condensedRow from verboseRow,
 but sets the value equal to null if the entry in verboseRow cannot be parsed into
-a date.*/
+a date.  Note that "verbose" value is in an array, "condensed" is not.*/
 function setEqualIfDate(condensedRow, verboseRow, fieldName){
-  condensedRow[fieldName] = [];
   if (isNaN(Date.parse(verboseRow[fieldName][0]))){
-    condensedRow[fieldName].push(null);
+    condensedRow[fieldName] = null;
   }
-  else condensedRow[fieldName].push(verboseRow[fieldName][0]);
+  else condensedRow[fieldName] = verboseRow[fieldName][0];
 }
 
 
@@ -82,32 +78,38 @@ function condenseRow(verboseRow){
   setEqualIfDate(condensedRow, verboseRow, "gradDate");
   setEqualIfDate(condensedRow, verboseRow, "certDate");
 
-  condensedRow.ethnicity = verboseRow.ethnicity;
-
-  condenseArrayField(condensedRow, verboseRow, "employType");
-  condenseArrayField(condensedRow, verboseRow, "wages");
-  condenseArrayField(condensedRow, verboseRow, "ITYesNo");
-
-
   var sex = verboseRow.female.toString();
   if (sex.toLowerCase().includes('f') || sex.toLowerCase().includes('w')) condensedRow.female = true;
   else condensedRow.female = false;
 
+  var veteran = verboseRow.veteran.toString();
+  if (veteran.toLowerCase().includes('t')) condensedRow.veteran = true;
+  else condensedRow.veteran = false;
 
+  condensedRow.ethnicity = verboseRow.ethnicity[0];
+
+  var fullTime = verboseRow.FTYesNo.toString();
+  if (fullTime.toLowerCase().includes('ft') || fullTime.toLowerCase().includes('full')) condensedRow.placedFullTime = true;
+  else condensedRow.placedFullTime = false;
+
+  condenseArrayField(condensedRow, verboseRow, "employType");
+  condenseArrayField(condensedRow, verboseRow, "wages");
+  condenseArrayField(condensedRow, verboseRow, "ITYesNo");
+  // condenseArrayField(condensedRow, verboseRow, "otherCerts");
+
+  var tempHistory = {};
+  //clear null values in array before summarizing employment history
+  condenseArrayField(tempHistory, verboseRow, "employStart");
+  condenseArrayField(tempHistory, verboseRow, "employEnd");
+  condensedRow.employHistory = employmentHistory(tempHistory.employStart, tempHistory.employEnd);
   //assemble *DISTINCT* employers/contract agencies into one property
 
   /*
-  class-start-date, grad-date, cert-date,
-  wage: [number], employment-type: [string],
-  IT-position: true/false, distinct-employers: [string],
-  placed-FT: true/false,
-  first-employement: date *or* null,
-  end-of-employment: date *or* null,
+  distinct-employers: [string],
   certifications: [date *or* null] - define order convention...
-  veteran: true/false,
-  female: true/false,
-  ethnicity: string,
-  age @start date: true/false
+  age @start date: number
+
+  //****still need to use retention milestone data??
   */
 
   return condensedRow;
@@ -132,12 +134,6 @@ function buildRowVerbose(rowData, colIds){
 }
 
 
-// var colIds = {'classStart': [], 'gradDate': [], 'certDate': [], 'wages': [],
-//               'employType': [], 'ITYesNo': [], 'employers': [], 'staffingFirms': [],
-//               'FTYesNo': [], 'otherCerts': [], 'veteran': [], 'female': [],
-//               'ethnicity': [], 'DOB': [], 'employStart': [], 'employEnd': [], 'retainedYesNo': []};
-
-
 /*Given a single row object from the "rows" array in the Smartsheet data, returns the value
 corresponding to the column ID being sought.  Returns null if no such value exists.*/
 function getRowVal(oneSmartsheetRow, colId){
@@ -155,12 +151,12 @@ If 'start' has a date value, and 'end' is null, the individual continues to be e
 If both fields have date values, the individual was placed, but is not currently employed.*/
 function employmentHistory(startDatesArray, endDatesArray){
   var employStartEnd = { 'start': null, 'end': null };
-  if (startDatesArray.length > 0){
-    if (Object.prototype.toString.call(startDatesArray[0]) === '[object Date]'){
+  if (startDatesArray && startDatesArray.length > 0){
+    if (!isNaN(Date.parse(startDatesArray[0]))){
       employStartEnd.start = startDatesArray[0];
     }
-    if (endDatesArray.length >= startDatesArray.length){
-      if (Object.prototype.toString.call(endDatesArray[endDatesArray.length - 1]) === '[object Date]'){
+    if (endDatesArray && endDatesArray.length >= startDatesArray.length){
+      if (!isNaN(Date.parse(endDatesArray[endDatesArray.length - 1]))){
         employStartEnd.end = endDatesArray[endDatesArray.length - 1];
       }
     }
@@ -181,7 +177,7 @@ function fetchAllCols(worksheetData){
 
   var searchStrings = {'classStart':[['class'],['start'],['date']], 'gradDate':[['grad'],['date']], 'certDate':[['cert'],['date']], 'wages':[['wage']],
                 'employType':[['employ'],['type']], 'ITYesNo':[['IT', 'industry'],['position', 'job']], 'employers':[['employer']], 'staffingFirms':[['staffing']],
-                'FTYesNo':[['FT', 'full'], ['PT', 'part']], 'otherCerts':[['date', '+'], ['Network', 'Security', 'Other']], 'veteran':[['vet']], 'female':[['M/F', 'gender', 'sex']],
+                'FTYesNo':[['FT', 'full'], ['PT', 'part']], 'otherCerts':[['date', '+'], ['Network', 'Server', 'Security', 'Other']], 'veteran':[['vet']], 'female':[['M/F', 'gender', 'sex']],
                 'ethnicity':[['race', 'ethnic']], 'DOB':[['DOB', 'birth']], 'employStart': [['date'], ['start', 'placed']], 'employEnd': [['date'], ['end']],
                 'retainedYesNo': [['1', '2', '3', '4', '5', '6'], ['mo', 'yr', 'month', 'year']]};
 
