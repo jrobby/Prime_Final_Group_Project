@@ -12,7 +12,7 @@
     <base href="/">
 </head>
 <body ng-controller="MainController as main">
-    <img src="../assets/img/CITFF_LogoWithTag.jpg" alt="CITFF_Logo" class="logo"><br><br><br>
+    <a href="/"><img src="../assets/img/CITFF_LogoWithTag.jpg" alt="CITFF_Logo" class="logo"></a><br><br><br>
 
     <form class="dateForm">
         <p>Start Date: <input type="date" ng-model="startDate" ng-value="{{startDate | date: 'yyyy-MM-dd'}}"> End Date: <input type="date" ng-model="endDate" ng-value="{{endDate | date: 'yyyy-MM-dd'}}"><button class="dateSelect" ng-click="submitDate()">Select</button></p>
