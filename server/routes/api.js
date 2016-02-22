@@ -33,28 +33,68 @@ router.get('/', function(request, response){
 
 
 //***temporarily, this builds verbose rows for testing purposes...
+//might switch this back and forth during testing...
 function assembleRows(worksheetData){
   var rowList = [];
   for (var i = 0; i < worksheetData.rows.length; i++){
-    rowList.push(buildRowVerbose(worksheetData.rows[i], fetchAllCols(worksheetData)));
+    // rowList.push(buildRowVerbose(worksheetData.rows[i], fetchAllCols(worksheetData)));
+    rowList.push(condenseRow(buildRowVerbose(worksheetData.rows[i], fetchAllCols(worksheetData))));
   }
   return rowList;
 }
 
 
 
+/*Creates an array property fieldName in condensedRow, to match an existing such property in verboseRow.
+Pushes the entries from verboseRow to condensedRow, but stops doing this as soon as a false-y value is found.*/
+function condenseArrayField(condensedRow, verboseRow, fieldName){
+  var temp;
+  for (var i = 0; i < verboseRow[fieldName].length; i++){
+    temp = verboseRow[fieldName][i];
+    if (temp) {
+      if (i == 0) condensedRow[fieldName] = [];
+      condensedRow[fieldName].push(temp);
+    }
+    else return;
+  }
+}
+
+
+/*Creates a matching date property [fieldName] in condensedRow from verboseRow,
+but sets the value equal to null if the entry in verboseRow cannot be parsed into
+a date.*/
+function setEqualIfDate(condensedRow, verboseRow, fieldName){
+  condensedRow[fieldName] = [];
+  if (isNaN(Date.parse(verboseRow[fieldName][0]))){
+    condensedRow[fieldName].push(null);
+  }
+  else condensedRow[fieldName].push(verboseRow[fieldName][0]);
+}
+
+
+
+/*Starting with a "verbose" Row object, condenses the information into final form to be graphed,
+performing date/null validation and calculations as necessary.*/
 function condenseRow(verboseRow){
   var condensedRow = {};
   var keys = Object.keys(verboseRow);
+  setEqualIfDate(condensedRow, verboseRow, "classStart");
+  setEqualIfDate(condensedRow, verboseRow, "gradDate");
+  setEqualIfDate(condensedRow, verboseRow, "certDate");
 
-  condensedRow.classStart = verboseRow.classStart;
-  condensedRow.gradDate = verboseRow.gradDate;
-  condensedRow.certDate = verboseRow.certDate;
-  condensedRow.wages = verboseRow.wages;
-  condensedRow.ITYesNo = verboseRow.ITYesNo;
+  condensedRow.ethnicity = verboseRow.ethnicity;
+
+  condenseArrayField(condensedRow, verboseRow, "employType");
+  condenseArrayField(condensedRow, verboseRow, "wages");
+  condenseArrayField(condensedRow, verboseRow, "ITYesNo");
+
+
+  var sex = verboseRow.female.toString();
+  if (sex.toLowerCase().includes('f') || sex.toLowerCase().includes('w')) condensedRow.female = true;
+  else condensedRow.female = false;
+
 
   //assemble *DISTINCT* employers/contract agencies into one property
-
 
   /*
   class-start-date, grad-date, cert-date,
@@ -66,7 +106,7 @@ function condenseRow(verboseRow){
   certifications: [date *or* null] - define order convention...
   veteran: true/false,
   female: true/false,
-  ethnicity: true/false,
+  ethnicity: string,
   age @start date: true/false
   */
 
@@ -85,6 +125,7 @@ function buildRowVerbose(rowData, colIds){
     for (var j = 0; j < colIds[keys[i]].length; j++){
       var temp = getRowVal(rowData, colIds[keys[i]][j]);
       if (temp) verboseRow[keys[i]].push(temp);
+      else verboseRow[keys[i]].push(null);
     }
   }
   return verboseRow;
