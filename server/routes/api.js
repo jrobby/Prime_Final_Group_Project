@@ -31,7 +31,6 @@ router.get('/', function(request, response){
 });
 
 
-
 //might switch this back and forth between "condensed" and "verbose" rows during testing...
 function assembleRows(worksheetData){
   var rowList = [];
@@ -41,7 +40,6 @@ function assembleRows(worksheetData){
   }
   return rowList;
 }
-
 
 
 /*Creates an array property fieldName in condensedRow, to match an existing such property in verboseRow.
@@ -68,7 +66,6 @@ function setEqualIfDate(condensedRow, verboseRow, fieldName){
 }
 
 
-
 /*Starting with a "verbose" Row object, condenses the information into final form to be graphed,
 performing date/null validation and calculations as necessary.*/
 function condenseRow(verboseRow){
@@ -77,6 +74,8 @@ function condenseRow(verboseRow){
   setEqualIfDate(condensedRow, verboseRow, "classStart");
   setEqualIfDate(condensedRow, verboseRow, "gradDate");
   setEqualIfDate(condensedRow, verboseRow, "certDate");
+
+  condensedRow.ageAtStart = ageAtDate(verboseRow.DOB, verboseRow.classStart);
 
   var sex = verboseRow.female.toString();
   if (sex.toLowerCase().includes('f') || sex.toLowerCase().includes('w')) condensedRow.female = true;
@@ -89,32 +88,68 @@ function condenseRow(verboseRow){
   condensedRow.ethnicity = verboseRow.ethnicity[0];
 
   var fullTime = verboseRow.FTYesNo.toString();
-  if (fullTime.toLowerCase().includes('ft') || fullTime.toLowerCase().includes('full')) condensedRow.placedFullTime = true;
+  if (fullTime.toLowerCase().includes('ft') || fullTime.toLowerCase().includes('full') || fullTime.toLowerCase().includes('true')) condensedRow.placedFullTime = true;
   else condensedRow.placedFullTime = false;
 
   condenseArrayField(condensedRow, verboseRow, "employType");
   condenseArrayField(condensedRow, verboseRow, "wages");
   condenseArrayField(condensedRow, verboseRow, "ITYesNo");
-  // condenseArrayField(condensedRow, verboseRow, "otherCerts");
 
   var tempHistory = {};
   //clear null values in array before summarizing employment history
   condenseArrayField(tempHistory, verboseRow, "employStart");
   condenseArrayField(tempHistory, verboseRow, "employEnd");
   condensedRow.employHistory = employmentHistory(tempHistory.employStart, tempHistory.employEnd);
-  //assemble *DISTINCT* employers/contract agencies into one property
 
-  /*
-  distinct-employers: [string],
-  certifications: [date *or* null] - define order convention...
-  age @start date: number
+  var tempEmployers = {};
+  //clear null values in array before summarizing employer list
+  condenseArrayField(tempEmployers, verboseRow, "employers");
+  condenseArrayField(tempEmployers, verboseRow, "staffingFirms");
+  condensedRow.distinctEmployers = distinctEmployers(tempEmployers.employers, tempEmployers.staffingFirms);
 
-  //****still need to use retention milestone data??
-  */
+  var tempCerts = {
+    networkPlus: [verboseRow.otherCerts[0]],
+    serverPlus: [verboseRow.otherCerts[1]],
+    securityPlus: [verboseRow.otherCerts[2]],
+    otherCert: [verboseRow.otherCerts[3]]
+  }
+  //perform date validation before storing other certifications into their own, named fields
+  setEqualIfDate(condensedRow, tempCerts, "networkPlus");
+  setEqualIfDate(condensedRow, tempCerts, "serverPlus");
+  setEqualIfDate(condensedRow, tempCerts, "securityPlus");
+  setEqualIfDate(condensedRow, tempCerts, "otherCert");
 
+  //****still need to use retention milestone data somewhere??
   return condensedRow;
 }
 
+
+function distinctEmployers(firstArray, secondArray){
+  // console.log('first array:', firstArray);
+  // console.log('second array:', secondArray);
+  var tempArray = [];
+  var tempVal;
+
+  for (var i = 0; i < firstArray.length; i++){
+    tempVal = firstArray[i];
+    if (tempArray.length == 0){
+      tempArray.push(firstArray[i]);
+      continue;
+    }
+    for (var j = 0; j < tempArray.length; j++){
+      if (tempArray[j] == firstArray[i]) break;
+      if (j >= tempArray.length - 1) tempArray.push(firstArray[i]);
+    }
+  }
+  for (var i = 0; i < secondArray.length; i++){
+    tempVal = secondArray[i];
+    for (var j = 0; j < tempArray.length; j++){
+      if (tempArray[j] == secondArray[i]) break;
+      if (j >= tempArray.length - 1) tempArray.push(secondArray[i]);
+    }
+  }
+  return tempArray;
+}
 
 
 /*Translates a row object from the smartsheet API into meaningful, named key/data pairs
@@ -143,6 +178,22 @@ function getRowVal(oneSmartsheetRow, colId){
   }
   return null;
 }
+
+
+/*Returns an estimate, in years, of a person's age at the specified date.*/
+function ageAtDate(stringDOB, stringDate){
+  if (isNaN(Date.parse(stringDOB)) || isNaN(Date.parse(stringDate))) return null;
+  var DOB = new Date(stringDOB);
+  var date = new Date(stringDate);
+
+  var diffMilliSec = date.getTime() - DOB.getTime();
+  var diffYears = diffMilliSec / 31556952000;
+
+  //arbitrary "reasonable" date validation
+  if (diffYears < 10 || diffYears > 85) return null;
+  else return diffYears.toFixed(0);
+}
+
 
 
 /*Returns an object representing a single person's estimated employment timeline.
