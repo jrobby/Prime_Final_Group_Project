@@ -58,13 +58,15 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
                 $scope.completed = incrementRowVals($scope.smartSheetData[i].gradDate, $scope.completed);
                 $scope.certified = incrementRowVals($scope.smartSheetData[i].certDate, $scope.certified);
-                $scope.placed = incrementRowVals($scope.smartSheetData[i].placedFullTime, $scope.placed);
+                $scope.placed = incrementRowVals($scope.smartSheetData[i].employHistory.start, $scope.placed);
                 $scope.certNetwork = incrementRowVals($scope.smartSheetData[i].networkPlus, $scope.certNetwork);
                 $scope.certServer = incrementRowVals($scope.smartSheetData[i].serverPlus, $scope.certServer);
                 $scope.certSecurity = incrementRowVals($scope.smartSheetData[i].securityPlus, $scope.certSecurity);
             }
         }
-        $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, Date.parse($scope.startDate), Date.parse($scope.endDate));
+        var adjStartDate = new Date($scope.startDate);
+        adjStartDate.setDate(adjStartDate.getDate() - 1);
+        $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
     };
 
 
@@ -79,14 +81,16 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
           sumOfWages += tempWage;
           numPlaced++;
         }
+        // else console.log('missing index:', i);
       }
+      console.log('numPlaced:', numPlaced);
       return (sumOfWages / numPlaced).toFixed(2);
     }
 
 
     function getWageAtPlacement(rowData, startDate, endDate){
       var classStart = Date.parse(rowData.classStart);
-      if (isNaN(classStart)) return null;
+      if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
       if (rowData.employHistory.start){
         if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[0];
       }
