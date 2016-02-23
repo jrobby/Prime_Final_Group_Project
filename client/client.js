@@ -31,8 +31,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     SmartSheetService.getSmartSheetData().then(function(response){
         $scope.smartSheetData = response.data;
         $scope.submitDate();
-        $scope.avgWageAtPlacement = computeAveragePlacedWage(response.data);
-        console.log($scope.avgWageAtPlacement);
     });
 
     //function that kicks off after date range is selected
@@ -66,16 +64,17 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
                 $scope.certSecurity = incrementRowVals($scope.smartSheetData[i].securityPlus, $scope.certSecurity);
             }
         }
+        $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, Date.parse($scope.startDate), Date.parse($scope.endDate));
     };
 
 
-    function computeAveragePlacedWage(allRows){
+    function computeAveragePlacedWage(allRows, startDate, endDate){
       var sumOfWages = 0;
       var numPlaced = 0; //numPlaced = $scope.placed (after submitDate is called)
       var tempWage = 0;
 
       for (var i = 0; i < allRows.length; i++){
-        tempWage = getWageAtPlacement(allRows[i]);
+        tempWage = getWageAtPlacement(allRows[i], startDate, endDate);
         if (tempWage){
           sumOfWages += tempWage;
           numPlaced++;
@@ -85,9 +84,11 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     }
 
 
-    function getWageAtPlacement(rowData){
+    function getWageAtPlacement(rowData, startDate, endDate){
+      var classStart = Date.parse(rowData.classStart);
+      if (isNaN(classStart)) return null;
       if (rowData.employHistory.start){
-        if (rowData.wages.length > 0) return rowData.wages[0];
+        if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[0];
       }
       return null;
     }
