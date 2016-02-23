@@ -104,7 +104,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
 
     $scope.demographicList = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
-    $scope.progressList = ['3mo', '6mo', '1yr', '2yr', '3yr', '4yr', '5yr'];
+    $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
 
     $scope.tab = 'a';
     $scope.averageShow = false;
