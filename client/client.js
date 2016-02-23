@@ -37,20 +37,16 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     $scope.submitDate = function(){
 
         $scope.numServed = 0;
-        $scope.numCompleted = 0;
-        $scope.numCertified = 0;
-        $scope.numPlaced = 0;
-        $scope.numCertNetwork = 0;
-        $scope.numCertServer = 0;
-        $scope.numCertSecurity = 0;
-
-        $scope.completedPercent = 0;
-
-
+        $scope.completed = { number: 0, percent: 0 };
+        $scope.certified = { number: 0, percent: 0 };
+        $scope.placed = { number: 0, percent: 0 };
+        $scope.certNetwork = { number: 0, percent: 0 };
+        $scope.certServer = { number: 0, percent: 0 };
+        $scope.certSecurity = { number: 0, percent: 0 };
 
           for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
-              console.log("object number" + i + " " + $scope.smartSheetData[i]);
+              // console.log("object number" + i + " " + $scope.smartSheetData[i]);
 
             //inelegant way to account for new Date() reading date as one day prior
             //add a day to the result
@@ -60,48 +56,25 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
               //count total number served
               $scope.numServed++;
 
-              //count how many graduated (gradDate is not null)
-              if($scope.smartSheetData[i].gradDate){
-                $scope.numCompleted++;
-                $scope.completedPercent = Number(Math.round((($scope.numCompleted / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
-
-                //count number certified, calculate percentage certified
-                if($scope.smartSheetData[i].certDate){
-                $scope.numCertified++;
-                $scope.percentCertified = Number(Math.round((($scope.numCertified / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
-
-                //count number Network Plus certified, calculate percentage
-                if($scope.smartSheetData[i].networkPlus){
-                $scope.numCertNetwork++;
-                $scope.percentCertNetwork = Number(Math.round((($scope.numCertNetwork / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
-
-
-                //count number Server Plus certified, calculate percentage
-                if($scope.smartSheetData[i].serverPlus){
-                $scope.numCertServer++;
-                $scope.percentCertServer = Number(Math.round((($scope.numCertServer / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
-
-                //count number Security Plus certified, calculate percentage
-                if($scope.smartSheetData[i].securityPlus){
-                $scope.numCertSecurity++;
-                $scope.percentCertSecurity = Number(Math.round((($scope.numCertSecurity / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
-                //count number Placed, calculate percentage
-                if($scope.smartSheetData[i].placedFullTime){
-                $scope.numPlaced++;
-                $scope.percentPlaced = Number(Math.round((($scope.numPlaced / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
-
+              $scope.completed = incrementRowVals($scope.smartSheetData[i].gradDate, $scope.completed);
+              $scope.certified = incrementRowVals($scope.smartSheetData[i].certDate, $scope.certified);
+              $scope.placed = incrementRowVals($scope.smartSheetData[i].placedFullTime, $scope.placed);
+              $scope.certNetwork = incrementRowVals($scope.smartSheetData[i].networkPlus, $scope.certNetwork);
+              $scope.certServer = incrementRowVals($scope.smartSheetData[i].serverPlus, $scope.certServer);
+              $scope.certSecurity = incrementRowVals($scope.smartSheetData[i].securityPlus, $scope.certSecurity);
 
             }
           }
         };
 
-
+    function incrementRowVals(smartsheetDataVal, numPercentObject){
+      var tempObj = numPercentObject;
+      if (smartsheetDataVal){
+        tempObj.number++;
+        tempObj.percent = Number(Math.round(((tempObj.number / $scope.numServed)*100) + 'e2') + 'e-2');
+      }
+      return tempObj;
+    }
 
     $scope.demographicList = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
     $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
