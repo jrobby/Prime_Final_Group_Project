@@ -47,7 +47,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.completedPercent = 0;
 
 
-
           for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
               console.log("object number" + i + " " + $scope.smartSheetData[i]);
@@ -102,7 +101,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         };
 
 
-
     $scope.demographicList = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
     $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
 
@@ -127,20 +125,25 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
 app.controller('pieChartController',['$scope', '$location', function($scope, $location){
         $scope.pie = "this pie chart view is controlled";
+
+
         (function(d3) {
             'use strict';
             var dataset = [
                 //{ label: 'Abulia', count: 25 },
                 //{ label: 'Betelgeuse', count: 25 },
-                { label: 'This', count: 50 },
-                { label: 'That', count: 50 },
-                {label:'TheOther', count: 10}
+                { label: 'White', count: 50 },
+                {label:'Black/African American', count:40},
+                { label: 'Hispanic/Latino', count: 50 },
+                {label:'Asian', count:40},
+                {label:'Other/Mixed Race', count: 10}
             ];
+
             var width = 360;
             var height = 360;
             var radius = Math.min(width, height) / 2;
             var color = d3.scale.ordinal()
-                .range(['red', 'blue', 'yellow', 'green']);
+                .range(['red', 'yellow', 'green', 'pink', 'purple', 'blue', 'orange', 'brown', 'gray']);
             //var color = d3.scale.category20b();
             var svg = d3.select('#chart')
                 .append('svg')
@@ -163,6 +166,7 @@ app.controller('pieChartController',['$scope', '$location', function($scope, $lo
                     return color(d.data.label);
                 });
         })(window.d3);
+
     }]);
 
 
