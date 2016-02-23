@@ -105,9 +105,9 @@ app.controller('pieChartController',['$scope', '$location', function($scope, $lo
         var dataset = [
             //{ label: 'Abulia', count: 25 },
             //{ label: 'Betelgeuse', count: 25 },
-            { label: 'This', count: 50 },
-            { label: 'That', count: 50 },
-            {label:'TheOther', count: 10}
+            { label: 'White', count: 50 },
+            { label: 'Black', count: 10 },
+            {label:'Latino', count: 5}
         ];
         var width = 360;
         var height = 360;
