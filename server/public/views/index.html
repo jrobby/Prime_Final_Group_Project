@@ -17,7 +17,9 @@
 <form class="dateForm">
     <p>Start Date: <input type="date" ng-model="startDate" ng-value="{{startDate | date: 'yyyy-MM-dd'}}"> End Date: <input type="date" ng-model="endDate" ng-value="{{endDate | date: 'yyyy-MM-dd'}}"><button class="dateSelect" ng-click="submitDate()">Select</button></p>
 </form>
+
 <div class="totalsTable">
+    <img src="../assets/img/IT_READY_300dpi.jpg" alt="IT_Ready_Logo" class="ITlogo">
     <div class="tableMain">
         <div class="tableColumn">
             <div class="tableHeading">Totals</div>
@@ -96,7 +98,7 @@
 
     <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
 
-    <div ng-show="averageShow">
+    <div ng-show="averageShow" class="popUpInfo">
         Congratulations: You've moused over an icon!
     </div>
 
