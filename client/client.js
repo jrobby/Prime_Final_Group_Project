@@ -74,7 +74,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     //[[AVERAGE WAGE AT PLACEMENT]]///////
     function computeAveragePlacedWage(allRows, startDate, endDate){
       var sumOfWages = 0;
-      var numPlaced = 0; //numPlaced = $scope.placed (after submitDate is called)
+      var numPlaced = 0;
       var tempWage = 0;
 
       for (var i = 0; i < allRows.length; i++){
@@ -83,9 +83,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
           sumOfWages += tempWage;
           numPlaced++;
         }
-        // else console.log('missing index:', i);
       }
-      console.log('numPlaced:', numPlaced);
       return (sumOfWages / numPlaced).toFixed(2);
     }
 
@@ -104,24 +102,24 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     //[[AVERAGE CURRENT WAGE ]]///CURRENT //CURRENT //CURRENT //CURRENT //CURRENT //
     function computeAverageCurrentWage(allRows, startDate, endDate){
       var sumOfWages = 0;
-      var numPlaced = 0; //numCurrentlyEmployed = ??
+      var numEmployed = 0;
       var tempWage = 0;
 
       for (var i = 0; i < allRows.length; i++){
         tempWage = getCurrentWage(allRows[i], startDate, endDate);
         if (tempWage){
           sumOfWages += tempWage;
-          numPlaced++;
+          numEmployed++;
         }
       }
-      return (sumOfWages / numPlaced).toFixed(2);
+      return (sumOfWages / numEmployed).toFixed(2);
     }
 
 
     function getCurrentWage(rowData, startDate, endDate){
       var classStart = Date.parse(rowData.classStart);
-      if (isNaN(classStart)) return null;
-      if (rowData.employHistory.start && rowData.employHistory.end==null){
+      if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
+      if (rowData.employHistory.start && !rowData.employHistory.end){
         if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[rowData.wages.length -1];
       }
       return null;
