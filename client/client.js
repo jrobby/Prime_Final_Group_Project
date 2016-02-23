@@ -30,7 +30,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     //returns an array of objects with the columns we need
     SmartSheetService.getSmartSheetData().then(function(response){
         $scope.smartSheetData = response.data;
-        // console.log($scope.smartSheetData);
+        $scope.submitDate();
       });
 
     //function that kicks off after date range is selected
