@@ -31,6 +31,8 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     SmartSheetService.getSmartSheetData().then(function(response){
         $scope.smartSheetData = response.data;
         $scope.submitDate();
+        $scope.avgWageAtPlacement = computeAveragePlacedWage(response.data);
+        console.log($scope.avgWageAtPlacement);
     });
 
     //function that kicks off after date range is selected
@@ -62,10 +64,35 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
                 $scope.certNetwork = incrementRowVals($scope.smartSheetData[i].networkPlus, $scope.certNetwork);
                 $scope.certServer = incrementRowVals($scope.smartSheetData[i].serverPlus, $scope.certServer);
                 $scope.certSecurity = incrementRowVals($scope.smartSheetData[i].securityPlus, $scope.certSecurity);
-
             }
         }
     };
+
+
+    function computeAveragePlacedWage(allRows){
+      var sumOfWages = 0;
+      var numPlaced = 0; //numPlaced = $scope.placed (after submitDate is called)
+      var tempWage = 0;
+
+      for (var i = 0; i < allRows.length; i++){
+        tempWage = getWageAtPlacement(allRows[i]);
+        if (tempWage){
+          sumOfWages += tempWage;
+          numPlaced++;
+        }
+      }
+      return (sumOfWages / numPlaced).toFixed(2);
+    }
+
+
+    function getWageAtPlacement(rowData){
+      if (rowData.employHistory.start){
+        if (rowData.wages.length > 0) return rowData.wages[0];
+      }
+      return null;
+    }
+
+
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
         var tempObj = numPercentObject;
