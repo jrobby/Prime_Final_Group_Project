@@ -1,0 +1,109 @@
+.logo{
+    height: 84px;
+    width: 310px;
+    display: block;
+    margin-left: 5%;
+    float: left;
+}
+.dateForm{
+    text-align: center;
+    margin-right: 10%;
+}
+p{
+    margin-bottom: .5%;
+}
+h1, h3, h4, h5 {
+    text-align: center;
+}
+.avgWageHeading{
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+/*//////////////////*/
+/*TOTALS TABLE SECTION*/
+/*//////////////////*/
+.totalsTable, .dataArea, .controlPanel{
+    float: left;
+    border: 2px solid black;
+    border-radius: 4px;
+    height: 490px;
+}
+.totalsTable {
+    width: 33%;
+    margin-left: .5%;
+    overflow-y: scroll;
+}
+.tableMain {
+
+}
+.tableColumn{
+    float: left;
+    width: 33%;
+}
+.tableHeading{
+    height: 35px;
+    font-weight: bold;
+    text-align: center;
+}
+.tableRow, .headingRow, .bottomRow {
+    border-top: 1px solid black;
+    height: 30px;
+    text-align: center;
+}
+.headingRow, .bottomHeadingRow {
+    text-align: left;
+    padding-left: 10px;
+}
+.bottomRow, .bottomHeadingRow{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    height: 30px;
+    margin-bottom: 24px;
+}
+.retentionSpan {
+    display: inline-block;
+    text-align: center;
+    width: 25%;
+    margin-bottom: 12px;
+}
+.dataArea{
+    margin-left: .5%;
+    width: 50%;
+}
+svg{
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+.plusIcon{
+    height: 64px;
+    width: 64px;
+    display: block;
+    margin-left: auto;
+    margin-top: -68px;
+}
+
+.controlPanel{
+    width: 15%;
+    margin: 0 .5% 0 .5%;
+}
+.graphButton{
+    width: 48%
+}
+.genButton{
+    display: block;
+    margin: auto;
+    width: 100%;
+    height: 15%;
+}
+select{
+    display: block;
+    margin: auto;
+    width: 98%;
+}
+
+.footer{
+    text-align: center;
+    color: gray;
+}
+
