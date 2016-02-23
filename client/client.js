@@ -124,9 +124,8 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 }]);
 
 
+
 app.controller('pieChartController',['$scope', '$location', function($scope, $location){
-    $scope.pie = "this pie chart view is controlled";
-    app.controller('pieChartController',['$scope', '$location', function($scope, $location){
         $scope.pie = "this pie chart view is controlled";
         (function(d3) {
             'use strict';
@@ -165,7 +164,7 @@ app.controller('pieChartController',['$scope', '$location', function($scope, $lo
                 });
         })(window.d3);
     }]);
-}]);
+
 
 
 app.controller('lineGraphController',['$scope', '$location', function($scope, $location){
