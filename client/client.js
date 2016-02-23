@@ -67,9 +67,11 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         var adjStartDate = new Date($scope.startDate);
         adjStartDate.setDate(adjStartDate.getDate() - 1);
         $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+        $scope.avgCurrentWage =  computeAverageCurrentWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
     };
 
 
+    //[[AVERAGE WAGE AT PLACEMENT]]///////
     function computeAveragePlacedWage(allRows, startDate, endDate){
       var sumOfWages = 0;
       var numPlaced = 0; //numPlaced = $scope.placed (after submitDate is called)
@@ -93,6 +95,34 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
       if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
       if (rowData.employHistory.start){
         if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[0];
+      }
+      return null;
+    }
+
+
+
+    //[[AVERAGE CURRENT WAGE ]]///CURRENT //CURRENT //CURRENT //CURRENT //CURRENT //
+    function computeAverageCurrentWage(allRows, startDate, endDate){
+      var sumOfWages = 0;
+      var numPlaced = 0; //numCurrentlyEmployed = ??
+      var tempWage = 0;
+
+      for (var i = 0; i < allRows.length; i++){
+        tempWage = getCurrentWage(allRows[i], startDate, endDate);
+        if (tempWage){
+          sumOfWages += tempWage;
+          numPlaced++;
+        }
+      }
+      return (sumOfWages / numPlaced).toFixed(2);
+    }
+
+
+    function getCurrentWage(rowData, startDate, endDate){
+      var classStart = Date.parse(rowData.classStart);
+      if (isNaN(classStart)) return null;
+      if (rowData.employHistory.start && rowData.employHistory.end==null){
+        if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[rowData.wages.length -1];
       }
       return null;
     }
@@ -137,15 +167,16 @@ app.controller('pieChartController',['$scope', '$location', function($scope, $lo
         var dataset = [
             //{ label: 'Abulia', count: 25 },
             //{ label: 'Betelgeuse', count: 25 },
-            { label: 'White', count: 50 },
+            { label: 'White', count: 15 },
             { label: 'Black', count: 10 },
-            {label:'Latino', count: 5}
+            {label:'Latino', count: 5},
+            {label:'Asian', count: 8}
         ];
         var width = 360;
         var height = 360;
         var radius = Math.min(width, height) / 2;
         var color = d3.scale.ordinal()
-            .range(['red', 'blue', 'yellow', 'green']);
+            .range(['pink', 'blue', 'yellow', 'green']);
         //var color = d3.scale.category20b();
         var svg = d3.select('#chart')
             .append('svg')
