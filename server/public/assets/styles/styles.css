@@ -19,6 +19,9 @@ h1, h3, h4, h5 {
     margin-top: 24px;
     margin-bottom: 24px;
 }
+/*//////////////////*/
+/*TOTALS TABLE SECTION*/
+/*//////////////////*/
 .totalsTable, .dataArea, .controlPanel{
     float: left;
     border: 2px solid black;
@@ -42,18 +45,20 @@ h1, h3, h4, h5 {
     font-weight: bold;
     text-align: center;
 }
-.tableRow{
+.tableRow, .headingRow {
     border-top: 1px solid black;
     height: 30px;
+    text-align: center;
 }
-.bottomRow{
+.headingRow, .bottomHeadingRow {
+    text-align: left;
+    padding-left: 10px;
+}
+.bottomRow, .bottomHeadingRow{
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     height: 30px;
     margin-bottom: 24px;
-}
-.nav-content{
-
 }
 .dataArea{
     margin-left: .5%;
