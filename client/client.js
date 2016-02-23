@@ -25,31 +25,42 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     //sets default start date to 05-07-2012
     $scope.startDate = new Date('2012-05-08');
 
-    //display the dates selected
+    $scope.smartSheetData = [];
+    //function on page load to do the call to get all the Smartsheet data
+    //returns an array of objects with the columns we need
+    SmartSheetService.getSmartSheetData().then(function(response){
+        $scope.smartSheetData = response.data;
+        // console.log($scope.smartSheetData);
+      });
+
+    //function that kicks off after date range is selected
     $scope.submitDate = function(){
-      console.log('start date selected', $scope.startDate);
-      console.log('end date selected', $scope.endDate);
 
-      //Test function to do the call to get all the Smartsheet data
-      //returns an array of objects with the columns we need
-        SmartSheetService.getSmartSheetData().then(function(response){
-          $scope.smartSheetData = response.data;
-          console.log($scope.smartSheetData);
-
-          //count the number served over the selected date range
-          //the count doesn't quite work because the new Date() reads the date as one day
-          //earlier than it actually is on the spreadsheet
           $scope.numServed = 0;
-          for(var i=0; i<response.data.length; i++){
-            var classStart = new Date(response.data[i].classStart);
-            console.log(classStart);
+          $scope.numCompleted = 0;
+          $scope.completedPercent = 0;
+          
+          for(var i=0; i<$scope.smartSheetData.length; i++){
+            var tempStartDate = new Date($scope.smartSheetData[i].classStart);
+
+            //inelegant way to account for new Date() reading date as one day prior
+            //add a day to the result
+            var classStart = tempStartDate.setDate(tempStartDate.getDate() + 1);
+            //check classStart is in the date range selected
             if(classStart >= $scope.startDate && classStart <= $scope.endDate){
+              //count total number served
               $scope.numServed++;
+
+              //count how many graduated (gradDate is not null)
+              if($scope.smartSheetData[i].gradDate){
+                $scope.numCompleted++;
+                $scope.completedPercent = Number(Math.round((($scope.numCompleted / $scope.numServed)*100) + 'e2') + 'e-2');
+              }
             }
           }
-          console.log('number served', $scope.numServed);
-        });
-    };
+        };
+
+
 
     $scope.demographicList = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
     $scope.progressList = ['3mo', '6mo', '1yr', '2yr', '3yr', '4yr', '5yr'];
