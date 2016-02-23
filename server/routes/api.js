@@ -11,23 +11,24 @@ var smartsheet = client.createClient({ accessToken: TEMP_API_KEY });
 var router = express.Router();
 router.use(bodyParser.json());
 
+var sheetId = null;
+var IdObject = null;
+smartsheet.sheets.listSheets()
+  .then(function(data){
+    sheetId = data.data[0].id;
+    IdObject = { id: sheetId };
+  }).catch(function(error){
+    console.log(error);
+});
 
 router.get('/', function(request, response){
-  smartsheet.sheets.listSheets()
-    .then(function(data){
-      var sheetId = data.data[0].id;
-      var IdObject = { id: sheetId };
-      smartsheet.sheets.getSheet(IdObject)
-        .then(function(sheetData){
-          response.send(assembleRows(sheetData));
-          // response.send(buildRow(sheetData.rows[0], fetchAllCols(sheetData)));
-          // response.send(JSON.stringify(sheetData));
-        }).catch(function(error){
-          console.log(error);
-        });
-    }).catch(function(error){
-      console.log(error);
-    });
+    smartsheet.sheets.getSheet(IdObject)
+      .then(function(sheetData){
+        response.send(assembleRows(sheetData));
+        // response.send(JSON.stringify(sheetData));
+      }).catch(function(error){
+        console.log(error);
+      });
 });
 
 
@@ -87,13 +88,13 @@ function condenseRow(verboseRow){
 
   condensedRow.ethnicity = verboseRow.ethnicity[0];
 
-  var fullTime = verboseRow.FTYesNo.toString();
+  var fullTime = verboseRow.placedFullTime.toString();
   if (fullTime.toLowerCase().includes('ft') || fullTime.toLowerCase().includes('full') || fullTime.toLowerCase().includes('true')) condensedRow.placedFullTime = true;
   else condensedRow.placedFullTime = false;
 
   condenseArrayField(condensedRow, verboseRow, "employType");
   condenseArrayField(condensedRow, verboseRow, "wages");
-  condenseArrayField(condensedRow, verboseRow, "ITYesNo");
+  condenseArrayField(condensedRow, verboseRow, "isITPosition");
 
   var tempHistory = {};
   //clear null values in array before summarizing employment history
@@ -124,9 +125,9 @@ function condenseRow(verboseRow){
 }
 
 
+//Pre-check - validate bad string??
+/*Combines list of employers and list of staffing agencies into a single list of distinct entries.*/
 function distinctEmployers(firstArray, secondArray){
-  // console.log('first array:', firstArray);
-  // console.log('second array:', secondArray);
   var tempArray = [];
   var tempVal;
 
@@ -222,19 +223,19 @@ function fetchAllCols(worksheetData){
   //***IMPORTANT: THIS FUNCTION WILL BREAK IF THE THREE OBJECTS BELOW (colIDs, searchStrings, and searchExclusions)
   //DO NOT HAVE THE SAME KEYS!!***
   var colIds = {'classStart': [], 'gradDate': [], 'certDate': [], 'wages': [],
-                'employType': [], 'ITYesNo': [], 'employers': [], 'staffingFirms': [],
-                'FTYesNo': [], 'otherCerts': [], 'veteran': [], 'female': [],
+                'employType': [], 'isITPosition': [], 'employers': [], 'staffingFirms': [],
+                'placedFullTime': [], 'otherCerts': [], 'veteran': [], 'female': [],
                 'ethnicity': [], 'DOB': [], 'employStart': [], 'employEnd': [], 'retainedYesNo': []};
 
   var searchStrings = {'classStart':[['class'],['start'],['date']], 'gradDate':[['grad'],['date']], 'certDate':[['cert'],['date']], 'wages':[['wage']],
-                'employType':[['employ'],['type']], 'ITYesNo':[['IT', 'industry'],['position', 'job']], 'employers':[['employer']], 'staffingFirms':[['staffing']],
-                'FTYesNo':[['FT', 'full'], ['PT', 'part']], 'otherCerts':[['date', '+'], ['Network', 'Server', 'Security', 'Other']], 'veteran':[['vet']], 'female':[['M/F', 'gender', 'sex']],
+                'employType':[['employ'],['type']], 'isITPosition':[['IT', 'industry'],['position', 'job']], 'employers':[['employer']], 'staffingFirms':[['staffing']],
+                'placedFullTime':[['FT', 'full'], ['PT', 'part']], 'otherCerts':[['date', '+'], ['Network', 'Server', 'Security', 'Other']], 'veteran':[['vet']], 'female':[['M/F', 'gender', 'sex']],
                 'ethnicity':[['race', 'ethnic']], 'DOB':[['DOB', 'birth']], 'employStart': [['date'], ['start', 'placed']], 'employEnd': [['date'], ['end']],
                 'retainedYesNo': [['1', '2', '3', '4', '5', '6'], ['mo', 'yr', 'month', 'year']]};
 
   var searchExclusions = {'classStart':'', 'gradDate':'', 'certDate':'other', 'wages':'',
-                'employType':'', 'ITYesNo':'', 'employers':'date', 'staffingFirms':'date',
-                'FTYesNo':'', 'otherCerts':'', 'veteran':'', 'female':'',
+                'employType':'', 'isITPosition':'', 'employers':'date', 'staffingFirms':'date',
+                'placedFullTime':'', 'otherCerts':'', 'veteran':'', 'female':'',
                 'ethnicity':'', 'DOB':'', 'employStart':'class', 'employEnd':'class', 'retainedYesNo':'date'};
 
   var keys = Object.keys(colIds);

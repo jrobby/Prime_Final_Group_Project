@@ -47,7 +47,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.completedPercent = 0;
 
 
-          
+
           for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
               console.log("object number" + i + " " + $scope.smartSheetData[i]);
