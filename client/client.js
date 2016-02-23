@@ -1,3 +1,4 @@
+
 /**
  * Created by jeremycloutier on 2/16/16.
  */
@@ -31,7 +32,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     SmartSheetService.getSmartSheetData().then(function(response){
         $scope.smartSheetData = response.data;
         // console.log($scope.smartSheetData);
-      });
+    });
 
     //function that kicks off after date range is selected
     $scope.submitDate = function(){
@@ -48,63 +49,63 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
 
 
-          for(var i=0; i<$scope.smartSheetData.length; i++){
+        for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
-              console.log("object number" + i + " " + $scope.smartSheetData[i]);
+            console.log("object number" + i + " " + $scope.smartSheetData[i]);
 
             //inelegant way to account for new Date() reading date as one day prior
             //add a day to the result
             var classStart = tempStartDate.setDate(tempStartDate.getDate() + 1);
             //check classStart is in the date range selected
             if(classStart >= $scope.startDate && classStart <= $scope.endDate){
-              //count total number served
-              $scope.numServed++;
+                //count total number served
+                $scope.numServed++;
 
-              //count how many graduated (gradDate is not null)
-              if($scope.smartSheetData[i].gradDate){
-                $scope.numCompleted++;
-                $scope.completedPercent = Number(Math.round((($scope.numCompleted / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
+                //count how many graduated (gradDate is not null)
+                if($scope.smartSheetData[i].gradDate){
+                    $scope.numCompleted++;
+                    $scope.completedPercent = Number(Math.round((($scope.numCompleted / $scope.numServed)*100) + 'e2') + 'e-2');
+                }
 
                 //count number certified, calculate percentage certified
                 if($scope.smartSheetData[i].certDate){
-                $scope.numCertified++;
-                $scope.percentCertified = Number(Math.round((($scope.numCertified / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
+                    $scope.numCertified++;
+                    $scope.percentCertified = Number(Math.round((($scope.numCertified / $scope.numServed)*100) + 'e2') + 'e-2');
+                }
 
                 //count number Network Plus certified, calculate percentage
                 if($scope.smartSheetData[i].networkPlus){
-                $scope.numCertNetwork++;
-                $scope.percentCertNetwork = Number(Math.round((($scope.numCertNetwork / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
+                    $scope.numCertNetwork++;
+                    $scope.percentCertNetwork = Number(Math.round((($scope.numCertNetwork / $scope.numServed)*100) + 'e2') + 'e-2');
+                }
 
 
                 //count number Server Plus certified, calculate percentage
                 if($scope.smartSheetData[i].serverPlus){
-                $scope.numCertServer++;
-                $scope.percentCertServer = Number(Math.round((($scope.numCertServer / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
+                    $scope.numCertServer++;
+                    $scope.percentCertServer = Number(Math.round((($scope.numCertServer / $scope.numServed)*100) + 'e2') + 'e-2');
+                }
 
                 //count number Security Plus certified, calculate percentage
                 if($scope.smartSheetData[i].securityPlus){
-                $scope.numCertSecurity++;
-                $scope.percentCertSecurity = Number(Math.round((($scope.numCertSecurity / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
+                    $scope.numCertSecurity++;
+                    $scope.percentCertSecurity = Number(Math.round((($scope.numCertSecurity / $scope.numServed)*100) + 'e2') + 'e-2');
+                }
                 //count number Placed, calculate percentage
                 if($scope.smartSheetData[i].placedFullTime){
-                $scope.numPlaced++;
-                $scope.percentPlaced = Number(Math.round((($scope.numPlaced / $scope.numServed)*100) + 'e2') + 'e-2');
-              }
+                    $scope.numPlaced++;
+                    $scope.percentPlaced = Number(Math.round((($scope.numPlaced / $scope.numServed)*100) + 'e2') + 'e-2');
+                }
 
 
             }
-          }
-        };
+        }
+    };
 
 
 
     $scope.demographicList = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
-    $scope.progressList = ['3mo', '6mo', '1yr', '2yr', '3yr', '4yr', '5yr'];
+    $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
 
     $scope.tab = 'a';
     $scope.averageShow = false;
@@ -126,6 +127,46 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
 app.controller('pieChartController',['$scope', '$location', function($scope, $location){
     $scope.pie = "this pie chart view is controlled";
+    app.controller('pieChartController',['$scope', '$location', function($scope, $location){
+        $scope.pie = "this pie chart view is controlled";
+        (function(d3) {
+            'use strict';
+            var dataset = [
+                //{ label: 'Abulia', count: 25 },
+                //{ label: 'Betelgeuse', count: 25 },
+                { label: 'This', count: 50 },
+                { label: 'That', count: 50 },
+                {label:'TheOther', count: 10}
+            ];
+            var width = 360;
+            var height = 360;
+            var radius = Math.min(width, height) / 2;
+            var color = d3.scale.ordinal()
+                .range(['red', 'blue', 'yellow', 'green']);
+            //var color = d3.scale.category20b();
+            var svg = d3.select('#chart')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .append('g')
+                .attr('transform', 'translate(' + (width / 2) +
+                    ',' + (height / 2) + ')');
+            var arc = d3.svg.arc()
+                .outerRadius(radius);
+            var pie = d3.layout.pie()
+                .value(function(d) { return d.count; })
+                .sort(null);
+            var path = svg.selectAll('path')
+                .data(pie(dataset))
+                .enter()
+                .append('path')
+                .attr('d', arc)
+                .attr('fill', function(d, i) {
+                    return color(d.data.label);
+                });
+        })(window.d3);
+    }]);
+
 }]);
 
 
@@ -137,11 +178,12 @@ app.controller('lineGraphController',['$scope', '$location', function($scope, $l
 //[][][] Factory to get Smartsheet data [][][][[[[[]]]]]
 app.factory('SmartSheetService', ['$http', function($http){
 
-  var getSmartSheetData = function(){
-    return $http.get('/api');
-  };
+    var getSmartSheetData = function(){
+        return $http.get('/api');
+    };
 
-  return {
-    getSmartSheetData: getSmartSheetData,
-  };
+    return {
+        getSmartSheetData: getSmartSheetData,
+    };
 }]);
+
