@@ -60,6 +60,12 @@ h1, h3, h4, h5 {
     height: 30px;
     margin-bottom: 24px;
 }
+.retentionSpan {
+    display: inline-block;
+    text-align: center;
+    width: 25%;
+    margin-bottom: 12px;
+}
 .dataArea{
     margin-left: .5%;
     width: 50%;
