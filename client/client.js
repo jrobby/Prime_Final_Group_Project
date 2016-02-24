@@ -68,6 +68,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         adjStartDate.setDate(adjStartDate.getDate() - 1);
         $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.avgCurrentWage =  computeAverageCurrentWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+        $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate))
     };
 
 
@@ -125,6 +126,27 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return null;
     }
 
+//Top Five Employers
+    function getTopFiveEmployers (allRows, startDate, endDate){
+        var employers = {};
+        $scope.topFive = [];
+
+        for (var i = 0; i < allRows.length;i++){
+            for (var j = 0; j<allRows[i].distinctEmployers.length; j++){
+                var tempString = allRows[i].distinctEmployers[j];
+                if (!employers.hasOwnProperty(tempString)){
+                    employers[tempString] = 0;
+                }
+                employers[tempString]++;
+            }
+        }
+
+        var sortedEmployers = sortObject(employers);
+        for (var n = 0; n < 5; n++){
+            $scope.topFive.push(sortedEmployers.pop());
+        }
+        return $scope.topFive;
+    }
 
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
@@ -134,6 +156,23 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
             tempObj.percent = Number(Math.round(((tempObj.number / $scope.numServed)*100) + 'e2') + 'e-2');
         }
         return tempObj;
+    }
+
+    function sortObject(obj) {
+        var arr = [];
+        var prop;
+        for (prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                arr.push({
+                    'key': prop,
+                    'value': obj[prop]
+                });
+            }
+        }
+        arr.sort(function(a, b) {
+            return a.value - b.value;
+        });
+        return arr; // returns array
     }
 
     $scope.demographicList = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
