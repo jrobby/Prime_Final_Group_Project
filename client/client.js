@@ -142,25 +142,62 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return null;
     }
 
+//Salary Calculator Area      Note: in index.html, ng-click="calcAvgSalary(), and Calculated Average Salary: {{calculatedSalary}}.
+    $scope.certAplus = false;
+    $scope.certNetworkplus = false;
+    $scope.certSecurityplus = false;
+    $scope.certServerplus = false;
+    $scope.otherCert = false;
+
+    $scope.calcAvgSalary = function(){
+        console.log("Button clicked, woohoo!");
+
+        $scope.tempCertArray = [];
+
+        if ($scope.certAplus){
+            $scope.tempCertArray.push("certAplus");
+        } if ($scope.certNetworkplus){
+            $scope.tempCertArray.push("certNetworkplus");
+        } if ($scope.certSecurityplus){
+            $scope.tempCertArray.push("certSecurityplus");
+        } if ($scope.certServerplus){
+            $scope.tempCertArray.push("certServerplus");
+        } if ($scope.otherCert){
+            $scope.tempCertArray.push("otherCert");
+        }
+
+        console.log($scope.tempCertArray);
+    };
+
 //Top Five Employers
     function getTopFiveEmployers (allRows, startDate, endDate){
+        if (isNaN(startDate) || isNaN(endDate)) return null;
         var employers = {};
         $scope.topFive = [];
 
         for (var i = 0; i < allRows.length;i++){
-            for (var j = 0; j<allRows[i].distinctEmployers.length; j++){
-                var tempString = allRows[i].distinctEmployers[j];
-                if (!employers.hasOwnProperty(tempString)){
-                    employers[tempString] = 0;
+            var classStart = Date.parse(allRows[i].classStart);
+            if (isNaN(classStart)) continue;
+            if (startDate <= classStart && classStart <= endDate){
+                for (var j = 0; j< allRows[i].distinctEmployers.length; j++){
+                    var tempString = allRows[i].distinctEmployers[j];
+                    if (!employers.hasOwnProperty(tempString)){
+                        employers[tempString] = 0;
+                    }
+                    employers[tempString]++;
                 }
-                employers[tempString]++;
             }
+
         }
 
-        var sortedEmployers = sortObject(employers);
+        $scope.sortedEmployers = sortObject(employers);
+        console.log('sorted employers', $scope.sortedEmployers);
+
         for (var n = 0; n < 5; n++){
-            $scope.topFive.push(sortedEmployers.pop());
+            $scope.topFive.push($scope.sortedEmployers.pop());
         }
+        console.log('top five', $scope.topFive);
+
         return $scope.topFive;
     }
 
