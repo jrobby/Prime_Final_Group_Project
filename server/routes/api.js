@@ -1,8 +1,6 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
-var https = require('https');
-var requestPromise = require('request-promise');
 var client = require('smartsheet');
 
 var TEMP_API_KEY = require('../../key').key;

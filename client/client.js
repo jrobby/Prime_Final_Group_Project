@@ -35,7 +35,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
     //function that kicks off after date range is selected
     $scope.submitDate = function(){
-
         $scope.numServed = 0;
         $scope.completed = { number: 0, percent: 0 };
         $scope.certified = { number: 0, percent: 0 };
@@ -68,8 +67,25 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         adjStartDate.setDate(adjStartDate.getDate() - 1);
         $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.avgCurrentWage =  computeAverageCurrentWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-        $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate))
+        $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
     };
+
+
+
+    function employedAtMilestones(rowData, startDate, endDate){
+      var milestoneHistory = {};
+      //how to check against start/end date?  Need to say "no data available" or "-" if not enough time has elapsed to calculate?
+      var classStart = Date.parse(rowData.classStart);
+      if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
+      var timeEmployed = 0;
+      //timeEmployed =
+
+    }
+
+
+    function allEmployedAtMilestones(){
+      //will need to construct { number: null, percent: null } objects in here...
+    }
 
 
     //[[AVERAGE WAGE AT PLACEMENT]]///////
@@ -93,7 +109,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         var classStart = Date.parse(rowData.classStart);
         if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
         if (rowData.employHistory.start){
-            if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[0];
+            if (startDate <= classStart && classStart <= endDate && rowData.wages.length > 0) return rowData.wages[0];
         }
         return null;
     }
@@ -121,7 +137,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         var classStart = Date.parse(rowData.classStart);
         if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
         if (rowData.employHistory.start && !rowData.employHistory.end){
-            if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[rowData.wages.length -1];
+            if (startDate <= classStart && classStart <= endDate && rowData.wages.length > 0) return rowData.wages[rowData.wages.length -1];
         }
         return null;
     }
