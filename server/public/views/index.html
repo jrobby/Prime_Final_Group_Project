@@ -109,26 +109,62 @@
 
 <div class="controlPanel">
     <h5>Control Panel</h5>
-    <button class="graphButton"><a href="/"> Pie Chart</a></button>
-    <button class="graphButton"><a href="/lineGraph">Line Graph</a></button>
 
-    <br><br><br>
-    <h5>Demographic Data</h5>
-    <select class="demographicDropdown" ng-model="demographics">
-        <option ng-repeat="demographic in demographicList" value="{{demographic}}">{{demographic}}</option>
-    </select>
+    <ul class="nav nav-tabs nav-justified">
+        <li><a href="javascript:void(0);" ng-class="{selected: chartTab=='pie'}" ng-click="chartTab = 'pie'">Pie</a></li>
+        <li><a href="javascript:void(0); " ng-class="{selected: chartTab=='line'}" ng-click="chartTab = 'line'">Line</a></li>
+    </ul>
 
-    <br><br><br>
-    <h5>Program Progress</h5>
-    <select class="progressDropdown" ng-model="progress">
-        <option ng-repeat="progress in progressList" value="{{progress}}">{{progress}}</option>
-    </select>
+    <div class="pieControls" ng-show="chartTab == 'pie'">
+        <br><br><br>
+        <h5>Demographic Data</h5>
+        <select class="demographicDropdown" ng-model="demographics">
+            <option ng-repeat="demographic in demographicList" value="{{demographic}}">{{demographic}}</option>
+        </select>
 
-    <br><br><br><br>
+        <br><br><br>
+        <h5>Program Progress</h5>
+        <select class="progressDropdown" ng-model="progress">
+            <option ng-repeat="progress in progressList" value="{{progress}}">{{progress}}</option>
+        </select>
 
-    <button ng-click="generateCharts(demographics, progress)" class="genButton">Generate Charts</button>
+        <br><br><br><br>
+
+        <button ng-click="generateCharts()" class="genButton">Generate Charts</button>
+    </div>
+
+    <div class="lineControls" ng-show="chartTab == 'line'">
+        <br><br><br>
+
+        <h5>Demographic Data</h5>
+        <select class="demographicDropdownLine" ng-model="demographics">
+            <option ng-repeat="demographic in demographicList" value="{{demographic}}">{{demographic}}</option>
+        </select>
+
+        <br><br><br><br><br><br><br><br><br>
+
+        <button ng-click="generateCharts()" class="genButton">Generate Charts</button>
+    </div>
 
 
+    <!--<button class="graphButton"><a href="/"> Pie Chart</a></button>-->
+    <!--<button class="graphButton"><a href="/lineGraph">Line Graph</a></button>-->
+
+    <!--<br><br><br>-->
+    <!--<h5>Demographic Data</h5>-->
+    <!--<select class="demographicDropdown" ng-model="demographics">-->
+        <!--<option ng-repeat="demographic in demographicList" value="{{demographic}}">{{demographic}}</option>-->
+    <!--</select>-->
+
+    <!--<br><br><br>-->
+    <!--<h5>Program Progress</h5>-->
+    <!--<select class="progressDropdown" ng-model="progress">-->
+        <!--<option ng-repeat="progress in progressList" value="{{progress}}">{{progress}}</option>-->
+    <!--</select>-->
+
+    <!--<br><br><br><br>-->
+
+    <!--<button ng-click="generateCharts(demographics, progress)" class="genButton">Generate Charts</button>-->
 </div>
 
 <div class="footer">
