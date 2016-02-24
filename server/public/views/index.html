@@ -75,22 +75,23 @@
 
     <div class="salary" ng-show="tab == 'b'">
         <h5>Average Salary Calculator</h5>
-        <p>Certified A+: <input type="checkbox" ng-model="certAplus"></p>
-        <p>Certified Network+: <input type="checkbox" ng-model="certNetworkplus"></p>
-        <p>Certified Server+: <input type="checkbox" ng-model="certServerplus"></p>
-        <p>Certified Security+: <input type="checkbox" ng-model="certSecurityplus"></p>
-        <p>Other Certification: <input type="checkbox" ng-model="otherCert"></p><br>
-        <p>Calculated Average Salary: {{calculatedSalary}}</p><br>
-        <button class="salaryButton" ng-click="calcAvgSalary()">Calculate</button>
+          <p class="avgSalaryP">Certified A+: <input type="checkbox" ng-model="certAplus"></p>
+          <p class="avgSalaryP">Certified Network+: <input type="checkbox" ng-model="certNetworkplus"></p>
+          <p class="avgSalaryP">Certified Server+: <input type="checkbox" ng-model="certServerplus"></p>
+          <p class="avgSalaryP">Certified Security+: <input type="checkbox" ng-model="certSecurityplus"></p>
+          <p class="avgSalaryP">Other Certification: <input type="checkbox" ng-model="otherCert"></p><br>
+          <p class="avgSalaryP">Calculated Average Salary: {{calculatedSalary}}</p><br>
+          <button class="avgSalButton" ng-click="calcAvgSalary()">Calculate</button>
     </div>
 
     <div class="employers" ng-show="tab == 'c'">
         <h5>Top 5 Employers</h5>
-        <p>Employer 1: {{topFive[0].key}} ({{topFive[0].value}})</p>
-        <p>Employer 2: {{topFive[1].key}} ({{topFive[1].value}})</p>
-        <p>Employer 3: {{topFive[2].key}} ({{topFive[2].value}})</p>
-        <p>Employer 4: {{topFive[3].key}} ({{topFive[3].value}})</p>
-        <p>Employer 5: {{topFive[4].key}} ({{topFive[4].value}})</p>
+        <p class="employerP">1: {{topFive[0].key}} ({{topFive[0].value}} students hired)</p>
+        <p class="employerP">2: {{topFive[1].key}} ({{topFive[1].value}} students hired)</p>
+        <p class="employerP">3: {{topFive[2].key}} ({{topFive[2].value}} students hired)</p>
+        <p class="employerP">4: {{topFive[3].key}} ({{topFive[3].value}} students hired)</p>
+        <p class="employerP">5: {{topFive[4].key}} ({{topFive[4].value}} students hired)</p>
+        <br>
     </div>
 
 </div>
@@ -101,7 +102,7 @@
     <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
 
     <div ng-show="averageShow" class="popUpInfo">
-        Congratulations: You've moused over an icon!
+        <h5>Salary by Demographic</h5>
     </div>
 
 </div>
