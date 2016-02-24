@@ -17,7 +17,9 @@
 <form class="dateForm">
     <p>Start Date: <input type="date" ng-model="startDate" ng-value="{{startDate | date: 'yyyy-MM-dd'}}"> End Date: <input type="date" ng-model="endDate" ng-value="{{endDate | date: 'yyyy-MM-dd'}}"><button class="dateSelect" ng-click="submitDate()">Select</button></p>
 </form>
+
 <div class="totalsTable">
+    <img src="../assets/img/IT_READY_300dpi.jpg" alt="IT_Ready_Logo" class="ITlogo">
     <div class="tableMain">
         <div class="tableColumn">
             <div class="tableHeading">Totals</div>
@@ -57,9 +59,9 @@
     <h5 class="avgWageHeading">Average Current Wage: ${{avgCurrentWage}}/hr</h5>
 
     <ul class="nav nav-tabs nav-justified">
-        <li><a href="javascript:void(0);" ng-class="{selected: tab=='a'}" ng-click="tab = tab=='a'? null: 'a'">Retention Rates</a></li>
-        <li><a href="javascript:void(0); " ng-class="{selected: tab=='b'}" ng-click="tab = tab=='b'? null: 'b' ">Salary Calculator</a></li>
-        <li><a href="javascript:void(0);" ng-class="{selected: tab=='c'}" ng-click="tab = tab=='c'? null: 'c' ">Top 5 Employers</a></li>
+        <li><a href="javascript:void(0);" ng-class="{selected: tab=='a'}" ng-click="tab = 'a'">Retention Rates</a></li>
+        <li><a href="javascript:void(0); " ng-class="{selected: tab=='b'}" ng-click="tab = 'b' ">Salary Calculator</a></li>
+        <li><a href="javascript:void(0);" ng-class="{selected: tab=='c'}" ng-click="tab = 'c' ">Top 5 Employers</a></li>
     </ul>
 
 
@@ -82,11 +84,11 @@
 
     <div class="employers" ng-show="tab == 'c'">
         <h5>Top 5 Employers</h5>
-        <p>Employer 1: {{getTopFive[0].key}}</p>
-        <p>Employer 2: {{getTopFive[1].key}}</p>
-        <p>Employer 3: {{getTopFive[2].key}}</p>
-        <p>Employer 4: {{getTopFive[3].key}}</p>
-        <p>Employer 5: {{getTopFive[4].key}}</p>
+        <p>Employer 1: Scroll Test</p>
+        <p>Employer 2: Scroll Test</p>
+        <p>Employer 3: Scroll Test</p>
+        <p>Employer 4: Scroll Test</p>
+        <p>Employer 5: Scroll Test</p>
     </div>
 
 </div>
@@ -96,7 +98,7 @@
 
     <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
 
-    <div ng-show="averageShow">
+    <div ng-show="averageShow" class="popUpInfo">
         Congratulations: You've moused over an icon!
     </div>
 

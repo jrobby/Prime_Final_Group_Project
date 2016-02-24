@@ -58,94 +58,73 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
                 $scope.completed = incrementRowVals($scope.smartSheetData[i].gradDate, $scope.completed);
                 $scope.certified = incrementRowVals($scope.smartSheetData[i].certDate, $scope.certified);
-                $scope.placed = incrementRowVals($scope.smartSheetData[i].placedFullTime, $scope.placed);
+                $scope.placed = incrementRowVals($scope.smartSheetData[i].employHistory.start, $scope.placed);
                 $scope.certNetwork = incrementRowVals($scope.smartSheetData[i].networkPlus, $scope.certNetwork);
                 $scope.certServer = incrementRowVals($scope.smartSheetData[i].serverPlus, $scope.certServer);
                 $scope.certSecurity = incrementRowVals($scope.smartSheetData[i].securityPlus, $scope.certSecurity);
             }
         }
-        $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, Date.parse($scope.startDate), Date.parse($scope.endDate));
-        $scope.avgCurrentWage =  computeAverageCurrentWage($scope.smartSheetData, Date.parse($scope.startDate), Date.parse($scope.endDate));
-        $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, Date.parse($scope.startDate), Date.parse($scope.endDate));
+        var adjStartDate = new Date($scope.startDate);
+        adjStartDate.setDate(adjStartDate.getDate() - 1);
+        $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+        $scope.avgCurrentWage =  computeAverageCurrentWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
     };
 
 
     //[[AVERAGE WAGE AT PLACEMENT]]///////
     function computeAveragePlacedWage(allRows, startDate, endDate){
-      var sumOfWages = 0;
-      var numPlaced = 0; //numPlaced = $scope.placed (after submitDate is called)
-      var tempWage = 0;
+        var sumOfWages = 0;
+        var numPlaced = 0;
+        var tempWage = 0;
 
-      for (var i = 0; i < allRows.length; i++){
-        tempWage = getWageAtPlacement(allRows[i], startDate, endDate);
-        if (tempWage){
-          sumOfWages += tempWage;
-          numPlaced++;
+        for (var i = 0; i < allRows.length; i++){
+            tempWage = getWageAtPlacement(allRows[i], startDate, endDate);
+            if (tempWage){
+                sumOfWages += tempWage;
+                numPlaced++;
+            }
         }
-      }
-      return (sumOfWages / numPlaced).toFixed(2);
+        return (sumOfWages / numPlaced).toFixed(2);
     }
 
 
     function getWageAtPlacement(rowData, startDate, endDate){
-      var classStart = Date.parse(rowData.classStart);
-      if (isNaN(classStart)) return null;
-      if (rowData.employHistory.start){
-        if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[0];
-      }
-      return null;
+        var classStart = Date.parse(rowData.classStart);
+        if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
+        if (rowData.employHistory.start){
+            if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[0];
+        }
+        return null;
     }
 
 
 
     //[[AVERAGE CURRENT WAGE ]]///CURRENT //CURRENT //CURRENT //CURRENT //CURRENT //
     function computeAverageCurrentWage(allRows, startDate, endDate){
-      var sumOfWages = 0;
-      var numPlaced = 0; //numCurrentlyEmployed = ??
-      var tempWage = 0;
+        var sumOfWages = 0;
+        var numEmployed = 0;
+        var tempWage = 0;
 
-      for (var i = 0; i < allRows.length; i++){
-        tempWage = getCurrentWage(allRows[i], startDate, endDate);
-        if (tempWage){
-          sumOfWages += tempWage;
-          numPlaced++;
+        for (var i = 0; i < allRows.length; i++){
+            tempWage = getCurrentWage(allRows[i], startDate, endDate);
+            if (tempWage){
+                sumOfWages += tempWage;
+                numEmployed++;
+            }
         }
-      }
-      return (sumOfWages / numPlaced).toFixed(2);
+        return (sumOfWages / numEmployed).toFixed(2);
     }
 
 
     function getCurrentWage(rowData, startDate, endDate){
-      var classStart = Date.parse(rowData.classStart);
-      if (isNaN(classStart)) return null;
-      if (rowData.employHistory.start && rowData.employHistory.end==null){
-        if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[rowData.wages.length -1];
-      }
-      return null;
+        var classStart = Date.parse(rowData.classStart);
+        if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
+        if (rowData.employHistory.start && !rowData.employHistory.end){
+            if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[rowData.wages.length -1];
+        }
+        return null;
     }
 
-
-    //Top Five Employers
-    function getTopFiveEmployers (allRows, startDate, endDate){
-        var employers = {};
-        $scope.topFive = [];
-
-        for (var i = 0; i < allRows.length;i++){
-            for (var j = 0; j<allRows[i].distinctEmployers.length; j++){
-                var tempString = allRows[i].distinctEmployers[j];
-                if (!employers.hasOwnProperty(tempString)){
-                    employers[tempString] = 0;
-                }
-                employers[tempString]++;
-            }
-        }
-
-        var sortedEmployers = sortObject(employers);
-        for (var n = 0; n < 5; n++){
-            $scope.topFive.push(sortedEmployers.pop());
-        }
-        return $scope.topFive;
-    }
 
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
@@ -156,24 +135,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         }
         return tempObj;
     }
-
-    function sortObject(obj) {
-        var arr = [];
-        var prop;
-        for (prop in obj) {
-            if (obj.hasOwnProperty(prop)) {
-                arr.push({
-                    'key': prop,
-                    'value': obj[prop]
-                });
-            }
-        }
-        arr.sort(function(a, b) {
-            return a.value - b.value;
-        });
-        return arr; // returns array
-    }
-
 
     $scope.demographicList = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
     $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
@@ -237,6 +198,7 @@ app.controller('pieChartController',['$scope', '$location', function($scope, $lo
             });
     })(window.d3);
 }]);
+
 
 
 app.controller('lineGraphController',['$scope', '$location', function($scope, $location){

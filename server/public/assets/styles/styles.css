@@ -1,9 +1,13 @@
 .logo{
-    height: 84px;
     width: 310px;
     display: block;
     margin-left: 5%;
     float: left;
+}
+.ITlogo{
+    display: block;
+    margin: 6px auto 4px auto;
+    width: 128px;
 }
 .dateForm{
     text-align: center;
@@ -16,8 +20,8 @@ h1, h3, h4, h5 {
     text-align: center;
 }
 .avgWageHeading{
-    margin-top: 24px;
-    margin-bottom: 24px;
+    margin-top: 12px;
+    margin-bottom: 12px;
 }
 /*//////////////////*/
 /*TOTALS TABLE SECTION*/
@@ -41,7 +45,7 @@ h1, h3, h4, h5 {
     width: 33%;
 }
 .tableHeading{
-    height: 35px;
+    height: 24px;
     font-weight: bold;
     text-align: center;
 }
@@ -81,6 +85,15 @@ svg{
     display: block;
     margin-left: auto;
     margin-top: -68px;
+}
+
+.popUpInfo{
+    display: block;
+    margin: 0 0 100px 0;
+    border: 1px solid black;
+    border-radius: 4px;
+    width: 100px;
+    height: 100px;
 }
 
 .controlPanel{
