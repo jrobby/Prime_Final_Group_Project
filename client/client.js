@@ -66,6 +66,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         }
         $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, Date.parse($scope.startDate), Date.parse($scope.endDate));
         $scope.avgCurrentWage =  computeAverageCurrentWage($scope.smartSheetData, Date.parse($scope.startDate), Date.parse($scope.endDate));
+        $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, Date.parse($scope.startDate), Date.parse($scope.endDate));
     };
 
 
@@ -124,6 +125,28 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     }
 
 
+    //Top Five Employers
+    function getTopFiveEmployers (allRows, startDate, endDate){
+        var employers = {};
+        $scope.topFive = [];
+
+        for (var i = 0; i < allRows.length;i++){
+            for (var j = 0; j<allRows[i].distinctEmployers.length; j++){
+                var tempString = allRows[i].distinctEmployers[j];
+                if (!employers.hasOwnProperty(tempString)){
+                    employers[tempString] = 0;
+                }
+                employers[tempString]++;
+            }
+        }
+
+        var sortedEmployers = sortObject(employers);
+        for (var n = 0; n < 5; n++){
+            $scope.topFive.push(sortedEmployers.pop());
+        }
+        return $scope.topFive;
+    }
+
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
         var tempObj = numPercentObject;
@@ -133,6 +156,24 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         }
         return tempObj;
     }
+
+    function sortObject(obj) {
+        var arr = [];
+        var prop;
+        for (prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                arr.push({
+                    'key': prop,
+                    'value': obj[prop]
+                });
+            }
+        }
+        arr.sort(function(a, b) {
+            return a.value - b.value;
+        });
+        return arr; // returns array
+    }
+
 
     $scope.demographicList = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
     $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
@@ -196,7 +237,6 @@ app.controller('pieChartController',['$scope', '$location', function($scope, $lo
             });
     })(window.d3);
 }]);
-
 
 
 app.controller('lineGraphController',['$scope', '$location', function($scope, $location){
