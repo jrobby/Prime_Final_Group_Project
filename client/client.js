@@ -68,7 +68,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         adjStartDate.setDate(adjStartDate.getDate() - 1);
         $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.avgCurrentWage =  computeAverageCurrentWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-        $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate))
+        $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
     };
 
 
@@ -121,7 +121,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         var classStart = Date.parse(rowData.classStart);
         if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
         if (rowData.employHistory.start && !rowData.employHistory.end){
-            if (startDate <= classStart && classStart < endDate && rowData.wages.length > 0) return rowData.wages[rowData.wages.length -1];
+            if (startDate <= classStart && classStart <= endDate && rowData.wages.length > 0) return rowData.wages[rowData.wages.length -1];
         }
         return null;
     }
@@ -155,23 +155,33 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
 //Top Five Employers
     function getTopFiveEmployers (allRows, startDate, endDate){
+        if (isNaN(startDate) || isNaN(endDate)) return null;
         var employers = {};
         $scope.topFive = [];
 
         for (var i = 0; i < allRows.length;i++){
-            for (var j = 0; j<allRows[i].distinctEmployers.length; j++){
-                var tempString = allRows[i].distinctEmployers[j];
-                if (!employers.hasOwnProperty(tempString)){
-                    employers[tempString] = 0;
+            var classStart = Date.parse(allRows[i].classStart);
+            if (isNaN(classStart)) continue;
+            if (startDate <= classStart && classStart <= endDate){
+                for (var j = 0; j< allRows[i].distinctEmployers.length; j++){
+                    var tempString = allRows[i].distinctEmployers[j];
+                    if (!employers.hasOwnProperty(tempString)){
+                        employers[tempString] = 0;
+                    }
+                    employers[tempString]++;
                 }
-                employers[tempString]++;
             }
+
         }
 
-        var sortedEmployers = sortObject(employers);
+        $scope.sortedEmployers = sortObject(employers);
+        console.log('sorted employers', $scope.sortedEmployers);
+
         for (var n = 0; n < 5; n++){
-            $scope.topFive.push(sortedEmployers.pop());
+            $scope.topFive.push($scope.sortedEmployers.pop());
         }
+        console.log('top five', $scope.topFive);
+
         return $scope.topFive;
     }
 
