@@ -68,23 +68,68 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.avgCurrentWage =  computeAverageCurrentWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+        $scope.retentionData = allEmployedAtMilestones($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
     };
 
 
 
-    function employedAtMilestones(rowData, startDate, endDate){
-      var milestoneHistory = {};
+    function employedAtMilestones(rowData, startDate, endDate, milestoneDays){
+      var milestoneHistory = { };
       //how to check against start/end date?  Need to say "no data available" or "-" if not enough time has elapsed to calculate?
       var classStart = Date.parse(rowData.classStart);
       if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
-      var timeEmployed = 0;
-      //timeEmployed =
 
+      var daysEmployed = 0; /*convention: 0 means never employed, -1 means employed through present,
+                            positive integer means employed for that number of days*/
+      var daysSincePlaced = 0; //we can't judge employment for a milestone that hasn't occurred yet (in time).
+      var startWork = Date.parse(rowData.employHistory.start);
+      var endWork = Date.parse(rowData.employHistory.end);
+
+      if (startWork && !isNaN(startWork)){
+        daysSincePlaced = ((new Date() - startWork) / 1000 / 3600 / 24).toFixed(0);
+        if (endWork && !isNaN(endWork)){
+          daysEmployed = (endWork - startWork) / 1000 / 3600 / 24;
+        }
+        else {
+          daysEmployed = -1; //using this value to represent continuous employment through present
+        }
+      }
+
+      var keys = Object.keys(milestoneDays);
+      for (var i = 0; i < keys.length; i++){
+        if (daysSincePlaced < milestoneDays[keys[i]]) break;
+        if (daysEmployed < 0 || daysEmployed >= milestoneDays[keys[i]]){
+          milestoneHistory[keys[i]] = true;
+        }
+        else milestoneHistory[keys[i]] = false;
+      }
+      return milestoneHistory;
     }
 
 
-    function allEmployedAtMilestones(){
-      //will need to construct { number: null, percent: null } objects in here...
+    function allEmployedAtMilestones(allRows, startDate, endDate){
+      var milestoneDays = { '3mo': 90,  '6mo': 180, '1yr': 365, '2yr': 730, '3yr': 1095, '4yr': 1460, '5yr': 1825 };
+      var allKeys = Object.keys(milestoneDays);
+      var milestoneRetentionRates = {};
+      for (var i = 0; i < allKeys.length; i++){
+        milestoneRetentionRates[allKeys[i]] = { number: null, percent: null };
+      }
+      var studentCount = 0;
+      var milestoneData = {};
+      var keys = {};
+      for (i = 0; i < allRows.length; i++){
+        milestoneData = employedAtMilestones(allRows[i], startDate, endDate, milestoneDays);
+        if (!milestoneData) continue;
+        keys = Object.keys(milestoneData);
+        if (keys.length > 0){
+          studentCount++;
+          for (var j = 0; j < keys.length; j++){
+            milestoneRetentionRates[keys[j]].number++;
+          }
+        }//need to set percentages...
+      }
+      console.log(milestoneRetentionRates);
+      return milestoneRetentionRates;
     }
 
 
