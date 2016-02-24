@@ -126,6 +126,33 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return null;
     }
 
+//Salary Calculator Area      Note: in index.html, ng-click="calcAvgSalary(), and Calculated Average Salary: {{calculatedSalary}}.
+    $scope.certAplus = false;
+    $scope.certNetworkplus = false;
+    $scope.certSecurityplus = false;
+    $scope.certServerplus = false;
+    $scope.otherCert = false;
+
+    $scope.calcAvgSalary = function(){
+        console.log("Button clicked, woohoo!");
+
+        $scope.tempCertArray = [];
+
+        if ($scope.certAplus){
+            $scope.tempCertArray.push("certAplus");
+        } if ($scope.certNetworkplus){
+            $scope.tempCertArray.push("certNetworkplus");
+        } if ($scope.certSecurityplus){
+            $scope.tempCertArray.push("certSecurityplus");
+        } if ($scope.certServerplus){
+            $scope.tempCertArray.push("certServerplus");
+        } if ($scope.otherCert){
+            $scope.tempCertArray.push("otherCert");
+        }
+
+        console.log($scope.tempCertArray);
+    };
+
 //Top Five Employers
     function getTopFiveEmployers (allRows, startDate, endDate){
         var employers = {};
