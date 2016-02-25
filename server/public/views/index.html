@@ -67,7 +67,7 @@
 
     <div class="retention" ng-show="tab == 'a'">
         <h5>Retention Rate Over Time</h5>
-        <p><span ng-repeat="(key, value) in retentionData" class="retentionSpan">{{key}}: {{value.percent}}%</span></p>
+        <p><span ng-repeat="(key, value) in retentionData" class="retentionSpan"><span class="underlineSpan">{{key}}</span>: <span class="blueSpan">{{value.percent}}%</span></span></p>
     </div>
 
     <div class="salary" ng-show="tab == 'b'">
