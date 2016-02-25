@@ -29,12 +29,12 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.certSecurity = { number: 0, percent: 0 };
         //set the default for the salary calculator checkboxes
        //resets them to unchecked if the date range is changed
-       $scope.certDate = false;
        $scope.networkPlus = false;
        $scope.securityPlus = false;
        $scope.serverPlus = false;
        $scope.otherCert = false;
-       $scope.calculatedSalary = 0;
+       $scope.calculatedSalary = {};
+
 
         for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
@@ -94,7 +94,13 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
             if (daysEmployed < 0 || daysEmployed >= milestoneDays[keys[i]]){
                 milestoneHistory[keys[i]] = true;
             }
-            else milestoneHistory[keys[i]] = false;
+            else {
+              for (var j = i; j < keys.length; j++){
+                // if (daysSincePlaced < milestoneDays[keys[j]]) break;
+                milestoneHistory[keys[j]] = false;
+              }
+              break;
+            }
         }
         return milestoneHistory;
     }
@@ -104,25 +110,25 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         var milestoneDays = { '3mo': 90,  '6mo': 180, '1yr': 365, '2yr': 730, '3yr': 1095, '4yr': 1460, '5yr': 1825 };
         var allKeys = Object.keys(milestoneDays);
         var milestoneRetentionRates = {};
+        var studentCount = {};
         for (var i = 0; i < allKeys.length; i++){
             milestoneRetentionRates[allKeys[i]] = { number: null, percent: null };
+            studentCount[allKeys[i]] = 0;
         }
-        var studentCount = 0;
         var milestoneData = {};
         var keys = {};
         for (i = 0; i < allRows.length; i++){
             milestoneData = employedAtMilestones(allRows[i], startDate, endDate, milestoneDays);
             if (!milestoneData) continue;
             keys = Object.keys(milestoneData);
-            if (keys.length > 0){
-                studentCount++;
-                for (var j = 0; j < keys.length; j++){
-                    milestoneRetentionRates[keys[j]].number++;
-                }
-            }//need to set percentages...
+            for (var j = 0; j < keys.length; j++){
+                if (milestoneData[keys[j]]) milestoneRetentionRates[keys[j]].number++;
+                studentCount[keys[j]]++;
+            }
         }
         for (i = 0; i < allKeys.length; i++){
-            milestoneRetentionRates[allKeys[i]].percent = (milestoneRetentionRates[allKeys[i]].number / studentCount * 100).toFixed(1);
+            if (studentCount[allKeys[i]] <= 0) milestoneRetentionRates[allKeys[i]].percent = "N/A";
+            else milestoneRetentionRates[allKeys[i]].percent = (milestoneRetentionRates[allKeys[i]].number / studentCount[allKeys[i]] * 100).toFixed(1);
         }
         return milestoneRetentionRates;
     }
@@ -182,52 +188,55 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return null;
     }
 
-    //[][][][] Average Salary Calculator [][][][][][][]
-    $scope.calcAvgSalary = function(){
-        //array to hold checkboxes selected
-        $scope.tempCertArray = [];
-        //push checkbox names to array. checkbox names set to match column names
-        if ($scope.certDate){$scope.tempCertArray.push("certDate");}
-        if ($scope.networkPlus){$scope.tempCertArray.push("networkPlus");}
-        if ($scope.serverPlus){$scope.tempCertArray.push("serverPlus");}
-        if ($scope.securityPlus){$scope.tempCertArray.push("securityPlus");}
-        if ($scope.otherCert){$scope.tempCertArray.push("otherCert");}
+//[][][][] Average Salary Calculator [][][][][][][]
+$scope.calcAvgSalary = function(){
+    //array to hold checkboxes selected
+    $scope.tempCertArray = [];
+    //push checkbox names to array. checkbox names set to match column names
+    if ($scope.networkPlus){$scope.tempCertArray.push("networkPlus");}
+    if ($scope.serverPlus){$scope.tempCertArray.push("serverPlus");}
+    if ($scope.securityPlus){$scope.tempCertArray.push("securityPlus");}
+    if ($scope.otherCert){$scope.tempCertArray.push("otherCert");}
 
-        // $scope.getAverageSalary = getAvgSalary($scope.tempCertArry, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-        var adjStartDate = new Date($scope.startDate);
-        adjStartDate.setDate(adjStartDate.getDate() - 1);
-        $scope.calculatedSalary = getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-    };
+    // $scope.getAverageSalary = getAvgSalary($scope.tempCertArry, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+    var adjStartDate = new Date($scope.startDate);
+    adjStartDate.setDate(adjStartDate.getDate() - 1);
+    $scope.calculatedSalary = getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+};
 
-    function getAvgSalary(tempCert, allRows, startDate, endDate){
-        var sumOfWages = 0;
-        var tempWage = 0;
-        var count = 0;
+function getAvgSalary(tempCert, allRows, startDate, endDate){
+    var sumOfWages = 0;
+    var tempWage = 0;
+    var count = 0;
+    var tempCalculatedSalary = {};
 
-        if (isNaN(startDate) || isNaN(endDate)) return null;
+    if (isNaN(startDate) || isNaN(endDate)) return null;
 
-        for (var i = 0; i < allRows.length;i++){
-            var classStart = Date.parse(allRows[i].classStart);
-            if (isNaN(classStart)) continue;
-            //check to stay within time range selected
-            if (startDate <= classStart && classStart <= endDate){
-                for(var j=0; j< tempCert.length; j++){
-                  var cert = tempCert[j];
-                  //check that each checkbox selected is not null on smartsheet
-                  if(!allRows[i][cert]) break;
-                  //if we've reached the last checkbox in array
-                  if(j== tempCert.length-1){
-                    tempWage = getCurrentWage(allRows[i], startDate, endDate);
-                    if (tempWage){
-                        sumOfWages += tempWage;
-                        count++;
-                    }
-                  }
+    for (var i = 0; i < allRows.length;i++){
+        var classStart = Date.parse(allRows[i].classStart);
+        if (isNaN(classStart)) continue;
+        //check to stay within time range selected
+        if (startDate <= classStart && classStart <= endDate){
+            for(var j=0; j< tempCert.length; j++){
+              var cert = tempCert[j];
+              //check that each checkbox selected is not null on smartsheet
+              if(!allRows[i][cert]) break;
+              //if we've reached the last checkbox in array
+              if(j== tempCert.length-1){
+                tempWage = getCurrentWage(allRows[i], startDate, endDate);
+                if (tempWage){
+                    sumOfWages += tempWage;
+                    count++;
                 }
+              }
             }
         }
-        return (sumOfWages/count).toFixed(2);
     }
+    tempCalculatedSalary.avgWage = (sumOfWages/count).toFixed(2);
+    tempCalculatedSalary.count = count;
+
+    return (tempCalculatedSalary);
+}
 
 //Top Five Employers
     function getTopFiveEmployers (allRows, startDate, endDate){
@@ -296,6 +305,35 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
                 return color(d.data.label);
             });
     })(window.d3);
+
+    //Generate Pie Chart function
+    $scope.generatePieChart = function(demographics, progress){
+        console.log('demographics, progress', demographics, progress);
+        if (demographics == 'Race'){
+            //    Get Race Data
+            console.log('Get Race Data')
+        } else if (demographics =='Gender') {
+            //    Get Gender Data
+            console.log('Get gender data')
+        } else if (demographics =='Veteran Status'){
+            //    Get Veteran Status Data
+            console.log('Get veteran status data')
+        }
+
+        if (progress == 'Served'){
+            //    Get all served
+            console.log('get all data')
+        } else if(progress=='Completed') {
+            //    Get completed
+            console.log('get completed')
+        }else if(progress='Certified A+') {
+            //    get Certified A+
+            console.log('get certified A+ data')
+        }else if(progress='Placed'){
+        //    get Placed
+            console.log('get Placed data')
+        }
+            };
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
         var tempObj = numPercentObject;
