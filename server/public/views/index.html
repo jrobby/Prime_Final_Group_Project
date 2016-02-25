@@ -17,7 +17,7 @@
 <form class="dateForm">
     <p>Start Date: <input type="date" ng-model="startDate" ng-value="{{startDate | date: 'yyyy-MM-dd'}}"> End Date: <input type="date" ng-model="endDate" ng-value="{{endDate | date: 'yyyy-MM-dd'}}"><button class="dateSelect" ng-click="submitDate()">Select</button></p>
 </form>
-
+<!--MAIN LAYOUT ELEMENTS: TOTALS TABLE, DATA AREA, AND CONTROL PANEL-->
 <div class="totalsTable">
     <img src="../assets/img/IT_READY_300dpi.jpg" alt="IT_Ready_Logo" class="ITlogo">
     <div class="tableMain">
@@ -64,7 +64,6 @@
         <li><a href="javascript:void(0);" ng-class="{selected: tab=='c'}" ng-click="tab = 'c' ">Top 5 Employers</a></li>
     </ul>
 
-
     <div class="retention" ng-show="tab == 'a'">
         <h5>Retention Rate Over Time</h5>
         <p><span ng-repeat="(key, value) in retentionData" class="retentionSpan"><span class="underlineSpan">{{key}}</span>: <span class="blueSpan">{{value.percent}}%</span></span></p>
@@ -90,20 +89,15 @@
         <p class="employerP">5: {{topFive[4].key}} ({{topFive[4].value}} students hired)</p>
         <br>
     </div>
-
 </div>
-
-<div class="dataArea" >
-    <!--<div class="ng-view"></div>-->
+<!--DATA AREA: GRAPHS AND CHARTS DISPLAY HERE-->
+<div class="dataArea">
     <div class="pieControls" ng-show="chartTab == 'pie'">
         <h1>Pie Chart </h1>
         <div id="chart"></div>
     </div>
 
-
     <div id="line" class="lineControls" ng-show="chartTab == 'line'">
-
-
         <svg width="500" height="471">
             <text id="p0_title" class="p0_title" x="252.5" y="38.59375" text-anchor="middle" fill="#333333" style="font-size: 20px; font-family: arial;">Simple Line Graph
             </text>
@@ -115,17 +109,8 @@
                 <path d="M0 200 L50 50 L100 150 L150 100 L200 150"
                       fill="none" stroke="black" stroke-width="3"></path>
             </g>
-
         </svg>
     </div>
-
-<!--<ul class="nav nav-tabs nav-justified">-->
-    <!--<li><a href="javascript:void(0);" ng-class="{selected: tab=='a'}" ng-click="tab = 'a'">Retention Rates</a></li>-->
-    <!--<li><a href="javascript:void(0);" ng-class="{selected: tab=='b'}" ng-click="tab = 'b' ">Salary Calculator</a></li>-->
-    <!--<li><a href="javascript:void(0);" ng-class="{selected: tab=='c'}" ng-click="tab = 'c' ">Top 5 Employers</a></li>-->
-<!--</ul>-->
-
-
 
     <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
 
@@ -134,7 +119,7 @@
     </div>
 
 </div>
-
+<!--CONTROL PANEL: CHART CONTROLS FOR PIE CHART AND LINE GRAPH-->
 <div class="controlPanel">
     <h5>Control Panel</h5>
 
@@ -156,9 +141,7 @@
         <button ng-click="generateCharts()" class="genButton">Generate Charts</button>
     </div>
 
-    <div class="lineControls" ng-show="chartTab == 'line'">
-        <br><br><br>
-
+    <div class="lineControls" ng-show="chartTab == 'line'"><br><br><br>
         <h5>Demographic Data</h5>
         <select class="demographicDropdownLine" ng-model="demographics">
             <option ng-repeat="demographic in demographicList" value="{{demographic}}">{{demographic}}</option>
@@ -168,27 +151,6 @@
 
         <button ng-click="generateCharts()" class="genButton">Generate Charts</button>
     </div>
-
-
-    <!--<button class="graphButton"><a href="/"> Pie Chart</a></button>-->
-    <!--<button class="graphButton"><a href="/lineGraph">Line Graph</a></button>-->
-
-    <!--<br><br><br>-->
-    <!--<h5>Demographic Data</h5>-->
-    <!--<select class="demographicDropdown" ng-model="demographics">-->
-        <!--<option ng-repeat="demographic in demographicList" value="{{demographic}}">{{demographic}}</option>-->
-    <!--</select>-->
-
-    <!--<br><br><br>-->
-    <!--<h5>Program Progress</h5>-->
-    <!--<select class="progressDropdown" ng-model="progress">-->
-        <!--<option ng-repeat="progress in progressList" value="{{progress}}">{{progress}}</option>-->
-    <!--</select>-->
-
-    <!--<br><br><br><br>-->
-
-    <!--<button ng-click="generateCharts(demographics, progress)" class="genButton">Generate Charts</button>-->
-
 </div>
 
 <div class="footer">
