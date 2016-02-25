@@ -4,21 +4,6 @@
 
 var app = angular.module('myApp', ['ngRoute']);
 
-app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
-    $routeProvider
-        .when('/', {
-            templateUrl: 'views/pieChart.html',
-            controller: 'pieChartController'
-        })
-        .when('/lineGraph',{
-            templateUrl: 'views/lineGraph.html',
-            controller: 'lineGraphController'
-        });
-
-    $locationProvider.html5Mode(true);
-}]);
-
-
 app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', function($scope, $location, SmartSheetService){
 
     $scope.endDate = new Date();
