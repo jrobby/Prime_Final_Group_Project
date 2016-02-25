@@ -29,12 +29,12 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.certSecurity = { number: 0, percent: 0 };
         //set the default for the salary calculator checkboxes
        //resets them to unchecked if the date range is changed
-       $scope.certDate = false;
        $scope.networkPlus = false;
        $scope.securityPlus = false;
        $scope.serverPlus = false;
        $scope.otherCert = false;
-       $scope.calculatedSalary = 0;
+       $scope.calculatedSalary = {};
+
 
         for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
@@ -182,52 +182,55 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return null;
     }
 
-    //[][][][] Average Salary Calculator [][][][][][][]
-    $scope.calcAvgSalary = function(){
-        //array to hold checkboxes selected
-        $scope.tempCertArray = [];
-        //push checkbox names to array. checkbox names set to match column names
-        if ($scope.certDate){$scope.tempCertArray.push("certDate");}
-        if ($scope.networkPlus){$scope.tempCertArray.push("networkPlus");}
-        if ($scope.serverPlus){$scope.tempCertArray.push("serverPlus");}
-        if ($scope.securityPlus){$scope.tempCertArray.push("securityPlus");}
-        if ($scope.otherCert){$scope.tempCertArray.push("otherCert");}
+//[][][][] Average Salary Calculator [][][][][][][]
+$scope.calcAvgSalary = function(){
+    //array to hold checkboxes selected
+    $scope.tempCertArray = [];
+    //push checkbox names to array. checkbox names set to match column names
+    if ($scope.networkPlus){$scope.tempCertArray.push("networkPlus");}
+    if ($scope.serverPlus){$scope.tempCertArray.push("serverPlus");}
+    if ($scope.securityPlus){$scope.tempCertArray.push("securityPlus");}
+    if ($scope.otherCert){$scope.tempCertArray.push("otherCert");}
 
-        // $scope.getAverageSalary = getAvgSalary($scope.tempCertArry, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-        var adjStartDate = new Date($scope.startDate);
-        adjStartDate.setDate(adjStartDate.getDate() - 1);
-        $scope.calculatedSalary = getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-    };
+    // $scope.getAverageSalary = getAvgSalary($scope.tempCertArry, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+    var adjStartDate = new Date($scope.startDate);
+    adjStartDate.setDate(adjStartDate.getDate() - 1);
+    $scope.calculatedSalary = getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+};
 
-    function getAvgSalary(tempCert, allRows, startDate, endDate){
-        var sumOfWages = 0;
-        var tempWage = 0;
-        var count = 0;
+function getAvgSalary(tempCert, allRows, startDate, endDate){
+    var sumOfWages = 0;
+    var tempWage = 0;
+    var count = 0;
+    var tempCalculatedSalary = {};
 
-        if (isNaN(startDate) || isNaN(endDate)) return null;
+    if (isNaN(startDate) || isNaN(endDate)) return null;
 
-        for (var i = 0; i < allRows.length;i++){
-            var classStart = Date.parse(allRows[i].classStart);
-            if (isNaN(classStart)) continue;
-            //check to stay within time range selected
-            if (startDate <= classStart && classStart <= endDate){
-                for(var j=0; j< tempCert.length; j++){
-                  var cert = tempCert[j];
-                  //check that each checkbox selected is not null on smartsheet
-                  if(!allRows[i][cert]) break;
-                  //if we've reached the last checkbox in array
-                  if(j== tempCert.length-1){
-                    tempWage = getCurrentWage(allRows[i], startDate, endDate);
-                    if (tempWage){
-                        sumOfWages += tempWage;
-                        count++;
-                    }
-                  }
+    for (var i = 0; i < allRows.length;i++){
+        var classStart = Date.parse(allRows[i].classStart);
+        if (isNaN(classStart)) continue;
+        //check to stay within time range selected
+        if (startDate <= classStart && classStart <= endDate){
+            for(var j=0; j< tempCert.length; j++){
+              var cert = tempCert[j];
+              //check that each checkbox selected is not null on smartsheet
+              if(!allRows[i][cert]) break;
+              //if we've reached the last checkbox in array
+              if(j== tempCert.length-1){
+                tempWage = getCurrentWage(allRows[i], startDate, endDate);
+                if (tempWage){
+                    sumOfWages += tempWage;
+                    count++;
                 }
+              }
             }
         }
-        return (sumOfWages/count).toFixed(2);
     }
+    tempCalculatedSalary.avgWage = (sumOfWages/count).toFixed(2);
+    tempCalculatedSalary.count = count;
+
+    return (tempCalculatedSalary);
+}
 
 //Top Five Employers
     function getTopFiveEmployers (allRows, startDate, endDate){
