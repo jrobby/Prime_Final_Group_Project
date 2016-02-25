@@ -306,6 +306,35 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             });
     })(window.d3);
 
+    //Generate Pie Chart function
+    $scope.generatePieChart = function(demographics, progress){
+        console.log('demographics, progress', demographics, progress);
+        if (demographics == 'Race'){
+            //    Get Race Data
+            console.log('Get Race Data')
+        } else if (demographics =='Gender') {
+            //    Get Gender Data
+            console.log('Get gender data')
+        } else if (demographics =='Veteran Status'){
+            //    Get Veteran Status Data
+            console.log('Get veteran status data')
+        }
+
+        if (progress == 'Served'){
+            //    Get all served
+            console.log('get all data')
+        } else if(progress=='Completed') {
+            //    Get completed
+            console.log('get completed')
+        }else if(progress='Certified A+') {
+            //    get Certified A+
+            console.log('get certified A+ data')
+        }else if(progress='Placed'){
+        //    get Placed
+            console.log('get Placed data')
+        }
+            };
+
     function incrementRowVals(smartsheetDataVal, numPercentObject){
         var tempObj = numPercentObject;
         if (smartsheetDataVal){
