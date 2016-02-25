@@ -146,16 +146,11 @@
     <div class="pieControls" ng-show="chartTab == 'pie'">
         <br><br><br>
         <h5>Demographic Data</h5>
-        <select class="demographicDropdown" ng-model="demographics">
-            <option ng-repeat="demographic in demographicList" value="{{demographic}}">{{demographic}}</option>
-        </select>
+        <select class="demographicDropdown" ng-model="selectedDemographic" ng-options="demographic for demographic in demographicList"></select>
 
         <br><br><br>
         <h5>Program Progress</h5>
-        <select class="progressDropdown" ng-model="progress">
-            <option ng-repeat="progress in progressList" value="{{progress}}">{{progress}}</option>
-        </select>
-
+        <select class="demographicDropdown" ng-model="selectedProgress" ng-options="progress for progress in progressList"></select>
         <br><br><br><br>
 
         <button ng-click="generateCharts()" class="genButton">Generate Charts</button>
