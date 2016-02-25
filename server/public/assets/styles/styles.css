@@ -73,6 +73,13 @@ h1, h3, h4, h5 {
     width: 25%;
     margin-bottom: 12px;
 }
+.underlineSpan {
+  text-decoration: underline;
+}
+.blueSpan {
+  font-weight: bold;
+  color: #337ab7;
+}
 .avgSalaryP{
     margin-left: 33%;
 }
