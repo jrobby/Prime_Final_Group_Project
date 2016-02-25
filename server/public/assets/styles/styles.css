@@ -76,9 +76,15 @@ h1, h3, h4, h5 {
 .avgSalaryP{
     margin-left: 33%;
 }
+
+.avgSalaryP2{
+    margin-left: 25%;
+    font-weight: bold;
+}
+
 .avgSalButton{
     display: block;
-    margin: 0 auto 24px auto;
+    margin: -5px auto 15px auto;
 }
 .employerP{
     margin-left: 23%;

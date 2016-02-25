@@ -75,13 +75,13 @@
 
     <div class="salary" ng-show="tab == 'b'">
         <h5>Average Salary Calculator</h5>
-          <p class="avgSalaryP">Certified A+: <input type="checkbox" ng-model="certAplus"></p>
-          <p class="avgSalaryP">Certified Network+: <input type="checkbox" ng-model="certNetworkplus"></p>
-          <p class="avgSalaryP">Certified Server+: <input type="checkbox" ng-model="certServerplus"></p>
-          <p class="avgSalaryP">Certified Security+: <input type="checkbox" ng-model="certSecurityplus"></p>
+          <p class="avgSalaryP">Certified A+: <input type="checkbox" ng-model="certDate"></p>
+          <p class="avgSalaryP">Certified Network+: <input type="checkbox" ng-model="networkPlus"></p>
+          <p class="avgSalaryP">Certified Server+: <input type="checkbox" ng-model="serverPlus"></p>
+          <p class="avgSalaryP">Certified Security+: <input type="checkbox" ng-model="securityPlus"></p>
           <p class="avgSalaryP">Other Certification: <input type="checkbox" ng-model="otherCert"></p><br>
-          <p class="avgSalaryP">Calculated Average Salary: {{calculatedSalary}}</p><br>
           <button class="avgSalButton" ng-click="calcAvgSalary()">Calculate</button>
+          <p class="avgSalaryP2">Calculated Average Salary: {{calculatedSalary}}</p><br>
     </div>
 
     <div class="employers" ng-show="tab == 'c'">
