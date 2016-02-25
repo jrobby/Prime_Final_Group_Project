@@ -42,14 +42,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.certNetwork = { number: 0, percent: 0 };
         $scope.certServer = { number: 0, percent: 0 };
         $scope.certSecurity = { number: 0, percent: 0 };
-        //set the default for the salary calculator checkboxes
-        //resets them to unchecked if the date range is changed
-        $scope.certDate = false;
-        $scope.networkPlus = false;
-        $scope.securityPlus = false;
-        $scope.serverPlus = false;
-        $scope.otherCert = false;
-        $scope.calculatedSalary = 0;
 
         for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
@@ -82,64 +74,64 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
 
     function employedAtMilestones(rowData, startDate, endDate, milestoneDays){
-      var milestoneHistory = { };
-      //how to check against start/end date?  Need to say "no data available" or "-" if not enough time has elapsed to calculate?
-      var classStart = Date.parse(rowData.classStart);
-      if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
-      if (classStart > endDate || classStart < startDate) return null;
-      var daysEmployed = 0; /*convention: 0 means never employed, -1 means employed through present,
-                            positive integer means employed for that number of days*/
-      var daysSincePlaced = 0; //we can't judge employment for a milestone that hasn't occurred yet (in time).
-      var startWork = Date.parse(rowData.employHistory.start);
-      var endWork = Date.parse(rowData.employHistory.end);
+        var milestoneHistory = { };
+        //how to check against start/end date?  Need to say "no data available" or "-" if not enough time has elapsed to calculate?
+        var classStart = Date.parse(rowData.classStart);
+        if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
+        if (classStart > endDate || classStart < startDate) return null;
+        var daysEmployed = 0; /*convention: 0 means never employed, -1 means employed through present,
+         positive integer means employed for that number of days*/
+        var daysSincePlaced = 0; //we can't judge employment for a milestone that hasn't occurred yet (in time).
+        var startWork = Date.parse(rowData.employHistory.start);
+        var endWork = Date.parse(rowData.employHistory.end);
 
-      if (startWork && !isNaN(startWork)){
-        daysSincePlaced = ((new Date() - startWork) / 1000 / 3600 / 24).toFixed(0);
-        if (endWork && !isNaN(endWork)){
-          daysEmployed = (endWork - startWork) / 1000 / 3600 / 24;
+        if (startWork && !isNaN(startWork)){
+            daysSincePlaced = ((new Date() - startWork) / 1000 / 3600 / 24).toFixed(0);
+            if (endWork && !isNaN(endWork)){
+                daysEmployed = (endWork - startWork) / 1000 / 3600 / 24;
+            }
+            else {
+                daysEmployed = -1; //using this value to represent continuous employment through present
+            }
         }
-        else {
-          daysEmployed = -1; //using this value to represent continuous employment through present
-        }
-      }
 
-      var keys = Object.keys(milestoneDays);
-      for (var i = 0; i < keys.length; i++){
-        if (daysSincePlaced < milestoneDays[keys[i]]) break;
-        if (daysEmployed < 0 || daysEmployed >= milestoneDays[keys[i]]){
-          milestoneHistory[keys[i]] = true;
+        var keys = Object.keys(milestoneDays);
+        for (var i = 0; i < keys.length; i++){
+            if (daysSincePlaced < milestoneDays[keys[i]]) break;
+            if (daysEmployed < 0 || daysEmployed >= milestoneDays[keys[i]]){
+                milestoneHistory[keys[i]] = true;
+            }
+            else milestoneHistory[keys[i]] = false;
         }
-        else milestoneHistory[keys[i]] = false;
-      }
-      return milestoneHistory;
+        return milestoneHistory;
     }
 
 
     function allEmployedAtMilestones(allRows, startDate, endDate){
-      var milestoneDays = { '3mo': 90,  '6mo': 180, '1yr': 365, '2yr': 730, '3yr': 1095, '4yr': 1460, '5yr': 1825 };
-      var allKeys = Object.keys(milestoneDays);
-      var milestoneRetentionRates = {};
-      for (var i = 0; i < allKeys.length; i++){
-        milestoneRetentionRates[allKeys[i]] = { number: null, percent: null };
-      }
-      var studentCount = 0;
-      var milestoneData = {};
-      var keys = {};
-      for (i = 0; i < allRows.length; i++){
-        milestoneData = employedAtMilestones(allRows[i], startDate, endDate, milestoneDays);
-        if (!milestoneData) continue;
-        keys = Object.keys(milestoneData);
-        if (keys.length > 0){
-          studentCount++;
-          for (var j = 0; j < keys.length; j++){
-            milestoneRetentionRates[keys[j]].number++;
-          }
-        }//need to set percentages...
-      }
-      for (i = 0; i < allKeys.length; i++){
-        milestoneRetentionRates[allKeys[i]].percent = (milestoneRetentionRates[allKeys[i]].number / studentCount * 100).toFixed(1);
-      }
-      return milestoneRetentionRates;
+        var milestoneDays = { '3mo': 90,  '6mo': 180, '1yr': 365, '2yr': 730, '3yr': 1095, '4yr': 1460, '5yr': 1825 };
+        var allKeys = Object.keys(milestoneDays);
+        var milestoneRetentionRates = {};
+        for (var i = 0; i < allKeys.length; i++){
+            milestoneRetentionRates[allKeys[i]] = { number: null, percent: null };
+        }
+        var studentCount = 0;
+        var milestoneData = {};
+        var keys = {};
+        for (i = 0; i < allRows.length; i++){
+            milestoneData = employedAtMilestones(allRows[i], startDate, endDate, milestoneDays);
+            if (!milestoneData) continue;
+            keys = Object.keys(milestoneData);
+            if (keys.length > 0){
+                studentCount++;
+                for (var j = 0; j < keys.length; j++){
+                    milestoneRetentionRates[keys[j]].number++;
+                }
+            }//need to set percentages...
+        }
+        for (i = 0; i < allKeys.length; i++){
+            milestoneRetentionRates[allKeys[i]].percent = (milestoneRetentionRates[allKeys[i]].number / studentCount * 100).toFixed(1);
+        }
+        return milestoneRetentionRates;
     }
 
 
@@ -198,51 +190,61 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     }
 
 //[][][][] Average Salary Calculator [][][][][][][]
-$scope.calcAvgSalary = function(){
-    //array to hold checkboxes selected
-    $scope.tempCertArray = [];
-    //push checkbox names to array. checkbox names set to match column names
-    if ($scope.certDate){$scope.tempCertArray.push("certDate");}
-    if ($scope.networkPlus){$scope.tempCertArray.push("networkPlus");}
-    if ($scope.serverPlus){$scope.tempCertArray.push("serverPlus");}
-    if ($scope.securityPlus){$scope.tempCertArray.push("securityPlus");}
-    if ($scope.otherCert){$scope.tempCertArray.push("otherCert");}
+    $scope.certAplus = false;
+    $scope.certNetworkplus = false;
+    $scope.certSecurityplus = false;
+    $scope.certServerplus = false;
+    $scope.otherCert = false;
 
-    // $scope.getAverageSalary = getAvgSalary($scope.tempCertArry, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-    var adjStartDate = new Date($scope.startDate);
-    adjStartDate.setDate(adjStartDate.getDate() - 1);
-    $scope.calculatedSalary = getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-};
+    $scope.calcAvgSalary = function(){
+        //array to hold checkboxes selected
+        $scope.tempCertArray = [];
+        //push checkbox names to array. checkbox names set to match column names
+        if ($scope.certDate){$scope.tempCertArray.push("certDate");}
+        if ($scope.networkPlus){$scope.tempCertArray.push("networkPlus");}
+        if ($scope.serverPlus){$scope.tempCertArray.push("serverPlus");}
+        if ($scope.securityPlus){$scope.tempCertArray.push("securityPlus");}
+        if ($scope.otherCert){$scope.tempCertArray.push("otherCert");}
 
-function getAvgSalary(tempCert, allRows, startDate, endDate){
-    var sumOfWages = 0;
-    var tempWage = 0;
-    var count = 0;
+        // $scope.getAverageSalary = getAvgSalary($scope.tempCertArry, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+        var adjStartDate = new Date($scope.startDate);
+        adjStartDate.setDate(adjStartDate.getDate() - 1);
+        getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+    };
 
-    if (isNaN(startDate) || isNaN(endDate)) return null;
+    function getAvgSalary(tempCert, allRows, startDate, endDate){
+        var sumOfWages = 0;
+        var tempWage = 0;
+        var count = 0;
 
-    for (var i = 0; i < allRows.length;i++){
-        var classStart = Date.parse(allRows[i].classStart);
-        if (isNaN(classStart)) continue;
-        //check to stay within time range selected
-        if (startDate <= classStart && classStart <= endDate){
-            for(var j=0; j< tempCert.length; j++){
-              var cert = tempCert[j];
-              //check that each checkbox selected is not null on smartsheet
-              if(!allRows[i][cert]) break;
-              //if we've reached the last checkbox in array
-              if(j== tempCert.length-1){
-                tempWage = getCurrentWage(allRows[i], startDate, endDate);
-                if (tempWage){
-                    sumOfWages += tempWage;
-                    count++;
+        if (isNaN(startDate) || isNaN(endDate)) return null;
+
+        for (var i = 0; i < allRows.length;i++){
+            var classStart = Date.parse(allRows[i].classStart);
+            if (isNaN(classStart)) continue;
+            //check to stay within time range selected
+            if (startDate <= classStart && classStart <= endDate){
+                for(var j=0; j< tempCert.length; j++){
+                    var cert = tempCert[j];
+                    //check that each checkbox selected is not null on smartsheet
+                    if(!allRows[i][cert]) break;
+                    //if we've reached the last checkbox in array
+                    if(j== tempCert.length-1){
+                        tempWage = getCurrentWage(allRows[i], startDate, endDate);
+                        if (tempWage){
+                            sumOfWages += tempWage;
+                            count++;
+                        }
+                    }
                 }
-              }
             }
         }
+
+        console.log('count', count);
+        console.log('sum of wages', sumOfWages);
+        var avgSalary = (sumOfWages/count).toFixed(2);
+        console.log(avgSalary);
     }
-    return (sumOfWages/count).toFixed(2);
-}
 
 //Top Five Employers
     function getTopFiveEmployers (allRows, startDate, endDate){
@@ -338,9 +340,10 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         return arr; // returns array
     }
 
-    $scope.demographicList = ['Age', 'Gender', 'Race', 'Veteran Status']; // More here, possibly?
+    $scope.demographicList = ['Gender', 'Age', 'Race', 'Veteran Status']; // More here, possibly?
     $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
-
+    $scope.selectedDemographic = 'Gender';
+    $scope.selectedProgress = 'Served';
     $scope.tab = 'a';
     $scope.chartTab = 'pie';
     $scope.averageShow = false;
@@ -357,56 +360,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         $scope.averageShow = false;
     };
 
-}]);
-
-
-
-app.controller('pieChartController',['$scope', '$location', function($scope, $location){
-    $scope.pie = "this pie chart view is controlled";
-    (function(d3) {
-        'use strict';
-        var dataset = [
-            //{ label: 'Abulia', count: 25 },
-            //{ label: 'Betelgeuse', count: 25 },
-            { label: 'White', count: 15 },
-            { label: 'Black', count: 10 },
-            {label:'Latino', count: 5},
-            {label:'Asian', count: 8}
-        ];
-        var width = 360;
-        var height = 360;
-        var radius = Math.min(width, height) / 2;
-        var color = d3.scale.ordinal()
-            .range(['pink', 'blue', 'yellow', 'green']);
-        //var color = d3.scale.category20b();
-        var svg = d3.select('#chart')
-            .append('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .append('g')
-            .attr('transform', 'translate(' + (width / 2) +
-                ',' + (height / 2) + ')');
-        var arc = d3.svg.arc()
-            .outerRadius(radius);
-        var pie = d3.layout.pie()
-            .value(function(d) { return d.count; })
-            .sort(null);
-        var path = svg.selectAll('path')
-            .data(pie(dataset))
-            .enter()
-            .append('path')
-            .attr('d', arc)
-            .attr('fill', function(d, i) {
-                return color(d.data.label);
-            });
-    })(window.d3);
-}]);
-
-
-
-app.controller('lineGraphController',['$scope', '$location', function($scope, $location){
-
-    $scope.line = "this line Graph view is controlled";
 }]);
 
 //[][][] Factory to get Smartsheet data [][][][[[[[]]]]]
