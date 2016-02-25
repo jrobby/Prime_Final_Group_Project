@@ -78,7 +78,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
       //how to check against start/end date?  Need to say "no data available" or "-" if not enough time has elapsed to calculate?
       var classStart = Date.parse(rowData.classStart);
       if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
-
+      if (classStart > endDate || classStart < startDate) return null;
       var daysEmployed = 0; /*convention: 0 means never employed, -1 means employed through present,
                             positive integer means employed for that number of days*/
       var daysSincePlaced = 0; //we can't judge employment for a milestone that hasn't occurred yet (in time).
