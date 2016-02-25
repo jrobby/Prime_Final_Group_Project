@@ -42,6 +42,14 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.certNetwork = { number: 0, percent: 0 };
         $scope.certServer = { number: 0, percent: 0 };
         $scope.certSecurity = { number: 0, percent: 0 };
+        //set the default for the salary calculator checkboxes
+        //resets them to unchecked if the date range is changed
+        $scope.certDate = false;
+        $scope.networkPlus = false;
+        $scope.securityPlus = false;
+        $scope.serverPlus = false;
+        $scope.otherCert = false;
+        $scope.calculatedSalary = 0;
 
         for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
@@ -190,12 +198,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     }
 
 //[][][][] Average Salary Calculator [][][][][][][]
-$scope.certAplus = false;
-$scope.certNetworkplus = false;
-$scope.certSecurityplus = false;
-$scope.certServerplus = false;
-$scope.otherCert = false;
-
 $scope.calcAvgSalary = function(){
     //array to hold checkboxes selected
     $scope.tempCertArray = [];
@@ -209,7 +211,7 @@ $scope.calcAvgSalary = function(){
     // $scope.getAverageSalary = getAvgSalary($scope.tempCertArry, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
     var adjStartDate = new Date($scope.startDate);
     adjStartDate.setDate(adjStartDate.getDate() - 1);
-    getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+    $scope.calculatedSalary = getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
 };
 
 function getAvgSalary(tempCert, allRows, startDate, endDate){
@@ -239,11 +241,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             }
         }
     }
-
-    console.log('count', count);
-    console.log('sum of wages', sumOfWages);
-    var avgSalary = (sumOfWages/count).toFixed(2);
-    console.log(avgSalary);
+    return (sumOfWages/count).toFixed(2);
 }
 
 //Top Five Employers
