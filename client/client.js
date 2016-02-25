@@ -4,21 +4,6 @@
 
 var app = angular.module('myApp', ['ngRoute']);
 
-app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
-    $routeProvider
-        .when('/', {
-            templateUrl: 'views/pieChart.html',
-            controller: 'pieChartController'
-        })
-        .when('/lineGraph',{
-            templateUrl: 'views/lineGraph.html',
-            controller: 'lineGraphController'
-        });
-
-    $locationProvider.html5Mode(true);
-}]);
-
-
 app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', function($scope, $location, SmartSheetService){
 
     $scope.endDate = new Date();
@@ -42,6 +27,14 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.certNetwork = { number: 0, percent: 0 };
         $scope.certServer = { number: 0, percent: 0 };
         $scope.certSecurity = { number: 0, percent: 0 };
+        //set the default for the salary calculator checkboxes
+       //resets them to unchecked if the date range is changed
+       $scope.certDate = false;
+       $scope.networkPlus = false;
+       $scope.securityPlus = false;
+       $scope.serverPlus = false;
+       $scope.otherCert = false;
+       $scope.calculatedSalary = 0;
 
         for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
@@ -189,13 +182,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return null;
     }
 
-//[][][][] Average Salary Calculator [][][][][][][]
-    $scope.certAplus = false;
-    $scope.certNetworkplus = false;
-    $scope.certSecurityplus = false;
-    $scope.certServerplus = false;
-    $scope.otherCert = false;
-
+    //[][][][] Average Salary Calculator [][][][][][][]
     $scope.calcAvgSalary = function(){
         //array to hold checkboxes selected
         $scope.tempCertArray = [];
@@ -209,7 +196,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         // $scope.getAverageSalary = getAvgSalary($scope.tempCertArry, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         var adjStartDate = new Date($scope.startDate);
         adjStartDate.setDate(adjStartDate.getDate() - 1);
-        getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+        $scope.calculatedSalary = getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
     };
 
     function getAvgSalary(tempCert, allRows, startDate, endDate){
@@ -225,25 +212,21 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
             //check to stay within time range selected
             if (startDate <= classStart && classStart <= endDate){
                 for(var j=0; j< tempCert.length; j++){
-                    var cert = tempCert[j];
-                    //check that each checkbox selected is not null on smartsheet
-                    if(!allRows[i][cert]) break;
-                    //if we've reached the last checkbox in array
-                    if(j== tempCert.length-1){
-                        tempWage = getCurrentWage(allRows[i], startDate, endDate);
-                        if (tempWage){
-                            sumOfWages += tempWage;
-                            count++;
-                        }
+                  var cert = tempCert[j];
+                  //check that each checkbox selected is not null on smartsheet
+                  if(!allRows[i][cert]) break;
+                  //if we've reached the last checkbox in array
+                  if(j== tempCert.length-1){
+                    tempWage = getCurrentWage(allRows[i], startDate, endDate);
+                    if (tempWage){
+                        sumOfWages += tempWage;
+                        count++;
                     }
+                  }
                 }
             }
         }
-
-        console.log('count', count);
-        console.log('sum of wages', sumOfWages);
-        var avgSalary = (sumOfWages/count).toFixed(2);
-        console.log(avgSalary);
+        return (sumOfWages/count).toFixed(2);
     }
 
 //Top Five Employers
