@@ -78,7 +78,7 @@
            <p class="avgSalaryP">Certified Security+: <input type="checkbox" ng-model="securityPlus"></p>
            <p class="avgSalaryP">Other Certification: <input type="checkbox" ng-model="otherCert"></p><br>
            <button class="avgSalButton" ng-click="calcAvgSalary()">Calculate</button>
-           <p class="avgSalaryP2">Calculated Average Salary: ${{calculatedSalary}}</p><br>
+           <p class="avgSalaryP2">Calculated Average Salary: <span class="blueSpan">${{calculatedSalary}}</span> / hr</p><br>
      </div>
 
     <div class="employers" ng-show="tab == 'c'">
