@@ -128,6 +128,9 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
           }
         }//need to set percentages...
       }
+      for (i = 0; i < allKeys.length; i++){
+        milestoneRetentionRates[allKeys[i]].percent = (milestoneRetentionRates[allKeys[i]].number / studentCount * 100).toFixed(1);
+      }
       console.log(milestoneRetentionRates);
       return milestoneRetentionRates;
     }
