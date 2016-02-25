@@ -277,6 +277,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
 
     $scope.tab = 'a';
+    $scope.chartTab = 'pie';
     $scope.averageShow = false;
 
     $scope.generateCharts = function(demographics, progress){
