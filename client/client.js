@@ -142,32 +142,57 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return null;
     }
 
-//Salary Calculator Area      Note: in index.html, ng-click="calcAvgSalary(), and Calculated Average Salary: {{calculatedSalary}}.
-    $scope.certAplus = false;
-    $scope.certNetworkplus = false;
-    $scope.certSecurityplus = false;
-    $scope.certServerplus = false;
-    $scope.otherCert = false;
+//Salary Calculator Area
+$scope.certAplus = false;
+$scope.certNetworkplus = false;
+$scope.certSecurityplus = false;
+$scope.certServerplus = false;
+$scope.otherCert = false;
 
-    $scope.calcAvgSalary = function(){
-        console.log("Button clicked, woohoo!");
+$scope.calcAvgSalary = function(){
 
-        $scope.tempCertArray = [];
+    $scope.tempCertArray = [];
 
-        if ($scope.certAplus){
-            $scope.tempCertArray.push("certAplus");
-        } if ($scope.certNetworkplus){
-            $scope.tempCertArray.push("certNetworkplus");
-        } if ($scope.certSecurityplus){
-            $scope.tempCertArray.push("certSecurityplus");
-        } if ($scope.certServerplus){
-            $scope.tempCertArray.push("certServerplus");
-        } if ($scope.otherCert){
-            $scope.tempCertArray.push("otherCert");
+    if ($scope.certDate){
+        $scope.tempCertArray.push("certDate");
+    } if ($scope.networkPlus){
+        $scope.tempCertArray.push("networkPlus");
+    } if ($scope.serverPlus){
+        $scope.tempCertArray.push("serverPlus");
+    } if ($scope.securityPlus){
+        $scope.tempCertArray.push("securityPlus");
+    } if ($scope.otherCert){
+        $scope.tempCertArray.push("otherCert");
+    }
+
+    // $scope.getAverageSalary = getAvgSalary($scope.tempCertArry, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+    var adjStartDate = new Date($scope.startDate);
+    adjStartDate.setDate(adjStartDate.getDate() - 1);
+    getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+
+};
+
+function getAvgSalary(tempCert, allRows, startDate, endDate){
+
+    var count = 0;
+
+    if (isNaN(startDate) || isNaN(endDate)) return null;
+
+    for (var i = 0; i < allRows.length;i++){
+        var classStart = Date.parse(allRows[i].classStart);
+        if (isNaN(classStart)) continue;
+        if (startDate <= classStart && classStart <= endDate){
+            for(var j=0; j< tempCert.length; j++){
+              var cert = tempCert[j];
+              if(!allRows[i][cert]) break;
+              if(j== tempCert.length-1){
+                count++;
+              }
+            }
         }
-
-        console.log($scope.tempCertArray);
-    };
+    }
+    console.log('count', count);
+}
 
 //Top Five Employers
     function getTopFiveEmployers (allRows, startDate, endDate){
@@ -191,13 +216,10 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         }
 
         $scope.sortedEmployers = sortObject(employers);
-        console.log('sorted employers', $scope.sortedEmployers);
 
         for (var n = 0; n < 5; n++){
             $scope.topFive.push($scope.sortedEmployers.pop());
         }
-        console.log('top five', $scope.topFive);
-
         return $scope.topFive;
     }
 
