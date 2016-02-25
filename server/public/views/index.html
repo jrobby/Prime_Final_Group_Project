@@ -94,7 +94,38 @@
 </div>
 
 <div class="dataArea" >
-    <div class="ng-view"></div>
+    <!--<div class="ng-view"></div>-->
+    <div class="pieControls" ng-show="chartTab == 'pie'">
+        <h1>Pie Chart </h1>
+        <div id="chart"></div>
+    </div>
+
+
+    <div id="line" class="lineControls" ng-show="chartTab == 'line'">
+
+
+        <svg width="500" height="471">
+            <text id="p0_title" class="p0_title" x="252.5" y="38.59375" text-anchor="middle" fill="#333333" style="font-size: 20px; font-family: arial;">Simple Line Graph
+            </text>
+
+            <rect x="0"  y="50"   width="2"  height="375" fill="black"/>
+            <rect x="0" y="425" width="500" height="2"  fill="black"/>
+
+            <g transform="translate(0, 225)">
+                <path d="M0 200 L50 50 L100 150 L150 100 L200 150"
+                      fill="none" stroke="black" stroke-width="3"></path>
+            </g>
+
+        </svg>
+    </div>
+
+<!--<ul class="nav nav-tabs nav-justified">-->
+    <!--<li><a href="javascript:void(0);" ng-class="{selected: tab=='a'}" ng-click="tab = 'a'">Retention Rates</a></li>-->
+    <!--<li><a href="javascript:void(0);" ng-class="{selected: tab=='b'}" ng-click="tab = 'b' ">Salary Calculator</a></li>-->
+    <!--<li><a href="javascript:void(0);" ng-class="{selected: tab=='c'}" ng-click="tab = 'c' ">Top 5 Employers</a></li>-->
+<!--</ul>-->
+
+
 
     <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
 
