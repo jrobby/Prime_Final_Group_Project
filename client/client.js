@@ -151,7 +151,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return (sumOfWages / numPlaced).toFixed(2);
     }
 
-
     function getWageAtPlacement(rowData, startDate, endDate){
         var classStart = Date.parse(rowData.classStart);
         if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
@@ -275,7 +274,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return $scope.topFive;
     }
 
-    //PIE CHART
+    //PIE CHART - D3
     (function(d3) {
         'use strict';
         var dataset = [
@@ -313,6 +312,26 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
                 return color(d.data.label);
             });
     })(window.d3);
+
+    //Generate Pie Chart function
+    $scope.generatePieChart = function(demographics, progress){
+        console.log('demographics, progress', demographics, progress);
+        if (demographics == 'Race'){
+        //    Get Race Data
+            console.log('Get Race Data')
+        } else if (demographics =='Gender') {
+            //    Get Gender Data
+            console.log('Get gender data')
+        } else if (demographics =='Veteran Status'){
+        //    Get Veteran Status Data
+            console.log('Get veteran status data')
+        }
+
+        if (progress == 'Served'){
+        //    Get all served
+            console.log('get all data')
+        } else if(progress== )
+    };
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
         var tempObj = numPercentObject;
