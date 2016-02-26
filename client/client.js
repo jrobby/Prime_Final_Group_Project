@@ -314,28 +314,35 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
     })(window.d3);
 
     //Generate Pie Chart function
-    $scope.generatePieCharts = function(startDate, endDate){
+    $scope.generatePieCharts = function(){
+        var adjStartDate = new Date($scope.startDate);
+        adjStartDate.setDate(adjStartDate.getDate() - 1);
+
         console.log('demographic, progress', $scope.selectedDemographic, $scope.selectedProgress);
         // Get all that data, yo
 
-        var allRows=$scope.smartSheetData;
+        //var allRows=$scope.smartSheetData;
         var rowsInPie;
 
         if ($scope.selectedProgress == 'Served'){
             //    Get all served
             console.log('get all data')
-            rowsInPie=allRows;
+            rowsInPie=getServedInDateRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+
         } else if($scope.selectedProgress=='Completed') {
             //    Get completed
             console.log('get completed')
-            rowsInPie = getCompleted();
+            rowsInPie = getCompleted($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
 
         }else if($scope.selectedProgress='Certified A+') {
             //    get Certified A+
             console.log('get certified A+ data')
+            rowsInPie = getCertifiedAPlus($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+
         }else if($scope.selectedProgress='Placed'){
             //    get Placed
             console.log('get Placed data')
+            rowsInPie = getPlaced($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate))
         }
 
 
@@ -356,8 +363,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         }
 
     };
-
-
 
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
@@ -414,46 +419,80 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
 
 // functions for our pie chart maker
-function getCompleted(startDate, endDate, allRows){
+
+function getServedInDateRange(allRows, startDate, endDate){
+    if (isNaN(startDate) || isNaN(endDate)) return null;
+
+    var servedInRange = [];
+    for (var i = 0; i < allRows.length;i++){
+        var classStart = Date.parse(allRows[i].classStart);
+        if (isNaN(classStart)) continue;
+
+        if(startDate <= classStart && classStart <= endDate){
+            servedInRange.push(allRows[i]);
+        }
+    }
+    //rowsInPie = completed;
+    console.log('served in date range', servedInRange)
+    return servedInRange;
+
+}
+function getCompleted(allRows, startDate, endDate){
+    if (isNaN(startDate) || isNaN(endDate)) return null;
+
     var completed = [];
     for (var i = 0; i < allRows.length;i++){
-        if(rows[i].gradDate){
+        var classStart = Date.parse(allRows[i].classStart);
+        if (isNaN(classStart)) continue;
+
+        if(allRows[i].gradDate && startDate <= classStart && classStart <= endDate){
             completed.push(allRows[i]);
         }
     }
     //rowsInPie = completed;
-    console.log('completed rows in pie', rowsInPie)
+    console.log('completed: ', completed)
     return completed;
 
 }
 
-function getCertifiedAPlus(){
+function getCertifiedAPlus(allRows, startDate, endDate){
+    if (isNaN(startDate) || isNaN(endDate)) return null;
+
     var certified = [];
     for (var i = 0; i < allRows.length;i++){
-        if(allRows[i].certDate){
+        var classStart = Date.parse(allRows[i].classStart);
+        if (isNaN(classStart)) continue;
+
+        if(allRows[i].certDate && startDate <= classStart && classStart <= endDate){
             certified.push(allRows[i])
         }
     }
     //rowsInPie = certified;
-    console.log('certified A+ rows in pie', rowsInPie)
-    return
+    console.log('certified A+ rows in pie', certified)
+    return certified;
 }
 
-function getPlaced(){
+function getPlaced( allRows, startDate, endDate){
+    if (isNaN(startDate) || isNaN(endDate)) return null;
+
     var placed = [];
     for (var i = 0; i < allRows.length;i++){
-        if(allRows[i].placedFullTime){
+        var classStart = Date.parse(allRows[i].classStart);
+        if (isNaN(classStart)) continue;
+
+        if(allRows[i].placedFullTime && startDate <= classStart && classStart <= endDate){
             placed.push(allRows[i]);
         }
     }
-    rowsInPie = placed;
-    console.log('placed rows in pie', rowsInPie)
+    //rowsInPie = placed;
+    console.log('placed rows in pie', placed)
 }
 
 function slicePieByRace(rows){
     var numberOfBlacks=0;
     var numberOfWhites=0;
     var numberOfLatinos=0;
+    var numberOfAsians =0;
     var numberOfOthers=0;
 
     for (var i = 0; i < rows.length;i++){
@@ -466,12 +505,19 @@ function slicePieByRace(rows){
             numberOfLatinos++
         }else if(ethnicity=="Other, Multi-Racial"){
             numberOfOthers++;
+        }else if(ethnicity=="Asian"){
+            numberOfAsians++;
         }
     };
-    //var dataset = [
-    //    {label:'Black', count:numberOfBlacks},
-    //    {label:''}
-    //]
+    var dataset = [
+        {label:'Black', count:numberOfBlacks},
+        {label:'White', count:numberOfWhites},
+        {label:'Latino', count:numberOfLatinos},
+        {label:'Asian', count:numberOfAsians},
+        {label:'Other', count:numberOfOthers}
+    ]
+
+    console.log('dataset', dataset);
 }
 
 function slicePieByGender(rows){
@@ -494,7 +540,20 @@ function slicePieByGender(rows){
 
 function slicePieByVeteran(rows){
     var numberOfVeterans = 0;
+    var numberOfNonVeterans = 0;
 
+    for (var i = 0; i < rows.length;i++){
+        if (rows[i].veteran){
+            numberOfVeterans++;
+        } else {
+            numberOfNonVeterans++;
+        }
+    }
+
+    var dataset = [{label:'Veteran', count:numberOfVeterans},
+        {label:'Non-veterans', count:numberOfNonVeterans}]
+
+    console.log('dataset', dataset);
 }
 
 //[][][] Factory to get Smartsheet data [][][][[[[[]]]]]
