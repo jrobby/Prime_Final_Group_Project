@@ -326,7 +326,8 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         if ($scope.selectedProgress == 'Served'){
             //    Get all served
             console.log('get all data')
-            rowsInPie=$scope.smartSheetData;
+            rowsInPie=getServedInDateRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+
         } else if($scope.selectedProgress=='Completed') {
             //    Get completed
             console.log('get completed')
@@ -413,6 +414,24 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
 
 // functions for our pie chart maker
+
+function getServedInDateRange(allRows, startDate, endDate){
+    if (isNaN(startDate) || isNaN(endDate)) return null;
+
+    var servedInRange = [];
+    for (var i = 0; i < allRows.length;i++){
+        var classStart = Date.parse(allRows[i].classStart);
+        if (isNaN(classStart)) continue;
+
+        if(startDate <= classStart && classStart <= endDate){
+            servedInRange.push(allRows[i]);
+        }
+    }
+    //rowsInPie = completed;
+    console.log('served in date range', servedInRange)
+    return servedInRange;
+
+}
 function getCompleted(allRows, startDate, endDate){
     if (isNaN(startDate) || isNaN(endDate)) return null;
 
@@ -421,7 +440,7 @@ function getCompleted(allRows, startDate, endDate){
         var classStart = Date.parse(allRows[i].classStart);
         if (isNaN(classStart)) continue;
 
-        if(allRows[i].gradDate){
+        if(allRows[i].gradDate && startDate <= classStart && classStart <= endDate){
             completed.push(allRows[i]);
         }
     }
@@ -439,7 +458,7 @@ function getCertifiedAPlus(allRows, startDate, endDate){
         var classStart = Date.parse(allRows[i].classStart);
         if (isNaN(classStart)) continue;
 
-        if(allRows[i].certDate){
+        if(allRows[i].certDate && startDate <= classStart && classStart <= endDate){
             certified.push(allRows[i])
         }
     }
@@ -456,7 +475,7 @@ function getPlaced( allRows, startDate, endDate){
         var classStart = Date.parse(allRows[i].classStart);
         if (isNaN(classStart)) continue;
 
-        if(allRows[i].placedFullTime){
+        if(allRows[i].placedFullTime && startDate <= classStart && classStart <= endDate){
             placed.push(allRows[i]);
         }
     }
