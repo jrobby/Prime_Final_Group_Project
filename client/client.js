@@ -284,14 +284,16 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
     //Generate Pie Chart function
     $scope.generatePieCharts = function(){
+        d3.select("svg").remove();
         var adjStartDate = new Date($scope.startDate);
         adjStartDate.setDate(adjStartDate.getDate() - 1);
 
-        console.log('demographic, progress', $scope.selectedDemographic, $scope.selectedProgress);
+
         // Get all that data, yo
 
         //var allRows=$scope.smartSheetData;
-        var rowsInPie;
+        var rowsInPie = [];
+        var dataset = [];
 
         if ($scope.selectedProgress == 'Served'){
             //    Get all served
@@ -315,33 +317,36 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         }
 
 
+
+
+        //SLICE PIE BY SELECTED DEMOGRAPHIC - RACE, GENDER, VETERAN
         if ($scope.selectedDemographic == 'Race'){
             //    Get Race Data
-            slicePieByRace(rowsInPie);
+            dataset = slicePieByRace(rowsInPie);
+            //console.log('Race dataset', dataset);
 
 
         } else if ($scope.selectedDemographic=='Gender') {
             //    Get Gender Data
             console.log('slicing by gender')
-            slicePieByGender(rowsInPie);
+
+            dataset = slicePieByGender(rowsInPie);
+            console.log('gender dataset after slice', dataset);
 
         } else if ($scope.selectedDemographic =='Veteran Status'){
             //    Get Veteran Status Data
-            slicePieByVeteran(rowsInPie);
-            console.log('Get veteran status data')
+            dataset=slicePieByVeteran(rowsInPie);
+            console.log('veteran dataset', dataset);
         }
+
+
 
         //PIE CHART
         (function(d3) {
             'use strict';
-            var dataset = [
-                //{ label: 'Abulia', count: 25 },
-                //{ label: 'Betelgeuse', count: 25 },
-                { label: 'White', count: 15 },
-                { label: 'Black', count: 10 },
-                {label:'Latino', count: 5},
-                {label:'Asian', count: 8}
-            ];
+
+
+
             var width = 360;
             var height = 360;
             var radius = Math.min(width, height) / 2;
@@ -520,15 +525,15 @@ function slicePieByRace(rows){
             numberOfAsians++;
         }
     };
-    var dataset = [
+    return [
         {label:'Black', count:numberOfBlacks},
         {label:'White', count:numberOfWhites},
         {label:'Latino', count:numberOfLatinos},
         {label:'Asian', count:numberOfAsians},
         {label:'Other', count:numberOfOthers}
-    ]
+    ];
 
-    console.log('dataset', dataset);
+
 }
 
 function slicePieByGender(rows){
@@ -542,11 +547,12 @@ function slicePieByGender(rows){
         } else {
             numberOfMales++;
         }
-    }
-    var dataset =[ {label:'Male', count:numberOfMales},
+    };
+    //console.log('gender dataset inside sliceByGender function');
+    return [ {label:'Male', count:numberOfMales},
         {label:'Female', count:numberOfFemales}
-    ]
-    console.log('dataset', dataset);
+    ];
+
 }
 
 function slicePieByVeteran(rows){
@@ -561,10 +567,9 @@ function slicePieByVeteran(rows){
         }
     }
 
-    var dataset = [{label:'Veteran', count:numberOfVeterans},
-        {label:'Non-veterans', count:numberOfNonVeterans}]
+    return [{label:'Veteran', count:numberOfVeterans},
+        {label:'Non-veterans', count:numberOfNonVeterans}];
 
-    console.log('dataset', dataset);
 }
 
 //[][][] Factory to get Smartsheet data [][][][[[[[]]]]]
