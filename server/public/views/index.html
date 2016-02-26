@@ -81,24 +81,24 @@
 
             <div class="tableColumn">
                 <div class="tableHeading">Fraction</div>
-                <div class="tableRow">{{}}</div>
-                <div class="tableRow">{{}}</div>
-                <div class="tableRow">{{}}</div>
-                <div class="tableRow">{{}}</div>
-                <div class="tableRow">{{}}</div>
-                <div class="tableRow">{{}}</div>
-                <div class="bottomRow">{{}}</div>
+                <div class="tableRow">{{retentionData.threeMonth.fraction}}</div>
+                <div class="tableRow">{{retentionData.sixMonth.fraction}}</div>
+                <div class="tableRow">{{retentionData.oneYear.fraction}}</div>
+                <div class="tableRow">{{retentionData.twoYear.fraction}}</div>
+                <div class="tableRow">{{retentionData.threeYear.fraction}}</div>
+                <div class="tableRow">{{retentionData.fourYear.fraction}}</div>
+                <div class="bottomRow">{{retentionData.fiveYear.fraction}}</div>
             </div>
 
             <div class="tableColumn">
                 <div class="tableHeading">Retention Rate</div>
-                <div class="tableRow">{{}}%</div>
-                <div class="tableRow">{{}}%</div>
-                <div class="tableRow">{{}}%</div>
-                <div class="tableRow">{{}}%</div>
-                <div class="tableRow">{{}}%</div>
-                <div class="tableRow">{{}}%</div>
-                <div class="bottomRow">{{}}%</div>
+                <div class="tableRow">{{retentionData.threeMonth.percent}}</div>
+                <div class="tableRow">{{retentionData.sixMonth.percent}}</div>
+                <div class="tableRow">{{retentionData.oneYear.percent}}</div>
+                <div class="tableRow">{{retentionData.twoYear.percent}}</div>
+                <div class="tableRow">{{retentionData.threeYear.percent}}</div>
+                <div class="tableRow">{{retentionData.fourYear.percent}}</div>
+                <div class="bottomRow">{{retentionData.fiveYear.percent}}</div>
             </div>
         </div>
         <!--<p><span ng-repeat="(key, value) in retentionData" class="retentionSpan"><span class="underlineSpan">{{key}}</span>: <span class="blueSpan">{{value.percent}}%</span></span></p>-->

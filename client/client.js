@@ -96,7 +96,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
             }
             else {
               for (var j = i; j < keys.length; j++){
-                // if (daysSincePlaced < milestoneDays[keys[j]]) break;
+                if (daysSincePlaced < milestoneDays[keys[j]]) break;
                 milestoneHistory[keys[j]] = false;
               }
               break;
@@ -107,12 +107,12 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
 
     function allEmployedAtMilestones(allRows, startDate, endDate){
-        var milestoneDays = { '3mo': 90,  '6mo': 180, '1yr': 365, '2yr': 730, '3yr': 1095, '4yr': 1460, '5yr': 1825 };
+        var milestoneDays = { 'threeMonth': 90,  'sixMonth': 180, 'oneYear': 365, 'twoYear': 730, 'threeYear': 1095, 'fourYear': 1460, 'fiveYear': 1825 };
         var allKeys = Object.keys(milestoneDays);
         var milestoneRetentionRates = {};
         var studentCount = {};
         for (var i = 0; i < allKeys.length; i++){
-            milestoneRetentionRates[allKeys[i]] = { number: null, percent: null };
+            milestoneRetentionRates[allKeys[i]] = { numRetained: 0, fraction: null, percent: null };
             studentCount[allKeys[i]] = 0;
         }
         var milestoneData = {};
@@ -122,13 +122,19 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
             if (!milestoneData) continue;
             keys = Object.keys(milestoneData);
             for (var j = 0; j < keys.length; j++){
-                if (milestoneData[keys[j]]) milestoneRetentionRates[keys[j]].number++;
+                if (milestoneData[keys[j]]) milestoneRetentionRates[keys[j]].numRetained++;
                 studentCount[keys[j]]++;
             }
         }
         for (i = 0; i < allKeys.length; i++){
-            if (studentCount[allKeys[i]] <= 0) milestoneRetentionRates[allKeys[i]].percent = "N/A";
-            else milestoneRetentionRates[allKeys[i]].percent = (milestoneRetentionRates[allKeys[i]].number / studentCount[allKeys[i]] * 100).toFixed(1);
+            if (studentCount[allKeys[i]] <= 0) {
+              milestoneRetentionRates[allKeys[i]].fraction = "N/A";
+              milestoneRetentionRates[allKeys[i]].percent = "N/A";
+            }
+            else {
+              milestoneRetentionRates[allKeys[i]].fraction = milestoneRetentionRates[allKeys[i]].numRetained + " / " + studentCount[allKeys[i]];
+              milestoneRetentionRates[allKeys[i]].percent = (milestoneRetentionRates[allKeys[i]].numRetained / studentCount[allKeys[i]] * 100).toFixed(1) + "%";
+            }
         }
         return milestoneRetentionRates;
     }
