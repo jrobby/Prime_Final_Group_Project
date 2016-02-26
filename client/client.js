@@ -47,16 +47,22 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
             if(classStart >= $scope.startDate && classStart <= $scope.endDate){
                 //count total number served
                 $scope.numServed++;
-
                 $scope.completed = incrementRowVals($scope.smartSheetData[i].gradDate, $scope.completed);
                 $scope.certified = incrementRowVals($scope.smartSheetData[i].certDate, $scope.certified);
                 $scope.placed = incrementRowVals($scope.smartSheetData[i].employHistory.start, $scope.placed);
-                console.log('scope.placed:', $scope.placed);
                 $scope.certNetwork = incrementRowVals($scope.smartSheetData[i].networkPlus, $scope.certNetwork);
                 $scope.certServer = incrementRowVals($scope.smartSheetData[i].serverPlus, $scope.certServer);
                 $scope.certSecurity = incrementRowVals($scope.smartSheetData[i].securityPlus, $scope.certSecurity);
             }
         }
+        //Set Percentages
+        $scope.completed = calcPercent($scope.completed);
+        $scope.certified = calcPercent($scope.certified);
+        $scope.placed = calcPercent($scope.placed);
+        $scope.certNetwork = calcPercent($scope.certNetwork);
+        $scope.certServer = calcPercent($scope.certServer);
+        $scope.certSecurity = calcPercent($scope.certSecurity);
+
         var adjStartDate = new Date($scope.startDate);
         adjStartDate.setDate(adjStartDate.getDate() - 1);
         $scope.avgWageAtPlacement = computeAveragePlacedWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
@@ -366,16 +372,19 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
-        var tempObj = numPercentObject;
-        if (smartsheetDataVal){
-            // console.log('tempObj:', tempObj);
-            // console.log('numServed:', $scope.numServed);
-            tempObj.number++;
-            console.log('number:', tempObj.number);
-            console.log('numServed:', $scope.numServed);
-            tempObj.percent = Number(Math.round(((tempObj.number / $scope.numServed)*100) + 'e2') + 'e-2');
-        }
-        return tempObj;
+      var tempObj = numPercentObject;
+      if (smartsheetDataVal){
+          tempObj.number++;
+      }
+      return tempObj;
+    }
+
+    function calcPercent(numPercentObject){
+      var tempObj = numPercentObject;
+      if (tempObj.number){
+        tempObj.percent = Number(Math.round(((tempObj.number / $scope.numServed)*100) + 'e2') + 'e-2');
+      }
+      return tempObj;
     }
 
     function sortObject(obj) {
