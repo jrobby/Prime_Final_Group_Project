@@ -18,6 +18,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.submitDate();
     });
 
+    $scope.genLineGraph = genLineGraph;
     //function that kicks off after date range is selected
     $scope.submitDate = function(){
         $scope.numServed = 0;
@@ -564,6 +565,81 @@ function slicePieByVeteran(rows){
 
     console.log('dataset', dataset);
 }
+// D3 LINE GRAPHS
+function genLineData(){
+  var fakeData = [
+      [
+          { x: new Date(2012, 1, 1), y: 2},
+          { x: new Date(2012, 3, 1), y: 4},
+          { x: new Date(2012, 5, 1), y: 6}
+
+      ],
+      [
+          { x: new Date(2012, 2, 1), y: 10},
+          { x: new Date(2012, 4, 1), y: 8},
+          { x: new Date(2012, 6, 1), y: 6}
+      ]
+  ];
+    return fakeData;
+}
+
+function genLineGraph(){
+    console.log('yo, line chart');
+    var gWidth = 750;
+    var gHeight = 500;
+    var pad = 60;
+    var gData = genLineData();
+    var palette = d3.scale.category10();
+
+    var yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
+    //var xRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.x; });
+    var xScale = d3.time.scale()
+        .domain([new Date(2012, 0, 1), new Date(2012, 11, 31)])
+        .range([pad, gWidth - pad * 2]);
+
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient("bottom")
+        .ticks(d3.time.months)
+        .tickSize(16, 0)
+        .tickFormat(d3.time.format("%b"));
+
+    var yScale = d3.scale.linear()
+        .domain([yRange[0], yRange[1]])
+        .range([gHeight - pad, pad]);
+
+    d3.select("svg").remove(); //clear chart for rebuild
+
+    var svg = d3.select('.lineControls')
+        .append("svg")
+        .attr("width", gWidth)
+        .attr("height", gHeight)
+        .attr("opacity", "1");
+
+    var yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(8);
+
+    svg.append("g").attr("class", "axis")
+        .attr("transform", "translate(0," + (gHeight - pad) + ")").call(xAxis);
+
+    svg.append("g").attr("class", "axis")
+        .attr("transform", "translate(" + pad + ",0)").call(yAxis);
+
+    var linePath = svg.selectAll("g.line").data(gData);
+
+    linePath.enter().append("g")
+        .attr("class", "line").attr("style", function(d) {
+        return "stroke: " + palette(gData.indexOf(d));
+    });
+
+    linePath.selectAll("path").data(function (d) { return [d]; })
+        .enter().append('path').attr("d", d3.svg.line()
+        .x(function (d) { return xScale(d.x); })
+        .y(function (d) { return yScale(d.y); })
+    );
+
+}
+
+
 
 //[][][] Factory to get Smartsheet data [][][][[[[[]]]]]
 app.factory('SmartSheetService', ['$http', function($http){

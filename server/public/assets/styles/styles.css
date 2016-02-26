@@ -153,3 +153,28 @@ select{
     text-align: center;
     color: gray;
 }
+/*-----------------------------*/
+/*--------D3 Styling-----------*/
+/*-----------------------------*/
+h2.chartTitle {
+    color: darkblue;
+    font: bold 20px/22px "Arial", sans-serif;
+    text-align: center;
+}
+.chartArea {
+    height: 350px;
+    display: block;
+    text-align: center;
+}
+.domain {
+    fill: none;
+    stroke: black;
+    stroke-width: 2;
+}
+.line {
+    stroke-width: 2px;
+    fill: none;
+}
+.legend text {
+    font: 11px "Arial", sans-serif;
+}
