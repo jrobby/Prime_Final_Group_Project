@@ -66,7 +66,42 @@
 
     <div class="retention" ng-show="tab == 'a'">
         <h5>Retention Rate Over Time</h5>
-        <p><span ng-repeat="(key, value) in retentionData" class="retentionSpan"><span class="underlineSpan">{{key}}</span>: <span class="blueSpan">{{value.percent}}%</span></span></p>
+
+        <div class="tableMain">
+            <div class="tableColumn">
+                <div class="tableHeading">Milestone</div>
+                <div class="tableRow">3 mo.</div>
+                <div class="tableRow">6 mo.</div>
+                <div class="tableRow">1 yr.</div>
+                <div class="tableRow">2 yr.</div>
+                <div class="tableRow">3 yr.</div>
+                <div class="tableRow">4 yr.</div>
+                <div class="bottomRow">5 yr.</div>
+            </div>
+
+            <div class="tableColumn">
+                <div class="tableHeading">Fraction</div>
+                <div class="tableRow">{{}}</div>
+                <div class="tableRow">{{}}</div>
+                <div class="tableRow">{{}}</div>
+                <div class="tableRow">{{}}</div>
+                <div class="tableRow">{{}}</div>
+                <div class="tableRow">{{}}</div>
+                <div class="bottomRow">{{}}</div>
+            </div>
+
+            <div class="tableColumn">
+                <div class="tableHeading">Retention Rate</div>
+                <div class="tableRow">{{}}%</div>
+                <div class="tableRow">{{}}%</div>
+                <div class="tableRow">{{}}%</div>
+                <div class="tableRow">{{}}%</div>
+                <div class="tableRow">{{}}%</div>
+                <div class="tableRow">{{}}%</div>
+                <div class="bottomRow">{{}}%</div>
+            </div>
+        </div>
+        <!--<p><span ng-repeat="(key, value) in retentionData" class="retentionSpan"><span class="underlineSpan">{{key}}</span>: <span class="blueSpan">{{value.percent}}%</span></span></p>-->
     </div>
 
     <div class="salary" ng-show="tab == 'b'">
@@ -100,8 +135,7 @@
 
     <div id="line" class="lineControls" ng-show="chartTab == 'line'">
         <svg width="500" height="471">
-            <text id="p0_title" class="p0_title" x="252.5" y="38.59375" text-anchor="middle" fill="#333333" style="font-size: 20px; font-family: arial;">Simple Line Graph
-            </text>
+            <text id="p0_title" class="p0_title" x="252.5" y="38.59375" text-anchor="middle" fill="#333333" style="font-size: 20px; font-family: arial;">Simple Line Graph</text>
 
             <rect x="0"  y="50"   width="2"  height="375" fill="black"/>
             <rect x="0" y="425" width="500" height="2"  fill="black"/>
