@@ -69,6 +69,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.avgCurrentWage =  computeAverageCurrentWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.retentionData = allEmployedAtMilestones($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+        $scope.generatePieCharts();
     };
 
 
@@ -280,44 +281,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         return $scope.topFive;
     }
 
-    //PIE CHART
-    (function(d3) {
-        'use strict';
-        var dataset = [
-            //{ label: 'Abulia', count: 25 },
-            //{ label: 'Betelgeuse', count: 25 },
-            { label: 'White', count: 15 },
-            { label: 'Black', count: 10 },
-            {label:'Latino', count: 5},
-            {label:'Asian', count: 8}
-        ];
-        var width = 360;
-        var height = 360;
-        var radius = Math.min(width, height) / 2;
-        var color = d3.scale.ordinal()
-            .range(['pink', 'blue', 'yellow', 'green']);
-        //var color = d3.scale.category20b();
-        var svg = d3.select('#chart')
-            .append('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .append('g')
-            .attr('transform', 'translate(' + (width / 2) +
-                ',' + (height / 2) + ')');
-        var arc = d3.svg.arc()
-            .outerRadius(radius);
-        var pie = d3.layout.pie()
-            .value(function(d) { return d.count; })
-            .sort(null);
-        var path = svg.selectAll('path')
-            .data(pie(dataset))
-            .enter()
-            .append('path')
-            .attr('d', arc)
-            .attr('fill', function(d, i) {
-                return color(d.data.label);
-            });
-    })(window.d3);
 
     //Generate Pie Chart function
     $scope.generatePieCharts = function(){
@@ -367,6 +330,45 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             slicePieByVeteran(rowsInPie);
             console.log('Get veteran status data')
         }
+
+        //PIE CHART
+        (function(d3) {
+            'use strict';
+            var dataset = [
+                //{ label: 'Abulia', count: 25 },
+                //{ label: 'Betelgeuse', count: 25 },
+                { label: 'White', count: 15 },
+                { label: 'Black', count: 10 },
+                {label:'Latino', count: 5},
+                {label:'Asian', count: 8}
+            ];
+            var width = 360;
+            var height = 360;
+            var radius = Math.min(width, height) / 2;
+            var color = d3.scale.ordinal()
+                .range(['pink', 'blue', 'yellow', 'green']);
+            //var color = d3.scale.category20b();
+            var svg = d3.select('#chart')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .append('g')
+                .attr('transform', 'translate(' + (width / 2) +
+                    ',' + (height / 2) + ')');
+            var arc = d3.svg.arc()
+                .outerRadius(radius);
+            var pie = d3.layout.pie()
+                .value(function(d) { return d.count; })
+                .sort(null);
+            var path = svg.selectAll('path')
+                .data(pie(dataset))
+                .enter()
+                .append('path')
+                .attr('d', arc)
+                .attr('fill', function(d, i) {
+                    return color(d.data.label);
+                });
+        })(window.d3);
 
     };
 
