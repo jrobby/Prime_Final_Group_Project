@@ -173,7 +173,7 @@
         <select class="progressDropdown" ng-model="selectedProgress" ng-options="progress for progress in progressList"></select>
         <br><br><br><br>
 
-        <button ng-click="generatePieCharts()" class="genButton">Generate Charts</button>
+        <button ng-click="generatePieCharts(startDate, endDate)" class="genButton">Generate Charts</button>
     </div>
 
     <div class="lineControls" ng-show="chartTab == 'line'"><br><br><br>

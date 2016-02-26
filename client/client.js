@@ -313,33 +313,51 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
     })(window.d3);
 
     //Generate Pie Chart function
-    $scope.generatePieChart = function(demographics, progress){
-        console.log('demographics, progress', demographics, progress);
-        if (demographics == 'Race'){
+    $scope.generatePieCharts = function(startDate, endDate){
+        console.log('demographic, progress', $scope.selectedDemographic, $scope.selectedProgress);
+        // Get all that data, yo
+
+        var allRows=$scope.smartSheetData;
+        var rowsInPie;
+
+        if ($scope.selectedProgress == 'Served'){
+            //    Get all served
+            console.log('get all data')
+            rowsInPie=allRows;
+        } else if($scope.selectedProgress=='Completed') {
+            //    Get completed
+            console.log('get completed')
+            rowsInPie = getCompleted();
+
+        }else if($scope.selectedProgress='Certified A+') {
+            //    get Certified A+
+            console.log('get certified A+ data')
+        }else if($scope.selectedProgress='Placed'){
+            //    get Placed
+            console.log('get Placed data')
+        }
+
+
+        if ($scope.selectedDemographic == 'Race'){
             //    Get Race Data
-            console.log('Get Race Data')
-        } else if (demographics =='Gender') {
+            slicePieByRace(rowsInPie);
+
+
+        } else if ($scope.selectedDemographic=='Gender') {
             //    Get Gender Data
-            console.log('Get gender data')
-        } else if (demographics =='Veteran Status'){
+            console.log('slicing by gender')
+            slicePieByGender(rowsInPie);
+
+        } else if ($scope.selectedDemographic =='Veteran Status'){
             //    Get Veteran Status Data
+            slicePieByVeteran(rowsInPie);
             console.log('Get veteran status data')
         }
 
-        if (progress == 'Served'){
-            //    Get all served
-            console.log('get all data')
-        } else if(progress=='Completed') {
-            //    Get completed
-            console.log('get completed')
-        }else if(progress='Certified A+') {
-            //    get Certified A+
-            console.log('get certified A+ data')
-        }else if(progress='Placed'){
-        //    get Placed
-            console.log('get Placed data')
-        }
-            };
+    };
+
+
+
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
         var tempObj = numPercentObject;
@@ -388,6 +406,91 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
     };
 
 }]);
+
+
+// functions for our pie chart maker
+function getCompleted(startDate, endDate, allRows){
+    var completed = [];
+    for (var i = 0; i < allRows.length;i++){
+        if(rows[i].gradDate){
+            completed.push(allRows[i]);
+        }
+    }
+    //rowsInPie = completed;
+    console.log('completed rows in pie', rowsInPie)
+    return completed;
+
+}
+
+function getCertifiedAPlus(){
+    var certified = [];
+    for (var i = 0; i < allRows.length;i++){
+        if(allRows[i].certDate){
+            certified.push(allRows[i])
+        }
+    }
+    //rowsInPie = certified;
+    console.log('certified A+ rows in pie', rowsInPie)
+    return
+}
+
+function getPlaced(){
+    var placed = [];
+    for (var i = 0; i < allRows.length;i++){
+        if(allRows[i].placedFullTime){
+            placed.push(allRows[i]);
+        }
+    }
+    rowsInPie = placed;
+    console.log('placed rows in pie', rowsInPie)
+}
+
+function slicePieByRace(rows){
+    var numberOfBlacks=0;
+    var numberOfWhites=0;
+    var numberOfLatinos=0;
+    var numberOfOthers=0;
+
+    for (var i = 0; i < rows.length;i++){
+        var ethnicity = rows[i].ethnicity;
+        if (ethnicity=="Black / African American"){
+            numberOfBlacks++;
+        }else if(ethnicity=="White"){
+            numberOfWhites++;
+        }else if(ethnicity=="Hispanic / Latino"){
+            numberOfLatinos++
+        }else if(ethnicity=="Other, Multi-Racial"){
+            numberOfOthers++;
+        }
+    };
+    //var dataset = [
+    //    {label:'Black', count:numberOfBlacks},
+    //    {label:''}
+    //]
+}
+
+function slicePieByGender(rows){
+    var numberOfMales = 0;
+    var numberOfFemales=0;
+
+    for (var i = 0; i < rows.length;i++){
+        var female = rows[i].female;
+        if (female){
+            numberOfFemales++
+        } else {
+            numberOfMales++;
+        }
+    }
+    var dataset =[ {label:'Male', count:numberOfMales},
+        {label:'Female', count:numberOfFemales}
+    ]
+    console.log('dataset', dataset);
+}
+
+function slicePieByVeteran(rows){
+    var numberOfVeterans = 0;
+
+}
 
 //[][][] Factory to get Smartsheet data [][][][[[[[]]]]]
 app.factory('SmartSheetService', ['$http', function($http){
