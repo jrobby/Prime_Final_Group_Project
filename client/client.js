@@ -51,6 +51,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
                 $scope.completed = incrementRowVals($scope.smartSheetData[i].gradDate, $scope.completed);
                 $scope.certified = incrementRowVals($scope.smartSheetData[i].certDate, $scope.certified);
                 $scope.placed = incrementRowVals($scope.smartSheetData[i].employHistory.start, $scope.placed);
+                console.log('scope.placed:', $scope.placed);
                 $scope.certNetwork = incrementRowVals($scope.smartSheetData[i].networkPlus, $scope.certNetwork);
                 $scope.certServer = incrementRowVals($scope.smartSheetData[i].serverPlus, $scope.certServer);
                 $scope.certSecurity = incrementRowVals($scope.smartSheetData[i].securityPlus, $scope.certSecurity);
@@ -362,7 +363,11 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
     function incrementRowVals(smartsheetDataVal, numPercentObject){
         var tempObj = numPercentObject;
         if (smartsheetDataVal){
+            // console.log('tempObj:', tempObj);
+            // console.log('numServed:', $scope.numServed);
             tempObj.number++;
+            console.log('number:', tempObj.number);
+            console.log('numServed:', $scope.numServed);
             tempObj.percent = Number(Math.round(((tempObj.number / $scope.numServed)*100) + 'e2') + 'e-2');
         }
         return tempObj;
