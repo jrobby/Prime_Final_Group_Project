@@ -49,10 +49,11 @@ h1, h3, h4, h5 {
     font-weight: bold;
     text-align: center;
 }
-.tableRow, .headingRow, .bottomRow, .bottomRetentionRow {
+.tableRow, .headingRow, .bottomRow, .bottomHeadingRow, .bottomRetentionRow {
     border-top: 1px solid black;
     height: 30px;
     text-align: center;
+    padding-top: 4px;
 }
 .headingRow, .bottomHeadingRow {
     text-align: left;
