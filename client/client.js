@@ -70,6 +70,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.avgCurrentWage =  computeAverageCurrentWage($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.retentionData = allEmployedAtMilestones($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+        $scope.generatePieCharts();
     };
 
 
@@ -281,55 +282,22 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         return $scope.topFive;
     }
 
-    //PIE CHART
-    (function(d3) {
-        'use strict';
-        var dataset = [
-            //{ label: 'Abulia', count: 25 },
-            //{ label: 'Betelgeuse', count: 25 },
-            { label: 'White', count: 15 },
-            { label: 'Black', count: 10 },
-            {label:'Latino', count: 5},
-            {label:'Asian', count: 8}
-        ];
-        var width = 360;
-        var height = 360;
-        var radius = Math.min(width, height) / 2;
-        var color = d3.scale.ordinal()
-            .range(['pink', 'blue', 'yellow', 'green']);
-        //var color = d3.scale.category20b();
-        var svg = d3.select('#chart')
-            .append('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .append('g')
-            .attr('transform', 'translate(' + (width / 2) +
-                ',' + (height / 2) + ')');
-        var arc = d3.svg.arc()
-            .outerRadius(radius);
-        var pie = d3.layout.pie()
-            .value(function(d) { return d.count; })
-            .sort(null);
-        var path = svg.selectAll('path')
-            .data(pie(dataset))
-            .enter()
-            .append('path')
-            .attr('d', arc)
-            .attr('fill', function(d, i) {
-                return color(d.data.label);
-            });
-    })(window.d3);
 
     //Generate Pie Chart function
     $scope.generatePieCharts = function(){
+
+        d3.select("svg").remove();
+
         var adjStartDate = new Date($scope.startDate);
         adjStartDate.setDate(adjStartDate.getDate() - 1);
 
-        console.log('demographic, progress', $scope.selectedDemographic, $scope.selectedProgress);
+
         // Get all that data, yo
 
         //var allRows=$scope.smartSheetData;
-        var rowsInPie;
+        var rowsInPie = [];
+        var dataset = [];
+        $scope.pieHeading = "";
 
         if ($scope.selectedProgress == 'Served'){
             //    Get all served
@@ -353,21 +321,70 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         }
 
 
+
+
+        //SLICE PIE BY SELECTED DEMOGRAPHIC - RACE, GENDER, VETERAN
         if ($scope.selectedDemographic == 'Race'){
             //    Get Race Data
-            slicePieByRace(rowsInPie);
+            dataset = slicePieByRace(rowsInPie);
+            $scope.pieHeading = "Race"
+            //console.log('Race dataset', dataset);
 
 
         } else if ($scope.selectedDemographic=='Gender') {
             //    Get Gender Data
             console.log('slicing by gender')
-            slicePieByGender(rowsInPie);
+
+            dataset = slicePieByGender(rowsInPie);
+            console.log('gender dataset after slice', dataset);
+            $scope.pieHeading = "Gender"
 
         } else if ($scope.selectedDemographic =='Veteran Status'){
             //    Get Veteran Status Data
-            slicePieByVeteran(rowsInPie);
-            console.log('Get veteran status data')
+            dataset=slicePieByVeteran(rowsInPie);
+            console.log('veteran dataset', dataset);
+            $scope.pieHeading = "Veteran Status"
         }
+
+
+
+        //PIE CHART
+        (function(d3) {
+            'use strict';
+
+            var width = 360;
+            var height = 360;
+            var radius = Math.min(width, height) / 2;
+            var color = d3.scale.ordinal()
+                .range(['blue', 'pink', 'yellow', 'green', 'orange', 'purple']);
+            //var color = d3.scale.category20b();
+
+
+            var svg = d3.select('#chart')
+
+                .append('svg')
+
+                //.append('h1').text(pieHeading)
+                .attr('width', width)
+                .attr('height', height)
+                .append('g')
+                .attr('transform', 'translate(' + (width / 2) +
+                    ',' + (height / 2) + ')');
+
+            var arc = d3.svg.arc()
+                .outerRadius(radius);
+            var pie = d3.layout.pie()
+                .value(function(d) { return d.count; })
+                .sort(null);
+            var path = svg.selectAll('path')
+                .data(pie(dataset))
+                .enter()
+                .append('path')
+                .attr('d', arc)
+                .attr('fill', function(d, i) {
+                    return color(d.data.label);
+                });
+        })(window.d3);
 
     };
 
@@ -519,15 +536,15 @@ function slicePieByRace(rows){
             numberOfAsians++;
         }
     };
-    var dataset = [
+    return [
         {label:'Black', count:numberOfBlacks},
         {label:'White', count:numberOfWhites},
         {label:'Latino', count:numberOfLatinos},
         {label:'Asian', count:numberOfAsians},
         {label:'Other', count:numberOfOthers}
-    ]
+    ];
 
-    console.log('dataset', dataset);
+
 }
 
 function slicePieByGender(rows){
@@ -541,11 +558,12 @@ function slicePieByGender(rows){
         } else {
             numberOfMales++;
         }
-    }
-    var dataset =[ {label:'Male', count:numberOfMales},
+    };
+    //console.log('gender dataset inside sliceByGender function');
+    return [ {label:'Male', count:numberOfMales},
         {label:'Female', count:numberOfFemales}
-    ]
-    console.log('dataset', dataset);
+    ];
+
 }
 
 function slicePieByVeteran(rows){
@@ -560,10 +578,9 @@ function slicePieByVeteran(rows){
         }
     }
 
-    var dataset = [{label:'Veteran', count:numberOfVeterans},
-        {label:'Non-veterans', count:numberOfNonVeterans}]
+    return [{label:'Veteran', count:numberOfVeterans},
+        {label:'Non-veterans', count:numberOfNonVeterans}];
 
-    console.log('dataset', dataset);
 }
 // D3 LINE GRAPHS
 function genLineData(){
