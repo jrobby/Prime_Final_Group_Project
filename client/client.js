@@ -356,7 +356,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             var height = 360;
             var radius = Math.min(width, height) / 2;
             var color = d3.scale.ordinal()
-                .range(['blue', 'pink', 'yellow', 'green', 'orange', 'purple']);
+                .range(['blue', 'red', 'green', 'orange', 'purple', 'yellow']);
             //var color = d3.scale.category20b();
 
 

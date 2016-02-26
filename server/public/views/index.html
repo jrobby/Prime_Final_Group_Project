@@ -130,7 +130,7 @@
 <div class="dataArea">
     <div class="pieControls" ng-show="chartTab == 'pie'">
         <!--<h1>Pie Chart </h1>-->
-        <h1>{{pieHeading}}</h1>
+        <h3>{{pieHeading}}</h3>
         <div id="chart"></div>
     </div>
 
@@ -148,7 +148,7 @@
         <!--</svg>-->
     </div>
 
-    <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
+    <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-show="chartTab == 'pie'" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
 
     <div ng-show="averageShow" class="popUpInfo">
         <h5>Salary by Demographic</h5>
@@ -174,7 +174,7 @@
         <select class="progressDropdown" ng-model="selectedProgress" ng-options="progress for progress in progressList"></select>
         <br><br><br><br>
 
-        <button ng-click="generatePieCharts(startDate, endDate)" class="genButton">Generate Charts</button>
+        <button ng-click="generatePieCharts(startDate, endDate)" class="genButton">Generate Pie Chart</button>
     </div>
 
     <div class="lineControls" ng-show="chartTab == 'line'"><br><br><br>
@@ -185,7 +185,7 @@
 
         <br><br><br><br><br><br><br><br><br>
 
-        <button ng-click="genLineGraph()" class="genButton">Generate Line</button>
+        <button ng-click="genLineGraph()" class="genButton">Generate Line Graph</button>
     </div>
 </div>
 
