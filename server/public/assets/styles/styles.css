@@ -49,7 +49,7 @@ h1, h3, h4, h5 {
     font-weight: bold;
     text-align: center;
 }
-.tableRow, .headingRow, .bottomRow {
+.tableRow, .headingRow, .bottomRow, .bottomRetentionRow {
     border-top: 1px solid black;
     height: 30px;
     text-align: center;
@@ -64,6 +64,9 @@ h1, h3, h4, h5 {
     height: 30px;
     margin-bottom: 24px;
 }
+/*/////////////////////////////////////////////////////////////////*/
+/*RETENTION, SALARY CALCULATOR, AND EMPLOYERS SECTION TABLE SECTION*/
+/*/////////////////////////////////////////////////////////////////*/
 .selected {
     background-color: #F1F1F1;
 }
@@ -94,6 +97,9 @@ h1, h3, h4, h5 {
 .employerP{
     margin-left: 23%;
 }
+/*///////////////////////*/
+/*CHART AND GRAPH SECTION*/
+/*///////////////////////*/
 .dataArea{
     margin-left: .5%;
     width: 50%;
