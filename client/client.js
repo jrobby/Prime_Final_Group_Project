@@ -284,7 +284,9 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
     //Generate Pie Chart function
     $scope.generatePieCharts = function(){
+
         d3.select("svg").remove();
+
         var adjStartDate = new Date($scope.startDate);
         adjStartDate.setDate(adjStartDate.getDate() - 1);
 
@@ -294,6 +296,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         //var allRows=$scope.smartSheetData;
         var rowsInPie = [];
         var dataset = [];
+        $scope.pieHeading = "";
 
         if ($scope.selectedProgress == 'Served'){
             //    Get all served
@@ -323,6 +326,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         if ($scope.selectedDemographic == 'Race'){
             //    Get Race Data
             dataset = slicePieByRace(rowsInPie);
+            $scope.pieHeading = "Race"
             //console.log('Race dataset', dataset);
 
 
@@ -332,11 +336,13 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
             dataset = slicePieByGender(rowsInPie);
             console.log('gender dataset after slice', dataset);
+            $scope.pieHeading = "Gender"
 
         } else if ($scope.selectedDemographic =='Veteran Status'){
             //    Get Veteran Status Data
             dataset=slicePieByVeteran(rowsInPie);
             console.log('veteran dataset', dataset);
+            $scope.pieHeading = "Veteran Status"
         }
 
 
@@ -345,21 +351,25 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         (function(d3) {
             'use strict';
 
-
-
             var width = 360;
             var height = 360;
             var radius = Math.min(width, height) / 2;
             var color = d3.scale.ordinal()
-                .range(['pink', 'blue', 'yellow', 'green']);
+                .range(['blue', 'pink', 'yellow', 'green', 'orange', 'purple']);
             //var color = d3.scale.category20b();
+
+
             var svg = d3.select('#chart')
+
                 .append('svg')
+
+                //.append('h1').text(pieHeading)
                 .attr('width', width)
                 .attr('height', height)
                 .append('g')
                 .attr('transform', 'translate(' + (width / 2) +
                     ',' + (height / 2) + ')');
+
             var arc = d3.svg.arc()
                 .outerRadius(radius);
             var pie = d3.layout.pie()
