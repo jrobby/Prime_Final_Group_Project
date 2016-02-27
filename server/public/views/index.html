@@ -167,7 +167,7 @@
         <h5 class="dropdownHeading">Demographic Data</h5>
         <select class="lineGraphDropdown" ng-model="selectedLineGraph" ng-options="lineGraph for lineGraph in lineGraphList"></select>
 
-        <button ng-click="genLineGraph(startDate, endDate)" class="genButton">Generate Line Graph</button>
+        <button ng-click="genLineGraph(smartSheetData, selectedLineGraph, startDate, endDate)" class="genButton">Generate Line Graph</button>
     </div>
 </div>
 
