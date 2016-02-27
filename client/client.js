@@ -288,6 +288,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         var adjStartDate = new Date($scope.startDate);
         adjStartDate.setDate(adjStartDate.getDate() - 1);
 
+        $scope.selectedDisplay = $scope.selectedProgress;
 
         // Get all that data, yo
 
