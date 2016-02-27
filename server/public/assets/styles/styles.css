@@ -80,6 +80,9 @@ h1, h3, h4, h5 {
 .underlineSpan {
   text-decoration: underline;
 }
+.boldSpan{
+    font-weight: bold;
+}
 .blueSpan {
   font-weight: bold;
   color: #337ab7;
@@ -129,9 +132,6 @@ svg{
     width: 15%;
     margin: 0 .5% 0 .5%;
 }
-.graphButton{
-    width: 48%
-}
 .genButton{
     display: block;
     margin: auto;
@@ -143,11 +143,17 @@ select{
     margin: auto;
     width: 98%;
 }
-.demographicDropdownLine, .lineGraphDropdown{
-    margin-bottom: 13px;
+.dropdownHeading{
+    margin-top: 60px;
 }
 .demographicDropdown, .progressDropdown, .lineGraphDropdown {
   text-align: center;
+}
+.progressDropdown{
+    margin-bottom: 60px;
+}
+.lineGraphDropdown{
+    margin-bottom: 163px;
 }
 .footer{
     text-align: center;
@@ -193,5 +199,5 @@ rect {                                                      /* NEW */
 }                                                           /* NEW */
 
 #chart{
-    border: solid black;
+    /*border: solid black;*/
 }

@@ -1,7 +1,6 @@
 /**
  * Created by jeremycloutier on 2/16/16.
  */
-
 var app = angular.module('myApp', ['ngRoute']);
 
 app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', function($scope, $location, SmartSheetService){
@@ -40,7 +39,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
 
         for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
-            // console.log("object number" + i + " " + $scope.smartSheetData[i]);
 
             //inelegant way to account for new Date() reading date as one day prior
             //add a day to the result
@@ -73,7 +71,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.retentionData = allEmployedAtMilestones($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.generatePieCharts();
     };
-
 
 
     function employedAtMilestones(rowData, startDate, endDate, milestoneDays){
@@ -175,7 +172,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         }
         return null;
     }
-
 
 
     //[[AVERAGE CURRENT WAGE ]]///CURRENT //CURRENT //CURRENT //CURRENT //CURRENT //
@@ -322,8 +318,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         }
 
 
-
-
         //SLICE PIE BY SELECTED DEMOGRAPHIC - RACE, GENDER, VETERAN
         if ($scope.selectedDemographic == 'Race'){
             //    Get Race Data
@@ -348,7 +342,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         }
 
 
-
         //PIE CHART
         (function(d3) {
             'use strict';
@@ -362,11 +355,8 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             var legendRectSize = 18;                                  // NEW
             var legendSpacing = 4;                                    // NEW
 
-
             var svg = d3.select('#chart')
-
                 .append('svg')
-
                 //.append('h1').text(pieHeading)
                 .attr('width', width)
                 .attr('height', height)
@@ -479,7 +469,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
 
 // functions for our pie chart maker
-
 function getServedInDateRange(allRows, startDate, endDate){
     if (isNaN(startDate) || isNaN(endDate)) return null;
 
@@ -497,6 +486,7 @@ function getServedInDateRange(allRows, startDate, endDate){
     return servedInRange;
 
 }
+
 function getCompleted(allRows, startDate, endDate){
     if (isNaN(startDate) || isNaN(endDate)) return null;
 
@@ -592,7 +582,6 @@ function slicePieByGender(rows){
             numberOfMales++;
         }
     };
-    //console.log('gender dataset inside sliceByGender function');
     return [ {label:'Male', count:numberOfMales},
         {label:'Female', count:numberOfFemales}
     ];

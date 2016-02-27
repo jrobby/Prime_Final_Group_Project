@@ -80,7 +80,7 @@
             </div>
 
             <div class="tableColumn">
-                <div class="tableHeading">Fraction</div>
+                <div class="tableHeading">Retained / Placed</div>
                 <div class="tableRow">{{retentionData.threeMonth.fraction}}</div>
                 <div class="tableRow">{{retentionData.sixMonth.fraction}}</div>
                 <div class="tableRow">{{retentionData.oneYear.fraction}}</div>
@@ -101,7 +101,6 @@
                 <div class="bottomRetentionRow">{{retentionData.fiveYear.percent}}</div>
             </div>
         </div>
-        <!--<p><span ng-repeat="(key, value) in retentionData" class="retentionSpan"><span class="underlineSpan">{{key}}</span>: <span class="blueSpan">{{value.percent}}%</span></span></p>-->
     </div>
 
     <div class="salary" ng-show="tab == 'b'">
@@ -118,11 +117,11 @@
 
     <div class="employers" ng-show="tab == 'c'">
         <h5>Top 5 Employers</h5>
-        <p class="employerP">1: {{topFive[0].key}} ({{topFive[0].value}} students hired)</p>
-        <p class="employerP">2: {{topFive[1].key}} ({{topFive[1].value}} students hired)</p>
-        <p class="employerP">3: {{topFive[2].key}} ({{topFive[2].value}} students hired)</p>
-        <p class="employerP">4: {{topFive[3].key}} ({{topFive[3].value}} students hired)</p>
-        <p class="employerP">5: {{topFive[4].key}} ({{topFive[4].value}} students hired)</p>
+        <p class="employerP">1: {{topFive[0].key}} (<span class="blueSpan">{{topFive[0].value}}</span> students hired)</p>
+        <p class="employerP">2: {{topFive[1].key}} (<span class="blueSpan">{{topFive[1].value}}</span> students hired)</p>
+        <p class="employerP">3: {{topFive[2].key}} (<span class="blueSpan">{{topFive[2].value}}</span> students hired)</p>
+        <p class="employerP">4: {{topFive[3].key}} (<span class="blueSpan">{{topFive[3].value}}</span> students hired)</p>
+        <p class="employerP">5: {{topFive[4].key}} (<span class="blueSpan">{{topFive[4].value}}</span> students hired)</p>
         <br>
     </div>
 </div>
@@ -155,23 +154,18 @@
     </ul>
 
     <div class="pieControls" ng-show="chartTab == 'pie'">
-        <br><br><br>
-        <h5>Demographic Data</h5>
+        <h5 class="dropdownHeading">Demographic Data</h5>
         <select class="demographicDropdown" ng-model="selectedDemographic" ng-options="demographic for demographic in demographicList"></select>
 
-        <br><br><br>
-        <h5>Program Progress</h5>
+        <h5 class="dropdownHeading">Program Progress</h5>
         <select class="progressDropdown" ng-model="selectedProgress" ng-options="progress for progress in progressList"></select>
-        <br><br><br><br>
 
         <button ng-click="generatePieCharts(startDate, endDate)" class="genButton">Generate Pie Chart</button>
     </div>
 
-    <div class="lineControls" ng-show="chartTab == 'line'"><br><br><br>
-        <h5>Demographic Data</h5>
+    <div class="lineControls" ng-show="chartTab == 'line'">
+        <h5 class="dropdownHeading">Demographic Data</h5>
         <select class="lineGraphDropdown" ng-model="selectedLineGraph" ng-options="lineGraph for lineGraph in lineGraphList"></select>
-
-        <br><br><br><br><br><br><br><br><br>
 
         <button ng-click="genLineGraph(startDate, endDate)" class="genButton">Generate Line Graph</button>
     </div>
