@@ -357,7 +357,9 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             var radius = Math.min(width, height) / 2;
             var color = d3.scale.ordinal()
                 .range(['blue', 'red', 'green', 'orange', 'purple', 'yellow']);
-            //var color = d3.scale.category20b();
+
+            var legendRectSize = 18;                                  // NEW
+            var legendSpacing = 4;                                    // NEW
 
 
             var svg = d3.select('#chart')
@@ -384,6 +386,32 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
                 .attr('fill', function(d, i) {
                     return color(d.data.label);
                 });
+
+            var legend = svg.selectAll('.pieLegend')                     // NEW
+                .data(color.domain())                                   // NEW
+                .enter()                                                // NEW
+                .append('g')                                            // NEW
+                .attr('class', 'pieLegend')                                // NEW
+                .attr('transform', function(d, i) {                     // NEW
+                    var height = legendRectSize + legendSpacing;          // NEW
+                    var offset =  height * color.domain().length / 2;     // NEW
+                    //var horz = -2 * legendRectSize;                       // NEW
+                    //var vert = i * height - offset;
+                    var horz = -12 * legendRectSize;                       // NEW
+                    var vert = i * height - offset;       // NEW
+                    return 'translate(' + horz + ',' + vert + ')';        // NEW
+                });                                                     // NEW
+
+            legend.append('rect')                                     // NEW
+                .attr('width', legendRectSize)                          // NEW
+                .attr('height', legendRectSize)                         // NEW
+                .style('fill', color)                                   // NEW
+                .style('stroke', color);                                // NEW
+
+            legend.append('text')                                     // NEW
+                .attr('x', legendRectSize + legendSpacing)              // NEW
+                .attr('y', legendRectSize - legendSpacing)              // NEW
+                .text(function(d) { return d; });                       // NEW
         })(window.d3);
 
     };

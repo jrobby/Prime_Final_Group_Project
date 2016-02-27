@@ -184,3 +184,14 @@ h2.chartTitle {
 .legend text {
     font: 11px "Arial", sans-serif;
 }
+
+.pieLegend {                                                   /* NEW */
+    font-size: 12px;                                          /* NEW */
+}                                                           /* NEW */
+rect {                                                      /* NEW */
+    stroke-width: 2;                                          /* NEW */
+}                                                           /* NEW */
+
+#chart{
+    border: solid black;
+}
