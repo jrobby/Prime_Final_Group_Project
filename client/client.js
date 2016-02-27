@@ -14,6 +14,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     //returns an array of objects with the columns we need
     SmartSheetService.getSmartSheetData().then(function(response){
         $scope.smartSheetData = response.data;
+        console.log($scope.smartSheetData);
         $scope.submitDate();
     });
 
@@ -624,6 +625,126 @@ function genLineData(){
   ];
     return fakeData;
 }
+
+
+/*Given the name of the field to be line-graphed: assembles the data for D3
+to use.*/
+function buildLineData(allRows, yFieldName, startDate, endDate){
+  var dataPoint = null;
+  var seriesNames = [];
+  var classStartDates = [];
+
+  var countsByClass = [];
+  var graphData = [];
+
+  var chartType = 'percentage';
+  //Special case: we will display the average wage by class start date...
+  if (yFieldName == 'Wage at Placement') chartType = 'average';
+
+
+  for (var i = 0; i < allRows.length; i++){
+    var seriesIndex = -1;
+    var classIndex = -1;
+    dataPoint = lineGraphData(allRows[i], yFieldName, startDate, endDate);
+    if (dataPoint){
+      for (var j = 0; j < seriesNames.length; j++)
+      {
+        if (seriesNames[j] == dataPoint.seriesName){
+          seriesIndex = j;
+          break;
+        }
+      }
+      if (seriesIndex < 0){
+        seriesIndex = seriesNames.length;
+        seriesNames.push(dataPoint.seriesName);
+        classStartDates.push([]);
+        graphData.push([]);
+      }
+      for (var k = 0; k < classStartDates[seriesIndex].length; k++){
+        if (classStartDates[seriesIndex][k] == dataPoint.classStart){
+          classIndex = k;
+          break;
+        }
+      }
+      if (classIndex < 0){
+        classIndex = classStartDates[seriesIndex].length;
+        classStartDates[seriesIndex].push({ 'date': dataPoint.classStart, 'sum': 0 });
+        countsByClass.push(0);
+      }
+
+
+    }
+  }
+
+
+
+  //return { 'seriesNames': seriesNames, 'graphData': graphData };
+}
+
+
+
+function lineGraphData(rowData, yFieldName, startDate, endDate){
+  /*Convention: if this function returns null, either we do not have data, or the individual falls
+  outside the specified date range.  If this function returns false, we *do* have applicable data
+  for that individual, and the data value in question is equal to false.*/
+  var rowDataVal = null;
+  var rowSeriesBin = null; //the series name to which rowDataVal will be added
+  var classStart = Date.parse(rowData.classStart);
+  if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
+  if (classStart < startDate || classStart > endDate) return null;
+  switch (yFieldName){
+    case 'Gender':{
+      if (rowData.female) rowSeriesBin = 'Female';
+      else rowSeriesBin = 'Male';
+      rowDataVal = 1;
+      break;
+    }
+    case 'Age':{ //special case...binned number groups
+      rowDataVal = rowData.ageAtStart; //***THIS ONE IS COMPLICATED...
+      break;
+    }
+    case 'Race':{ //String
+      if (rowData.ethnicity) {
+        rowSeriesBin = rowData.ethnicity;
+        rowDataVal = 1;
+      }
+      break;
+    }
+    case 'Veteran Status':{
+      if (rowData.veteran) {
+        rowSeriesBin = 'Veteran';
+        rowDataVal = 1;
+      }
+      break;
+    }
+    case 'Wage at Placement':{
+      if (rowData.wages && rowData.wages.length > 0){
+        rowDataVal = rowData.wages[0];
+        rowSeriesBin = 'Wage at Placement';
+      }
+      break;
+    }
+    case 'Placement Rates':{
+      if (rowData.employHistory.start) rowDataVal = rowData.employHistory.start;
+      else rowDataVal = false;
+      rowSeriesBin = 'Placement Rate';
+      break;
+    }
+    case 'Graduation Rates':{
+      if (rowData.gradDate) rowDataVal = rowData.gradDate;
+      else rowDataVal = false;
+      rowSeriesBin = 'Graduation Rate';
+      break;
+    }
+    default: {}
+  }
+  if (rowDataVal === null) return null;
+  else return { 'seriesName': rowSeriesBin, 'classStart': classStart, 'dataVal': rowDataVal };
+}
+
+
+//$scope.lineGraphList = ['Gender', 'Age', 'Race', 'Veteran Status', 'Wage at Placement','Placement Rates', 'Graduation Rates'];
+
 
 function genLineGraph(startDate, endDate){
     console.log('yo, line chart');
