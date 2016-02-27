@@ -929,7 +929,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .domain([yRange[0], yRange[1]])
         .range([gHeight - pad, pad]);
 
-    d3.select("svg").remove(); //clear chart for rebuild
+    d3.select("lineControls.svg").remove(); //clear chart for rebuild
 
     var svg = d3.select('.lineControls')
         .append("svg")
