@@ -425,7 +425,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             legendpop.select('.label').html(d.data.label);
             legendpop.select('.count').html(d.data.count);
             legendpop.select('.percent').html(percent + '%');
-            legendpop.select('.tooltips').style('display', 'block');
+            legendpop.select('.tooltips').style('text-align', 'center');
         });
 
         path.on('mouseout', function () {
@@ -447,7 +447,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             .attr('transform', function (d, i) {
                 var height = legendRectSize + legendSpacing;
                 var offset = height * color.domain().length / 2;
-                var horz = -15 * legendRectSize;
+                var horz = -17 * legendRectSize;
                 var vert = (i * height - offset) -140;
                 return 'translate(' + horz + ',' + vert + ')';
             });

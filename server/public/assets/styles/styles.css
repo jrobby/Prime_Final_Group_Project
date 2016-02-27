@@ -240,18 +240,22 @@ svg {
     position: absolute;
     text-align: center;
     top: 313px;
-    width: 80px;
+    width: 125px;
     z-index: 10;
     float:left;
 
+
 }
 .legend {
-    font-size: 12px;
+    /*font-size: 12px;*/
+    border: solid orange;
 }
+
 rect {
     cursor: pointer;
     /* NEW */
     stroke-width: 2;
+    border: solid red;
 }
 rect.disabled {
     /* NEW */
@@ -269,4 +273,13 @@ h1 {
 
 .label{
     color:black;
+    width: 250%;
+    text-align: center;
+    align-content: center;
+    margin:auto;
+    padding: 0;
+    /*border: solid blue;*/
+    font-size: 12px;
+
 }
+
