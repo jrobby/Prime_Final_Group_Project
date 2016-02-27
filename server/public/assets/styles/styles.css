@@ -171,6 +171,12 @@ h2.chartTitle {
     stroke: black;
     stroke-width: 2;
 }
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
 .line {
     stroke-width: 2px;
     fill: none;
