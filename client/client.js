@@ -387,11 +387,11 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
                     return color(d.data.label);
                 });
 
-            var legend = svg.selectAll('.legend')                     // NEW
+            var legend = svg.selectAll('.pieLegend')                     // NEW
                 .data(color.domain())                                   // NEW
                 .enter()                                                // NEW
                 .append('g')                                            // NEW
-                .attr('class', 'legend')                                // NEW
+                .attr('class', 'pieLegend')                                // NEW
                 .attr('transform', function(d, i) {                     // NEW
                     var height = legendRectSize + legendSpacing;          // NEW
                     var offset =  height * color.domain().length / 2;     // NEW
