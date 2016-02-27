@@ -632,7 +632,7 @@ to use.*/
 function buildLineData(allRows, yFieldName, startDate, endDate){
   var dataPoint = null;
   var seriesNames = [];
-  var classStartDates = [];
+  var seriesByClassStart = [];
 
   var countsByClass = [];
   var graphData = [];
@@ -641,14 +641,33 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
   //Special case: we will display the average wage by class start date...
   if (yFieldName == 'Wage at Placement') chartType = 'average';
 
+  //Assemble list of groupings (to become x-values) by class start date
+  for (var iBin = 0; iBin < allRows.length; iBin++){
+    if (!allRows[iBin].classStart) continue;
+    if (countsByClass.length == 0) {
+      countsByClass.push({ 'date': allRows[iBin].classStart, 'sum': 0 });
+      continue;
+    }
+    for (var jBin = 0; jBin < countsByClass.length; jBin++){
+      if (countsByClass[jBin].date == allRows[iBin].classStart) break;
+      if (jBin >= countsByClass.length - 1){
+        countsByClass.push({ 'date': allRows[iBin].classStart, 'sum': 0 });
+      }
+    }
+  }
+  //Sort the groupings from earliest to latest class
+  countsByClass.sort(function(a, b){
+    if (a.date < b.date) return -1;
+    if (a.date > b.date) return 1;
+    return 0;
+  });
 
   for (var i = 0; i < allRows.length; i++){
     var seriesIndex = -1;
     var classIndex = -1;
     dataPoint = lineGraphData(allRows[i], yFieldName, startDate, endDate);
     if (dataPoint){
-      for (var j = 0; j < seriesNames.length; j++)
-      {
+      for (var j = 0; j < seriesNames.length; j++){
         if (seriesNames[j] == dataPoint.seriesName){
           seriesIndex = j;
           break;
@@ -657,27 +676,24 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
       if (seriesIndex < 0){
         seriesIndex = seriesNames.length;
         seriesNames.push(dataPoint.seriesName);
-        classStartDates.push([]);
+        seriesByClassStart.push([]);
+        for (var l = 0; l < countsByClass.length; l++){
+          seriesByClassStart[seriesByClassStart.length - 1].push({ 'date': dataPoint.classStart, 'sum': 0 });
+        }
         graphData.push([]);
       }
-      for (var k = 0; k < classStartDates[seriesIndex].length; k++){
-        if (classStartDates[seriesIndex][k] == dataPoint.classStart){
-          classIndex = k;
-          break;
+      for (var k = 0; k < countsByClass.length; k++){
+        if (Date.parse(countsByClass[k].date) == dataPoint.classStart){
+          countsByClass[k].sum++;
+          seriesByClassStart[seriesIndex][k].sum++;
         }
       }
-      if (classIndex < 0){
-        classIndex = classStartDates[seriesIndex].length;
-        classStartDates[seriesIndex].push({ 'date': dataPoint.classStart, 'sum': 0 });
-        countsByClass.push(0);
-      }
-
-
     }
   }
-
-
-
+  console.log('seriesNames:', seriesNames);
+  console.log('seriesByClassStart:', seriesByClassStart);
+  console.log('graphData:', graphData);
+  console.log('countsByClass:', countsByClass);
   //return { 'seriesNames': seriesNames, 'graphData': graphData };
 }
 
@@ -700,7 +716,16 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
       break;
     }
     case 'Age':{ //special case...binned number groups
-      rowDataVal = rowData.ageAtStart; //***THIS ONE IS COMPLICATED...
+      if (rowData.ageAtStart){
+        var age = rowData.ageAtStart;
+        rowDataVal = 1;
+        if (age < 18) rowSeriesBin = 'Under 18';
+        else if (age < 24) rowSeriesBin = '18 to 24';
+        else if (age < 30) rowSeriesBin = '24 to 30';
+        else if (age < 40) rowSeriesBin = '30 to 40';
+        else if (age < 50) rowSeriesBin = '40 to 50';
+        else rowSeriesBin = 'Over 50';
+      }
       break;
     }
     case 'Race':{ //String
@@ -725,14 +750,12 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
       break;
     }
     case 'Placement Rates':{
-      if (rowData.employHistory.start) rowDataVal = rowData.employHistory.start;
-      else rowDataVal = false;
+      if (rowData.employHistory.start) rowDataVal = 1;
       rowSeriesBin = 'Placement Rate';
       break;
     }
     case 'Graduation Rates':{
-      if (rowData.gradDate) rowDataVal = rowData.gradDate;
-      else rowDataVal = false;
+      if (rowData.gradDate) rowDataVal = 1;
       rowSeriesBin = 'Graduation Rate';
       break;
     }
@@ -752,6 +775,8 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     var gHeight = 500;
     var pad = 60;
     var gData = genLineData();
+    //var gData = buildLineData(...).graphData;
+    //var series = buildLineData(...).seriesNames;
     var palette = d3.scale.category10();
 
     buildLineData(rowData, yFieldName, startDate, endDate);
