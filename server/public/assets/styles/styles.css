@@ -143,10 +143,10 @@ select{
     margin: auto;
     width: 98%;
 }
-.demographicDropdownLine{
+.demographicDropdownLine, .lineGraphDropdown{
     margin-bottom: 13px;
 }
-.demographicDropdown, .progressDropdown {
+.demographicDropdown, .progressDropdown, .lineGraphDropdown {
   text-align: center;
 }
 .footer{

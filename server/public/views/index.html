@@ -179,9 +179,7 @@
 
     <div class="lineControls" ng-show="chartTab == 'line'"><br><br><br>
         <h5>Demographic Data</h5>
-        <select class="demographicDropdownLine" ng-model="demographics">
-            <option ng-repeat="demographic in demographicList" value="{{demographic}}">{{demographic}}</option>
-        </select>
+        <select class="lineGraphDropdown" ng-model="selectedLineGraph" ng-options="lineGraph for lineGraph in lineGraphList"></select>
 
         <br><br><br><br><br><br><br><br><br>
 

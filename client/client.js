@@ -424,8 +424,12 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
     $scope.demographicList = ['Gender', 'Age', 'Race', 'Veteran Status']; // More here, possibly?
     $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
+    $scope.lineGraphList = ['Gender', 'Age', 'Race', 'Veteran Status', 'Wage at Placement','Placement Rates', 'Graduation Rates'];
+
     $scope.selectedDemographic = 'Gender';
     $scope.selectedProgress = 'Served';
+    $scope.selectedLineGraph = 'Gender';
+
     $scope.tab = 'a';
     $scope.chartTab = 'pie';
     $scope.averageShow = false;
