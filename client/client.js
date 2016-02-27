@@ -392,7 +392,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         legendpop.append('div')
             .attr('class', 'percent');
 
-        //d3.csv('weekdays.csv', function (error, dataset) {
+
         dataset.forEach(function (d) {
             d.count = +d.count;
             d.enabled = true; // NEW
@@ -400,7 +400,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             legendpop.select('.count').html("to");
             legendpop.select('.percent').html('View Percents');
             //legendpop.select('.tooltips').style('display', 'block');
-            //legendpop.select('.tooltips').style('display', 'block');
+
 
         });
 
@@ -433,13 +433,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             legendpop.style('display', 'none');
         });
 
-        //OPTIONAL
-        //path.on('mousemove', function(d) {
-        //    legendpop.style('top', (d3.event.pageY + 10) + 'px')
-        //.style('left', (d3.event.pageX + 10) + 'px');
-        //});
-
-
         var legend = svg.selectAll('.legend')
             .data(color.domain())
             .enter()
@@ -457,40 +450,40 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             .attr('width', legendRectSize)
             .attr('height', legendRectSize)
             .style('fill', color)
-            .style('stroke', color) // UPDATED (removed semicolon)
-            .on('click', function (label) { // NEW
+            .style('stroke', color)
+            .on('click', function (label) {
                 console.log('you clicked something');
-                var rect = d3.select(this); // NEW
-                var enabled = true; // NEW
-                var totalEnabled = d3.sum(dataset.map(function (d) { // NEW
-                    return (d.enabled) ? 1 : 0; // NEW
-                })); // NEW
+                var rect = d3.select(this);
+                var enabled = true;
+                var totalEnabled = d3.sum(dataset.map(function (d) {
+                    return (d.enabled) ? 1 : 0;
+                }));
 
-                if (rect.attr('class') === 'disabled') { // NEW
-                    rect.attr('class', ''); // NEW
-                } else { // NEW
-                    if (totalEnabled < 2) return; // NEW
-                    rect.attr('class', 'disabled'); // NEW
-                    enabled = false; // NEW
-                } // NEW
+                if (rect.attr('class') === 'disabled') {
+                    rect.attr('class', '');
+                } else {
+                    if (totalEnabled < 2) return;
+                    rect.attr('class', 'disabled');
+                    enabled = false;
+                }
 
-                pie.value(function (d) { // NEW
-                    if (d.label === label) d.enabled = enabled; // NEW
-                    return (d.enabled) ? d.count : 0; // NEW
-                }); // NEW
+                pie.value(function (d) {
+                    if (d.label === label) d.enabled = enabled;
+                    return (d.enabled) ? d.count : 0;
+                });
 
-                path = path.data(pie(dataset)); // NEW
+                path = path.data(pie(dataset));
 
-                path.transition() // NEW
-                    .duration(750) // NEW
-                    .attrTween('d', function (d) { // NEW
-                        var interpolate = d3.interpolate(this._current, d); // NEW
-                        this._current = interpolate(0); // NEW
-                        return function (t) { // NEW
-                            return arc(interpolate(t)); // NEW
-                        }; // NEW
-                    }); // NEW
-            }); // NEW
+                path.transition()
+                    .duration(750)
+                    .attrTween('d', function (d) {
+                        var interpolate = d3.interpolate(this._current, d);
+                        this._current = interpolate(0);
+                        return function (t) {
+                            return arc(interpolate(t));
+                        };
+                    });
+            });
 
         legend.append('text')
             .attr('x', legendRectSize + legendSpacing)
