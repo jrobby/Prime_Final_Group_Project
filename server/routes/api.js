@@ -194,7 +194,6 @@ function ageAtDate(stringDOB, stringDate){
 }
 
 
-
 /*Returns an object representing a single person's estimated employment timeline.
 If 'start' is null, the individual has not been placed.
 If 'start' has a date value, and 'end' is null, the individual continues to be employed.
@@ -244,7 +243,6 @@ function fetchAllCols(worksheetData){
   return colIds;
 }
 
-
 /*Returns the IDs of any columns matching at least one string from each
 index of testNameArray (an array of String arrays).
 Example: say we want to search for a start date column.  testNameArray might be...
@@ -262,7 +260,6 @@ function fetchCols(testNameArray, nameToExclude, colArray){
   return matchingIds;
 }
 
-
 /*Checks if the name of a column contains one or more of the specified strings
 in an array.  Returns true if at least one string is a match.*/
 function colMatch(stringArrayToMatch, stringToExclude, colName){
@@ -275,11 +272,4 @@ function colMatch(stringArrayToMatch, stringToExclude, colName){
 }
 
 
-
 module.exports = router;
-
-
-
-
-
-//

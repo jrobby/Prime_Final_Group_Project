@@ -358,7 +358,9 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             var radius = Math.min(width, height) / 2;
             var color = d3.scale.ordinal()
                 .range(['blue', 'red', 'green', 'orange', 'purple', 'yellow']);
-            //var color = d3.scale.category20b();
+
+            var legendRectSize = 18;                                  // NEW
+            var legendSpacing = 4;                                    // NEW
 
 
             var svg = d3.select('#chart')
@@ -385,6 +387,32 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
                 .attr('fill', function(d, i) {
                     return color(d.data.label);
                 });
+
+            var legend = svg.selectAll('.pieLegend')                     // NEW
+                .data(color.domain())                                   // NEW
+                .enter()                                                // NEW
+                .append('g')                                            // NEW
+                .attr('class', 'pieLegend')                                // NEW
+                .attr('transform', function(d, i) {                     // NEW
+                    var height = legendRectSize + legendSpacing;          // NEW
+                    var offset =  height * color.domain().length / 2;     // NEW
+                    //var horz = -2 * legendRectSize;                       // NEW
+                    //var vert = i * height - offset;
+                    var horz = -12 * legendRectSize;                       // NEW
+                    var vert = i * height - offset;       // NEW
+                    return 'translate(' + horz + ',' + vert + ')';        // NEW
+                });                                                     // NEW
+
+            legend.append('rect')                                     // NEW
+                .attr('width', legendRectSize)                          // NEW
+                .attr('height', legendRectSize)                         // NEW
+                .style('fill', color)                                   // NEW
+                .style('stroke', color);                                // NEW
+
+            legend.append('text')                                     // NEW
+                .attr('x', legendRectSize + legendSpacing)              // NEW
+                .attr('y', legendRectSize - legendSpacing)              // NEW
+                .text(function(d) { return d; });                       // NEW
         })(window.d3);
 
     };
@@ -591,15 +619,19 @@ function slicePieByVeteran(rows){
 function genLineData(){
   var fakeData = [
       [
-          { x: new Date(2012, 1, 1), y: 2},
-          { x: new Date(2012, 3, 1), y: 4},
-          { x: new Date(2012, 5, 1), y: 6}
+          { x: new Date(2012, 5, 7), y: 2},
+          { x: new Date(2012, 8, 7), y: 4},
+          { x: new Date(2013, 10, 7), y: 6},
+          { x: new Date(2014, 11, 7), y: 7},
+          { x: new Date(2015, 12, 7), y: 9}
 
       ],
       [
-          { x: new Date(2012, 2, 1), y: 10},
-          { x: new Date(2012, 4, 1), y: 8},
-          { x: new Date(2012, 6, 1), y: 6}
+          { x: new Date(2012, 5, 7), y: 10},
+          { x: new Date(2012, 8, 7), y: 8},
+          { x: new Date(2013, 10, 7), y: 6},
+          { x: new Date(2014, 11, 7), y: 6},
+          { x: new Date(2015, 12, 7), y: 5}
       ]
   ];
     return fakeData;
@@ -650,7 +682,7 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
         classStartDates[seriesIndex].push({ 'date': dataPoint.classStart, 'sum': 0 });
         countsByClass.push(0);
       }
-      
+
 
     }
   }
@@ -725,9 +757,9 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
 //$scope.lineGraphList = ['Gender', 'Age', 'Race', 'Veteran Status', 'Wage at Placement','Placement Rates', 'Graduation Rates'];
 
 
-function genLineGraph(){
+function genLineGraph(startDate, endDate){
     console.log('yo, line chart');
-    var gWidth = 750;
+    var gWidth = 800;
     var gHeight = 500;
     var pad = 60;
     var gData = genLineData();
@@ -736,15 +768,15 @@ function genLineGraph(){
     var yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
     //var xRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.x; });
     var xScale = d3.time.scale()
-        .domain([new Date(2012, 0, 1), new Date(2012, 11, 31)])
+        .domain([startDate, endDate])
         .range([pad, gWidth - pad * 2]);
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom")
-        .ticks(d3.time.months)
-        .tickSize(16, 0)
-        .tickFormat(d3.time.format("%b"));
+        .ticks(d3.time.months, 6)
+        .tickSize(12, 12)
+        .tickFormat(d3.time.format("%b. '%y"));
 
     var yScale = d3.scale.linear()
         .domain([yRange[0], yRange[1]])
@@ -780,7 +812,6 @@ function genLineGraph(){
     );
 
 }
-
 
 
 //[][][] Factory to get Smartsheet data [][][][[[[[]]]]]

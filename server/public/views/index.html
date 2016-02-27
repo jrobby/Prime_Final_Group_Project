@@ -135,17 +135,7 @@
     </div>
 
     <div id="line" class="lineControls" ng-show="chartTab == 'line'">
-        <!--<svg width="100%" height="486">-->
-            <!--<text id="p0_title" class="p0_title" x="252.5" y="38.59375" text-anchor="middle" fill="#333333" style="font-size: 20px; font-family: arial;">Simple Line Graph</text>-->
-
-            <!--<rect x="10"  y="50"   width="2"  height="375" fill="black"/>-->
-            <!--<rect x="10" y="425" width="500" height="2"  fill="black"/>-->
-
-            <!--<g transform="translate(10, 225)">-->
-                <!--<path d="M0 200 L50 50 L100 150 L150 100 L200 150"-->
-                      <!--fill="none" stroke="black" stroke-width="3"></path>-->
-            <!--</g>-->
-        <!--</svg>-->
+        <!--Line Graph Appears Here-->
     </div>
 
     <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-show="chartTab == 'pie'" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
@@ -183,7 +173,7 @@
 
         <br><br><br><br><br><br><br><br><br>
 
-        <button ng-click="genLineGraph()" class="genButton">Generate Line Graph</button>
+        <button ng-click="genLineGraph(startDate, endDate)" class="genButton">Generate Line Graph</button>
     </div>
 </div>
 

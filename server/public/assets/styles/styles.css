@@ -171,10 +171,27 @@ h2.chartTitle {
     stroke: black;
     stroke-width: 2;
 }
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
 .line {
     stroke-width: 2px;
     fill: none;
 }
 .legend text {
     font: 11px "Arial", sans-serif;
+}
+
+.pieLegend {                                                   /* NEW */
+    font-size: 12px;                                          /* NEW */
+}                                                           /* NEW */
+rect {                                                      /* NEW */
+    stroke-width: 2;                                          /* NEW */
+}                                                           /* NEW */
+
+#chart{
+    border: solid black;
 }
