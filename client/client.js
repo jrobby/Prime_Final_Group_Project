@@ -757,13 +757,15 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
 //$scope.lineGraphList = ['Gender', 'Age', 'Race', 'Veteran Status', 'Wage at Placement','Placement Rates', 'Graduation Rates'];
 
 
-function genLineGraph(startDate, endDate){
+function genLineGraph(rowData, yFieldName, startDate, endDate){
     console.log('yo, line chart');
     var gWidth = 800;
     var gHeight = 500;
     var pad = 60;
     var gData = genLineData();
     var palette = d3.scale.category10();
+
+    buildLineData(rowData, yFieldName, startDate, endDate);
 
     var yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
     //var xRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.x; });
