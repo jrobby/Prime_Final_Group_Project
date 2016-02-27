@@ -665,7 +665,6 @@ function genLineGraph(startDate, endDate){
 }
 
 
-
 //[][][] Factory to get Smartsheet data [][][][[[[[]]]]]
 app.factory('SmartSheetService', ['$http', function($http){
 
