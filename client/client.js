@@ -326,14 +326,20 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             //console.log('Race dataset', dataset);
 
 
-        } else if ($scope.selectedDemographic == 'Gender') {
+        } else if ($scope.selectedDemographic=='Age'){
+            dataset = slicePieByAge(rowsInPie);
+            $scope.pieHeading = "Age";
+
+        }
+
+        else if ($scope.selectedDemographic == 'Gender') {
             //    Get Gender Data
             console.log('slicing by gender')
 
             dataset = slicePieByGender(rowsInPie);
             console.log('gender dataset after slice', dataset);
             $scope.pieHeading = "Gender"
-            dataset.forEach
+
 
         } else if ($scope.selectedDemographic == 'Veteran Status') {
             //    Get Veteran Status Data
@@ -392,7 +398,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             legendpop.select('.label').html("Mouseover");
             legendpop.select('.count').html("to");
             legendpop.select('.percent').html('View Percents');
-            legendpop.select('.tooltips').style('display', 'block');
+            //legendpop.select('.tooltips').style('display', 'block');
             //legendpop.select('.tooltips').style('display', 'block');
 
         });
@@ -622,6 +628,41 @@ function getPlaced( allRows, startDate, endDate){
     }
     //rowsInPie = placed;
     console.log('placed rows in pie', placed)
+}
+
+function slicePieByAge(rows){
+    var numUnder18 = 0;
+    var num18to24 = 0;
+    var num24to30 = 0;
+    var num30to40 = 0;
+    var num40to50 = 0;
+    var numOver50 = 0;
+
+    for (var i = 0; i < rows.length;i++){
+        var age = rows[i].ageAtStart;
+
+        if (age<18){
+            numUnder18++
+        }else if (age<24) {
+            num18to24++
+        } else if( age < 30){
+            num24to30++
+        } else if (age < 40){
+            num30to40++
+        } else if (age <50) {
+            num40to50++
+        } else numOver50++
+    }
+
+    return [
+        {label: 'Under 18', count: numUnder18},
+         {label: 'Between 18 and 24', count: num18to24},
+         {label: 'Between 24 and 30', count: num24to30},
+         {label: 'Between 30 and 40', count: num30to40},
+         {label: 'Between 40 and 50', count: num40to50},
+         {label: 'Over 50', count: numOver50}
+
+    ]
 }
 
 function slicePieByRace(rows){
