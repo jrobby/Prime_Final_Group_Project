@@ -201,3 +201,85 @@ rect {                                                      /* NEW */
 #chart{
     /*border: solid black;*/
 }
+
+.pieLegend {                                                   /* NEW */
+    font-size: 12px;                                          /* NEW */
+}                                                           /* NEW */
+
+/*#chart{*/
+/*border: solid black;*/
+/*}*/
+
+svg {
+
+    margin:auto;
+
+}
+
+#pieHeading{
+    margin-top:5px;
+    margin-bottom: 5px;
+}
+
+#chart {
+    height: 400px;
+    margin: 0 auto;
+    /* NEW */
+    position: relative;
+    width: 650px;
+
+}
+.tooltips {
+    background: #eee ;
+    box-shadow: 0 0 5px #999999;
+    color: #333 ;
+    display: block !important;
+    font-size: 12px;
+    left: 15px;
+    padding: 10px;
+    position: absolute;
+    text-align: center;
+    top: 313px;
+    width: 125px;
+    z-index: 10;
+    float:left;
+
+
+}
+.legend {
+    /*font-size: 12px;*/
+    border: solid orange;
+}
+
+rect {
+    cursor: pointer;
+    /* NEW */
+    stroke-width: 2;
+    border: solid red;
+}
+rect.disabled {
+    /* NEW */
+    fill: transparent !important;
+    /* NEW */
+}
+/* NEW */
+h1 {
+    /* NEW */
+    font-size: 14px;
+    /* NEW */
+    text-align: center;
+    /* NEW */
+}
+
+.label{
+    color:black;
+    width: 250%;
+    text-align: center;
+    align-content: center;
+    margin:auto;
+    padding: 0;
+    /*border: solid blue;*/
+    font-size: 12px;
+
+}
+

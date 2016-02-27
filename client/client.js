@@ -281,13 +281,14 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
 
     //Generate Pie Chart function
-    $scope.generatePieCharts = function(){
+    $scope.generatePieCharts = function () {
 
         d3.select("svg").remove();
 
         var adjStartDate = new Date($scope.startDate);
         adjStartDate.setDate(adjStartDate.getDate() - 1);
 
+        $scope.selectedDisplay = $scope.selectedProgress;
 
         // Get all that data, yo
 
@@ -296,22 +297,22 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         var dataset = [];
         $scope.pieHeading = "";
 
-        if ($scope.selectedProgress == 'Served'){
+        if ($scope.selectedProgress == 'Served') {
             //    Get all served
             console.log('get all data')
-            rowsInPie=getServedInDateRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
+            rowsInPie = getServedInDateRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
 
-        } else if($scope.selectedProgress=='Completed') {
+        } else if ($scope.selectedProgress == 'Completed') {
             //    Get completed
             console.log('get completed')
             rowsInPie = getCompleted($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
 
-        }else if($scope.selectedProgress='Certified A+') {
+        } else if ($scope.selectedProgress = 'Certified A+') {
             //    get Certified A+
             console.log('get certified A+ data')
             rowsInPie = getCertifiedAPlus($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
 
-        }else if($scope.selectedProgress='Placed'){
+        } else if ($scope.selectedProgress = 'Placed') {
             //    get Placed
             console.log('get Placed data')
             rowsInPie = getPlaced($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate))
@@ -319,14 +320,20 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
 
         //SLICE PIE BY SELECTED DEMOGRAPHIC - RACE, GENDER, VETERAN
-        if ($scope.selectedDemographic == 'Race'){
+        if ($scope.selectedDemographic == 'Race') {
             //    Get Race Data
             dataset = slicePieByRace(rowsInPie);
             $scope.pieHeading = "Race"
             //console.log('Race dataset', dataset);
 
 
-        } else if ($scope.selectedDemographic=='Gender') {
+        } else if ($scope.selectedDemographic=='Age'){
+            dataset = slicePieByAge(rowsInPie);
+            $scope.pieHeading = "Age";
+
+        }
+
+        else if ($scope.selectedDemographic == 'Gender') {
             //    Get Gender Data
             console.log('slicing by gender')
 
@@ -334,79 +341,165 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             console.log('gender dataset after slice', dataset);
             $scope.pieHeading = "Gender"
 
-        } else if ($scope.selectedDemographic =='Veteran Status'){
+
+        } else if ($scope.selectedDemographic == 'Veteran Status') {
             //    Get Veteran Status Data
-            dataset=slicePieByVeteran(rowsInPie);
+            dataset = slicePieByVeteran(rowsInPie);
+
             console.log('veteran dataset', dataset);
             $scope.pieHeading = "Veteran Status"
         }
 
 
-        //PIE CHART
-        (function(d3) {
-            'use strict';
+        var width = 650;
+        var height = 400;
 
-            var width = 360;
-            var height = 360;
-            var radius = Math.min(width, height) / 2;
-            var color = d3.scale.ordinal()
-                .range(['blue', 'red', 'green', 'orange', 'purple', 'yellow']);
+        var radius = Math.min(width, height) / 2;
+        //var donutWidth = 75;
+        var legendRectSize = 18;
+        var legendSpacing = 4;
 
-            var legendRectSize = 18;                                  // NEW
-            var legendSpacing = 4;                                    // NEW
 
-            var svg = d3.select('#chart')
-                .append('svg')
-                //.append('h1').text(pieHeading)
-                .attr('width', width)
-                .attr('height', height)
-                .append('g')
-                .attr('transform', 'translate(' + (width / 2) +
-                    ',' + (height / 2) + ')');
+        var color = d3.scale.category10();
+        var svg = d3.select('#chart')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr('transform', 'translate(' + (width / 2) +
+                ',' + (height / 2) + ')');
 
-            var arc = d3.svg.arc()
-                .outerRadius(radius);
-            var pie = d3.layout.pie()
-                .value(function(d) { return d.count; })
-                .sort(null);
-            var path = svg.selectAll('path')
-                .data(pie(dataset))
-                .enter()
-                .append('path')
-                .attr('d', arc)
-                .attr('fill', function(d, i) {
-                    return color(d.data.label);
-                });
+        var arc = d3.svg.arc()
+            //.innerRadius(radius - donutWidth)
+            .outerRadius(radius);
 
-            var legend = svg.selectAll('.pieLegend')                     // NEW
-                .data(color.domain())                                   // NEW
-                .enter()                                                // NEW
-                .append('g')                                            // NEW
-                .attr('class', 'pieLegend')                                // NEW
-                .attr('transform', function(d, i) {                     // NEW
-                    var height = legendRectSize + legendSpacing;          // NEW
-                    var offset =  height * color.domain().length / 2;     // NEW
-                    //var horz = -2 * legendRectSize;                       // NEW
-                    //var vert = i * height - offset;
-                    var horz = -12 * legendRectSize;                       // NEW
-                    var vert = i * height - offset;       // NEW
-                    return 'translate(' + horz + ',' + vert + ')';        // NEW
-                });                                                     // NEW
+        var pie = d3.layout.pie()
+            .value(function (d) {
+                return d.count;
+            })
+            .sort(null);
 
-            legend.append('rect')                                     // NEW
-                .attr('width', legendRectSize)                          // NEW
-                .attr('height', legendRectSize)                         // NEW
-                .style('fill', color)                                   // NEW
-                .style('stroke', color);                                // NEW
+        var legendpop = d3.select('#chart')
+            .append('div')
+            .attr('class', 'tooltips');
 
-            legend.append('text')                                     // NEW
-                .attr('x', legendRectSize + legendSpacing)              // NEW
-                .attr('y', legendRectSize - legendSpacing)              // NEW
-                .text(function(d) { return d; });                       // NEW
-        })(window.d3);
+        legendpop.append('div')
+            .attr('class', 'label');
 
-    };
+        legendpop.append('div')
+            .attr('class', 'count');
 
+        legendpop.append('div')
+            .attr('class', 'percent');
+
+        //d3.csv('weekdays.csv', function (error, dataset) {
+        dataset.forEach(function (d) {
+            d.count = +d.count;
+            d.enabled = true; // NEW
+            legendpop.select('.label').html("Mouseover");
+            legendpop.select('.count').html("to");
+            legendpop.select('.percent').html('View Percents');
+            //legendpop.select('.tooltips').style('display', 'block');
+            //legendpop.select('.tooltips').style('display', 'block');
+
+        });
+
+        var path = svg.selectAll('path')
+            .data(pie(dataset))
+            .enter()
+            .append('path')
+            .attr('d', arc)
+            .attr('fill', function (d, i) {
+                return color(d.data.label);
+            }) // UPDATED (removed semicolon)
+            .each(function (d) {
+                this._current = d;
+            }); // NEW
+
+        path.on('mouseover', function (d) {
+            var total = d3.sum(dataset.map(function (d) {
+                return (d.enabled) ? d.count : 0; // UPDATED
+            }));
+            console.log('you mousedover');
+            console.log('d.data, d.data.count, d.data.label', d.data, d.data.count, d.data.label);
+            var percent = Math.round(1000 * d.data.count / total) / 10;
+            legendpop.select('.label').html(d.data.label);
+            legendpop.select('.count').html(d.data.count);
+            legendpop.select('.percent').html(percent + '%');
+            legendpop.select('.tooltips').style('text-align', 'center');
+        });
+
+        path.on('mouseout', function () {
+            legendpop.style('display', 'none');
+        });
+
+        //OPTIONAL
+        //path.on('mousemove', function(d) {
+        //    legendpop.style('top', (d3.event.pageY + 10) + 'px')
+        //.style('left', (d3.event.pageX + 10) + 'px');
+        //});
+
+
+        var legend = svg.selectAll('.legend')
+            .data(color.domain())
+            .enter()
+            .append('g')
+            .attr('class', 'legend')
+            .attr('transform', function (d, i) {
+                var height = legendRectSize + legendSpacing;
+                var offset = height * color.domain().length / 2;
+                var horz = -17 * legendRectSize;
+                var vert = (i * height - offset) -140;
+                return 'translate(' + horz + ',' + vert + ')';
+            });
+
+        legend.append('rect')
+            .attr('width', legendRectSize)
+            .attr('height', legendRectSize)
+            .style('fill', color)
+            .style('stroke', color) // UPDATED (removed semicolon)
+            .on('click', function (label) { // NEW
+                console.log('you clicked something');
+                var rect = d3.select(this); // NEW
+                var enabled = true; // NEW
+                var totalEnabled = d3.sum(dataset.map(function (d) { // NEW
+                    return (d.enabled) ? 1 : 0; // NEW
+                })); // NEW
+
+                if (rect.attr('class') === 'disabled') { // NEW
+                    rect.attr('class', ''); // NEW
+                } else { // NEW
+                    if (totalEnabled < 2) return; // NEW
+                    rect.attr('class', 'disabled'); // NEW
+                    enabled = false; // NEW
+                } // NEW
+
+                pie.value(function (d) { // NEW
+                    if (d.label === label) d.enabled = enabled; // NEW
+                    return (d.enabled) ? d.count : 0; // NEW
+                }); // NEW
+
+                path = path.data(pie(dataset)); // NEW
+
+                path.transition() // NEW
+                    .duration(750) // NEW
+                    .attrTween('d', function (d) { // NEW
+                        var interpolate = d3.interpolate(this._current, d); // NEW
+                        this._current = interpolate(0); // NEW
+                        return function (t) { // NEW
+                            return arc(interpolate(t)); // NEW
+                        }; // NEW
+                    }); // NEW
+            }); // NEW
+
+        legend.append('text')
+            .attr('x', legendRectSize + legendSpacing)
+            .attr('y', legendRectSize - legendSpacing)
+            .text(function (d) {
+                return d;
+            });
+
+    }
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
       var tempObj = numPercentObject;
@@ -536,6 +629,41 @@ function getPlaced( allRows, startDate, endDate){
     }
     //rowsInPie = placed;
     console.log('placed rows in pie', placed)
+}
+
+function slicePieByAge(rows){
+    var numUnder18 = 0;
+    var num18to24 = 0;
+    var num24to30 = 0;
+    var num30to40 = 0;
+    var num40to50 = 0;
+    var numOver50 = 0;
+
+    for (var i = 0; i < rows.length;i++){
+        var age = rows[i].ageAtStart;
+
+        if (age<18){
+            numUnder18++
+        }else if (age<24) {
+            num18to24++
+        } else if( age < 30){
+            num24to30++
+        } else if (age < 40){
+            num30to40++
+        } else if (age <50) {
+            num40to50++
+        } else numOver50++
+    }
+
+    return [
+        {label: 'Under 18', count: numUnder18},
+         {label: 'Between 18 and 24', count: num18to24},
+         {label: 'Between 24 and 30', count: num24to30},
+         {label: 'Between 30 and 40', count: num30to40},
+         {label: 'Between 40 and 50', count: num40to50},
+         {label: 'Over 50', count: numOver50}
+
+    ]
 }
 
 function slicePieByRace(rows){
@@ -779,6 +907,16 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     //var series = buildLineData(...).seriesNames;
     var palette = d3.scale.category10();
 
+    //LEGEND INFO//
+    //legendInfo = [];
+    //for (var i = 0; i < $scope.tableData.length; i++){
+    //    gData.push([]);
+    //    for (var j = 0; j < $scope.tableData[i].AC_monthly_kWh.length; j++){
+    //        gData[gData.length - 1].push({x: j, y:  $scope.tableData[i].AC_monthly_kWh[j]});
+    //    }
+    //    legendInfo.push({'name': $scope.tableData[i].Name, 'color': palette(i)});
+    //}
+
     buildLineData(rowData, yFieldName, startDate, endDate);
 
     var yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
@@ -826,7 +964,30 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .x(function (d) { return xScale(d.x); })
         .y(function (d) { return yScale(d.y); })
     );
-
+    /////////////////////
+    //LEGEND STUFF HERE//
+    /////////////////////
+    //var legend = svg.append("g")
+    //    .attr("class", "legend")
+    //    .attr("height", 100)
+    //    .attr("width", 100)
+    //    .attr('transform', 'translate(0,20)');
+    //
+    //legend.selectAll("rect").data(gData).enter()
+    //    .append("rect")
+    //    .attr("x", gWidth - 115)
+    //    .attr("y", function(d, i){ return i * 20 + 20; })
+    //    .attr("width", 10).attr("height", 10)
+    //    .style("fill", function(d) {
+    //        return legendInfo[gData.indexOf(d)].color;
+    //    });
+    //
+    //legend.selectAll("text").data(gData).enter()
+    //    .append("text").attr("x", gWidth - 100)
+    //    .attr("y", function(d, i){ return i *  20 + 29; })
+    //    .text(function(d) {
+    //        return legendInfo[gData.indexOf(d)].name;
+    //    });
 }
 
 
