@@ -288,6 +288,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         var adjStartDate = new Date($scope.startDate);
         adjStartDate.setDate(adjStartDate.getDate() - 1);
 
+        //for chart heading display
         $scope.selectedDisplay = $scope.selectedProgress;
 
         // Get all that data, yo
@@ -297,23 +298,21 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         var dataset = [];
         $scope.pieHeading = "";
 
+        // rowsInPie = getServedInDateRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate), $scope.selectedProgress);
+
         if ($scope.selectedProgress == 'Served') {
             //    Get all served
             rowsInPie = getServedInDateRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-
-        } else if ($scope.selectedProgress == 'Completed') {
+          } else if ($scope.selectedProgress == 'Completed') {
             //    Get completed
             rowsInPie = getCompleted($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-
-        } else if ($scope.selectedProgress = 'Certified A+') {
+          } else if ($scope.selectedProgress == 'Certified A+') {
             //    get Certified A+
             rowsInPie = getCertifiedAPlus($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-
-        } else if ($scope.selectedProgress = 'Placed') {
+          } else if ($scope.selectedProgress == 'Placed') {
             //    get Placed
             rowsInPie = getPlaced($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate))
-        }
-
+          }
 
         //SLICE PIE BY SELECTED DEMOGRAPHIC - RACE, GENDER, VETERAN
         if ($scope.selectedDemographic == 'Race') {
@@ -467,6 +466,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             });
 
     }
+    //end of generatePieCharts function
 
     function incrementRowVals(smartsheetDataVal, numPercentObject){
       var tempObj = numPercentObject;
@@ -513,10 +513,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
     $scope.chartTab = 'pie';
     $scope.averageShow = false;
 
-    $scope.generateCharts = function(demographics, progress){
-        // console.log('demographics, progress', demographics, progress);
-    };
-
     $scope.showAverageSalary = function(){
         $scope.averageShow = true;
     };
@@ -526,7 +522,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
     };
 
 }]);
-
 
 // functions for our pie chart maker
 function getServedInDateRange(allRows, startDate, endDate){
@@ -586,6 +581,7 @@ function getPlaced( allRows, startDate, endDate){
             placed.push(allRows[i]);
         }
     }
+    return placed;
 }
 
 function slicePieByAge(rows){
@@ -619,8 +615,7 @@ function slicePieByAge(rows){
          {label: 'Between 30 and 40', count: num30to40},
          {label: 'Between 40 and 50', count: num40to50},
          {label: 'Over 50', count: numOver50}
-
-    ]
+       ];
 }
 
 function slicePieByRace(rows){
@@ -670,7 +665,6 @@ function slicePieByGender(rows){
     return [ {label:'Male', count:numberOfMales},
         {label:'Female', count:numberOfFemales}
     ];
-
 }
 
 function slicePieByVeteran(rows){
@@ -684,11 +678,10 @@ function slicePieByVeteran(rows){
             numberOfNonVeterans++;
         }
     }
-
     return [{label:'Veteran', count:numberOfVeterans},
         {label:'Non-veterans', count:numberOfNonVeterans}];
-
 }
+
 // D3 LINE GRAPHS
 function genLineData(){
   var fakeData = [
