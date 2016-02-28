@@ -298,21 +298,8 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         var dataset = [];
         $scope.pieHeading = "";
 
-        // rowsInPie = getServedInDateRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate), $scope.selectedProgress);
-
-        if ($scope.selectedProgress == 'Served') {
-            //    Get all served
-            rowsInPie = getServedInDateRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-          } else if ($scope.selectedProgress == 'Completed') {
-            //    Get completed
-            rowsInPie = getCompleted($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-          } else if ($scope.selectedProgress == 'Certified A+') {
-            //    get Certified A+
-            rowsInPie = getCertifiedAPlus($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
-          } else if ($scope.selectedProgress == 'Placed') {
-            //    get Placed
-            rowsInPie = getPlaced($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate))
-          }
+        //get the data depending on drop down selection ("Served", "Completed", "Certified A+", "Placed")
+        rowsInPie = getRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate), $scope.selectedProgress);
 
         //SLICE PIE BY SELECTED DEMOGRAPHIC - RACE, GENDER, VETERAN
         if ($scope.selectedDemographic == 'Race') {
@@ -524,64 +511,34 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 }]);
 
 // functions for our pie chart maker
-function getServedInDateRange(allRows, startDate, endDate){
+function getRange(allRows, startDate, endDate, selected){
     if (isNaN(startDate) || isNaN(endDate)) return null;
 
-    var servedInRange = [];
+    var range = [];
     for (var i = 0; i < allRows.length;i++){
         var classStart = Date.parse(allRows[i].classStart);
         if (isNaN(classStart)) continue;
 
-        if(startDate <= classStart && classStart <= endDate){
-            servedInRange.push(allRows[i]);
+        if(selected == "Served"){
+          if(startDate <= classStart && classStart <= endDate){
+            range.push(allRows[i]);
+            return range;
+          }
+        } else if (selected == "Completed"){
+          if(allRows[i].gradDate && startDate <= classStart && classStart <= endDate){
+            range.push(allRows[i]);
+            return range;
+          }
+        } else if (selected == "Certified A+"){
+          if(allRows[i].certDate && startDate <= classStart && classStart <= endDate){
+            range.push(allRows[i])
+            return range;
+          }
+        } else if (selected == "Placed"){
+          if(allRows[i].placedFullTime && startDate <= classStart && classStart <= endDate){
+            range.push(allRows[i]);
+            return range;
         }
-    }
-    return servedInRange;
-}
-
-function getCompleted(allRows, startDate, endDate){
-    if (isNaN(startDate) || isNaN(endDate)) return null;
-
-    var completed = [];
-    for (var i = 0; i < allRows.length;i++){
-        var classStart = Date.parse(allRows[i].classStart);
-        if (isNaN(classStart)) continue;
-
-        if(allRows[i].gradDate && startDate <= classStart && classStart <= endDate){
-            completed.push(allRows[i]);
-        }
-    }
-    return completed;
-}
-
-function getCertifiedAPlus(allRows, startDate, endDate){
-    if (isNaN(startDate) || isNaN(endDate)) return null;
-
-    var certified = [];
-    for (var i = 0; i < allRows.length;i++){
-        var classStart = Date.parse(allRows[i].classStart);
-        if (isNaN(classStart)) continue;
-
-        if(allRows[i].certDate && startDate <= classStart && classStart <= endDate){
-            certified.push(allRows[i])
-        }
-    }
-    return certified;
-}
-
-function getPlaced( allRows, startDate, endDate){
-    if (isNaN(startDate) || isNaN(endDate)) return null;
-
-    var placed = [];
-    for (var i = 0; i < allRows.length;i++){
-        var classStart = Date.parse(allRows[i].classStart);
-        if (isNaN(classStart)) continue;
-
-        if(allRows[i].placedFullTime && startDate <= classStart && classStart <= endDate){
-            placed.push(allRows[i]);
-        }
-    }
-    return placed;
 }
 
 function slicePieByAge(rows){
