@@ -19,6 +19,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     });
 
     $scope.genLineGraph = genLineGraph;
+
     //function that kicks off after date range is selected
     $scope.submitDate = function(){
         $scope.numServed = 0;
@@ -35,7 +36,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
        $scope.serverPlus = false;
        $scope.otherCert = false;
        $scope.calculatedSalary = {};
-
 
         for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
@@ -299,22 +299,18 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
         if ($scope.selectedProgress == 'Served') {
             //    Get all served
-            console.log('get all data')
             rowsInPie = getServedInDateRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
 
         } else if ($scope.selectedProgress == 'Completed') {
             //    Get completed
-            console.log('get completed')
             rowsInPie = getCompleted($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
 
         } else if ($scope.selectedProgress = 'Certified A+') {
             //    get Certified A+
-            console.log('get certified A+ data')
             rowsInPie = getCertifiedAPlus($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
 
         } else if ($scope.selectedProgress = 'Placed') {
             //    get Placed
-            console.log('get Placed data')
             rowsInPie = getPlaced($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate))
         }
 
@@ -324,41 +320,25 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             //    Get Race Data
             dataset = slicePieByRace(rowsInPie);
             $scope.pieHeading = "Race"
-            //console.log('Race dataset', dataset);
-
-
         } else if ($scope.selectedDemographic=='Age'){
             dataset = slicePieByAge(rowsInPie);
             $scope.pieHeading = "Age";
-
-        }
-
-        else if ($scope.selectedDemographic == 'Gender') {
+        } else if ($scope.selectedDemographic == 'Gender') {
             //    Get Gender Data
-            console.log('slicing by gender')
-
             dataset = slicePieByGender(rowsInPie);
-            console.log('gender dataset after slice', dataset);
             $scope.pieHeading = "Gender"
-
-
         } else if ($scope.selectedDemographic == 'Veteran Status') {
             //    Get Veteran Status Data
             dataset = slicePieByVeteran(rowsInPie);
-
-            console.log('veteran dataset', dataset);
             $scope.pieHeading = "Veteran Status"
         }
-
 
         var width = 650;
         var height = 400;
 
         var radius = Math.min(width, height) / 2;
-        //var donutWidth = 75;
         var legendRectSize = 18;
         var legendSpacing = 4;
-
 
         var color = d3.scale.category10();
         var svg = d3.select('#chart')
@@ -370,7 +350,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
                 ',' + (height / 2) + ')');
 
         var arc = d3.svg.arc()
-            //.innerRadius(radius - donutWidth)
             .outerRadius(radius);
 
         var pie = d3.layout.pie()
@@ -400,8 +379,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             legendpop.select('.count').html("to");
             legendpop.select('.percent').html('View Percents');
             //legendpop.select('.tooltips').style('display', 'block');
-
-
         });
 
         var path = svg.selectAll('path')
@@ -420,8 +397,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             var total = d3.sum(dataset.map(function (d) {
                 return (d.enabled) ? d.count : 0; // UPDATED
             }));
-            console.log('you mousedover');
-            console.log('d.data, d.data.count, d.data.label', d.data, d.data.count, d.data.label);
             var percent = Math.round(1000 * d.data.count / total) / 10;
             legendpop.select('.label').html(d.data.label);
             legendpop.select('.count').html(d.data.count);
@@ -452,7 +427,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             .style('fill', color)
             .style('stroke', color)
             .on('click', function (label) {
-                console.log('you clicked something');
                 var rect = d3.select(this);
                 var enabled = true;
                 var totalEnabled = d3.sum(dataset.map(function (d) {
@@ -540,7 +514,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
     $scope.averageShow = false;
 
     $scope.generateCharts = function(demographics, progress){
-        console.log('demographics, progress', demographics, progress);
+        // console.log('demographics, progress', demographics, progress);
     };
 
     $scope.showAverageSalary = function(){
@@ -567,10 +541,7 @@ function getServedInDateRange(allRows, startDate, endDate){
             servedInRange.push(allRows[i]);
         }
     }
-    //rowsInPie = completed;
-    console.log('served in date range', servedInRange)
     return servedInRange;
-
 }
 
 function getCompleted(allRows, startDate, endDate){
@@ -585,10 +556,7 @@ function getCompleted(allRows, startDate, endDate){
             completed.push(allRows[i]);
         }
     }
-    //rowsInPie = completed;
-    console.log('completed: ', completed)
     return completed;
-
 }
 
 function getCertifiedAPlus(allRows, startDate, endDate){
@@ -603,8 +571,6 @@ function getCertifiedAPlus(allRows, startDate, endDate){
             certified.push(allRows[i])
         }
     }
-    //rowsInPie = certified;
-    console.log('certified A+ rows in pie', certified)
     return certified;
 }
 
@@ -620,8 +586,6 @@ function getPlaced( allRows, startDate, endDate){
             placed.push(allRows[i]);
         }
     }
-    //rowsInPie = placed;
-    console.log('placed rows in pie', placed)
 }
 
 function slicePieByAge(rows){
