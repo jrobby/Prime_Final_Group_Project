@@ -361,9 +361,9 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         dataset.forEach(function (d) {
             d.count = +d.count;
             d.enabled = true; // NEW
-            legendpop.select('.label').html("Mouseover");
-            legendpop.select('.count').html("to");
-            legendpop.select('.percent').html('View Percents');
+            legendpop.select('.label').html("Mouse over");
+            legendpop.select('.count').html("chart to");
+            legendpop.select('.percent').html('view percents');
             //legendpop.select('.tooltips').style('display', 'block');
         });
 
@@ -515,30 +515,43 @@ function getRange(allRows, startDate, endDate, selected){
     if (isNaN(startDate) || isNaN(endDate)) return null;
 
     var range = [];
-    for (var i = 0; i < allRows.length;i++){
-        var classStart = Date.parse(allRows[i].classStart);
-        if (isNaN(classStart)) continue;
+    if(selected == "Served"){
+      for (var i = 0; i < allRows.length;i++){
+          var classStart = Date.parse(allRows[i].classStart);
+          if (isNaN(classStart)) continue;
 
-        if(selected == "Served"){
           if(startDate <= classStart && classStart <= endDate){
             range.push(allRows[i]);
-            return range;
           }
-        } else if (selected == "Completed"){
-          if(allRows[i].gradDate && startDate <= classStart && classStart <= endDate){
-            range.push(allRows[i]);
-            return range;
-          }
-        } else if (selected == "Certified A+"){
-          if(allRows[i].certDate && startDate <= classStart && classStart <= endDate){
-            range.push(allRows[i])
-            return range;
-          }
-        } else if (selected == "Placed"){
-          if(allRows[i].placedFullTime && startDate <= classStart && classStart <= endDate){
-            range.push(allRows[i]);
-            return range;
-        }
+        } return range;
+      } else if (selected == "Completed"){
+        for (var i = 0; i < allRows.length;i++){
+            var classStart = Date.parse(allRows[i].classStart);
+            if (isNaN(classStart)) continue;
+
+            if(allRows[i].gradDate && startDate <= classStart && classStart <= endDate){
+              range.push(allRows[i]);
+            }
+          } return range;
+      } else if (selected == "Certified A+") {
+        for (var i = 0; i < allRows.length;i++){
+            var classStart = Date.parse(allRows[i].classStart);
+            if (isNaN(classStart)) continue;
+
+            if(allRows[i].certDate && startDate <= classStart && classStart <= endDate){
+              range.push(allRows[i]);
+            }
+          } return range;
+      } else if (selected == "Placed"){
+        for (var i = 0; i < allRows.length;i++){
+            var classStart = Date.parse(allRows[i].classStart);
+            if (isNaN(classStart)) continue;
+
+            if(allRows[i].placedFullTime && startDate <= classStart && classStart <= endDate){
+              range.push(allRows[i]);
+            }
+          } return range;
+      }
 }
 
 function slicePieByAge(rows){
