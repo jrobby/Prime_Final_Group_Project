@@ -900,8 +900,9 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
 
     d3.select("#lineSVG").remove(); //clear chart for rebuild
+    d3.select("#legendArea").remove(); //clear line graph legend
 
-    var svg = d3.select('.lineControls')
+    var svg = d3.select('#line')
         .append("svg")
         .attr("id", "lineSVG")
         .attr("width", gWidth)
@@ -931,24 +932,24 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     /////////////////////
     //LEGEND STUFF HERE//
     /////////////////////
-    var legend = svg.append("g")
-       .attr("class", "legend")
-       .attr("height", 100)
-       .attr("width", 100)
-       .attr('transform', 'translate(-85,200)');
+    var legendSpace = d3.select('#lineControlPanel').append("svg").attr("id", "legendArea");
+
+    var legend = legendSpace.append("g")
+       .attr("class", "legend");
+      //  .attr('transform', 'translate(-85,200)');
 
     legend.selectAll("rect").data(gData).enter()
        .append("rect")
-       .attr("x", gWidth - 120)
-       .attr("y", function(d, i){ return i * 24 + 20; })
+       .attr("x", 5)
+       .attr("y", function(d, i){ return i * 24; })
        .attr("width", 15).attr("height", 15)
        .style("fill", function(d) {
            return legendInfo[gData.indexOf(d)].color;
        });
 
     legend.selectAll("text").data(gData).enter()
-       .append("text").attr("x", gWidth - 100)
-       .attr("y", function(d, i){ return i *  24 + 31; })
+       .append("text").attr("x", 25)
+       .attr("y", function(d, i){ return i *  24 + 11; })
        .text(function(d) {
            return legendInfo[gData.indexOf(d)].name;
        });

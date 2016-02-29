@@ -155,7 +155,7 @@ select{
     margin-bottom: 60px;
 }
 .lineGraphDropdown{
-    margin-bottom: 163px;
+    margin-bottom: 50px;
 }
 .footer{
     text-align: center;
@@ -287,10 +287,14 @@ h1 {
 
 .chartAndControls{
     padding: 0;
-    margin-left: 0.5%;
-    width: 65.5%;
+    margin: 0 0.5% 0 0.5%;
+    width: 65%;
     float: left;
     border: 2px solid black;
     border-radius: 4px;
     height: 490px;
+}
+
+#legendArea {
+  height: 300px;
 }
