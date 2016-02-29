@@ -28,11 +28,13 @@ h1, h3, h4, h5 {
 /*////////////////////*/
 .totalsTable, .dataArea, .controlPanel{
     float: left;
-    border: 2px solid black;
-    border-radius: 4px;
+    /*border: 2px solid black;*/
+    /*border-radius: 4px;*/
     height: 490px;
 }
 .totalsTable {
+    border: 2px solid black;
+    border-radius: 4px;
     width: 33%;
     margin-left: .5%;
     overflow-y: scroll;
@@ -105,8 +107,8 @@ h1, h3, h4, h5 {
 /*CHART AND GRAPH SECTION*/
 /*///////////////////////*/
 .dataArea{
-    margin-left: .5%;
-    width: 50%;
+    /*margin-left: .5%;*/
+    width: 76%;
 }
 svg{
     display: block;
@@ -129,7 +131,7 @@ svg{
     height: 120px;
 }
 .controlPanel{
-    width: 15%;
+    width: 22%;
     margin: 0 .5% 0 .5%;
 }
 .genButton{
@@ -184,7 +186,7 @@ h2.chartTitle {
     shape-rendering: crispEdges;
 }
 .line {
-    stroke-width: 2px;
+    stroke-width: 3px;
     fill: none;
 }
 .legend text {
@@ -206,14 +208,8 @@ rect {                                                      /* NEW */
     font-size: 12px;                                          /* NEW */
 }                                                           /* NEW */
 
-/*#chart{*/
-/*border: solid black;*/
-/*}*/
-
 svg {
-
     margin:auto;
-
 }
 
 #pieHeading{
@@ -243,8 +239,6 @@ svg {
     width: 125px;
     z-index: 10;
     float:left;
-
-
 }
 .legend {
     /*font-size: 12px;*/
@@ -283,3 +277,20 @@ h1 {
 
 }
 
+.verticalRule{
+    margin-left: 0.25%;
+    width: 1px;
+    background-color: gray;
+    height: 480px;
+    float: left;
+}
+
+.chartAndControls{
+    padding: 0;
+    margin-left: 0.5%;
+    width: 65.5%;
+    float: left;
+    border: 2px solid black;
+    border-radius: 4px;
+    height: 490px;
+}

@@ -859,7 +859,7 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
 
 function genLineGraph(rowData, yFieldName, startDate, endDate){
     console.log('yo, line chart');
-    var gWidth = 700;
+    var gWidth = 850;
     var gHeight = 500;
     var pad = 60;
     var allData = buildLineData(rowData, yFieldName, startDate, endDate);
@@ -885,7 +885,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     var xScale = d3.time.scale()
         .domain([startDate, endDate])
-        .range([pad, gWidth - pad * 2]);
+        .range([pad, gWidth - 250]);
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
@@ -935,7 +935,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
        .attr("class", "legend")
        .attr("height", 100)
        .attr("width", 100)
-       .attr('transform', 'translate(-50,30)');
+       .attr('transform', 'translate(-85,200)');
 
     legend.selectAll("rect").data(gData).enter()
        .append("rect")

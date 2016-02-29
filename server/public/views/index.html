@@ -126,6 +126,8 @@
     </div>
 </div>
 <!--DATA AREA: GRAPHS AND CHARTS DISPLAY HERE-->
+<div class="chartAndControls">
+
 <div class="dataArea">
     <div class="pieControls" ng-show="chartTab == 'pie'">
         <!--<h1>Pie Chart </h1>-->
@@ -144,6 +146,7 @@
     </div>
 
 </div>
+<div class="verticalRule"></div>
 <!--CONTROL PANEL: CHART CONTROLS FOR PIE CHART AND LINE GRAPH-->
 <div class="controlPanel">
     <h5>Control Panel</h5>
@@ -166,6 +169,9 @@
         <select class="lineGraphDropdown" ng-model="selectedLineGraph" ng-options="lineGraph for lineGraph in lineGraphList" ng-change="genLineGraph(smartSheetData, selectedLineGraph, startDate, endDate)"></select>
     </div>
 </div>
+
+</div>
+
 
 <div class="footer">
     <p class="copyright">&copy; Copyright 2016 -- Creating IT Futures Foundation</p>
