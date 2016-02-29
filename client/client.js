@@ -30,12 +30,12 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.certServer = { number: 0, percent: 0 };
         $scope.certSecurity = { number: 0, percent: 0 };
         //set the default for the salary calculator checkboxes
-       //resets them to unchecked if the date range is changed
-       $scope.networkPlus = false;
-       $scope.securityPlus = false;
-       $scope.serverPlus = false;
-       $scope.otherCert = false;
-       $scope.calculatedSalary = {};
+        //resets them to unchecked if the date range is changed
+        $scope.networkPlus = false;
+        $scope.securityPlus = false;
+        $scope.serverPlus = false;
+        $scope.otherCert = false;
+        $scope.calculatedSalary = {};
 
         for(var i=0; i<$scope.smartSheetData.length; i++){
             var tempStartDate = new Date($scope.smartSheetData[i].classStart);
@@ -320,6 +320,8 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             $scope.pieHeading = "Veteran Status"
         }
 
+        $scope.dataset = dataset;
+        console.log('$scope.dataset', $scope.dataset);
         var width = 650;
         var height = 400;
 
@@ -430,6 +432,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
                 pie.value(function (d) {
                     if (d.label === label) d.enabled = enabled;
+                    console.log('d.label, d.enabled', d.label, d.enabled);
                     return (d.enabled) ? d.count : 0;
                 });
 
@@ -773,180 +776,184 @@ function genLineData(){
 
 
 /*Given the name of the field to be line-graphed: assembles the data for D3
-to use.*/
+ to use.*/
 function buildLineData(allRows, yFieldName, startDate, endDate){
-  var dataPoint = null;
-  var seriesNames = [];
-  var seriesByClassStart = [];
+    var dataPoint = null;
+    var seriesNames = [];
+    var seriesByClassStart = [];
 
-  var countsByClass = [];
-  var graphData = [];
+    var countsByClass = [];
+    var graphData = [];
 
-  var chartType = 'percentage';
-  //Special case: we will display the average wage by class start date...
-  if (yFieldName == 'Wage at Placement') chartType = 'average';
+    var chartType = 'percentage';
+    //Special case: we will display the average wage by class start date...
+    if (yFieldName == 'Wage at Placement') chartType = 'average';
 
-  //Assemble list of groupings (to become x-values) by class start date
-  for (var iBin = 0; iBin < allRows.length; iBin++){
-    if (!allRows[iBin].classStart) continue;
-    if (countsByClass.length == 0) {
-      countsByClass.push({ 'date': allRows[iBin].classStart, 'sum': 0 });
-      continue;
+    //Assemble list of groupings (to become x-values) by class start date
+    for (var iBin = 0; iBin < allRows.length; iBin++){
+        if (!allRows[iBin].classStart) continue;
+        if (countsByClass.length == 0) {
+            countsByClass.push({ 'date': allRows[iBin].classStart, 'sum': 0 });
+            continue;
+        }
+        for (var jBin = 0; jBin < countsByClass.length; jBin++){
+            if (countsByClass[jBin].date == allRows[iBin].classStart) break;
+            if (jBin >= countsByClass.length - 1){
+                countsByClass.push({ 'date': allRows[iBin].classStart, 'sum': 0 });
+            }
+        }
     }
-    for (var jBin = 0; jBin < countsByClass.length; jBin++){
-      if (countsByClass[jBin].date == allRows[iBin].classStart) break;
-      if (jBin >= countsByClass.length - 1){
-        countsByClass.push({ 'date': allRows[iBin].classStart, 'sum': 0 });
-      }
-    }
-  }
-  //Sort the groupings from earliest to latest class
-  countsByClass.sort(function(a, b){
-    if (a.date < b.date) return -1;
-    if (a.date > b.date) return 1;
-    return 0;
-  });
+    //Sort the groupings from earliest to latest class
+    countsByClass.sort(function(a, b){
+        if (a.date < b.date) return -1;
+        if (a.date > b.date) return 1;
+        return 0;
+    });
 
-  for (var i = 0; i < allRows.length; i++){
-    var seriesIndex = -1;
-    var classIndex = -1;
-    dataPoint = lineGraphData(allRows[i], yFieldName, startDate, endDate);
-    if (dataPoint){
-      for (var j = 0; j < seriesNames.length; j++){
-        if (seriesNames[j] == dataPoint.seriesName){
-          seriesIndex = j;
-          break;
+    for (var i = 0; i < allRows.length; i++){
+        var seriesIndex = -1;
+        var classIndex = -1;
+        dataPoint = lineGraphData(allRows[i], yFieldName, startDate, endDate);
+        if (dataPoint){
+            for (var j = 0; j < seriesNames.length; j++){
+                if (seriesNames[j] == dataPoint.seriesName){
+                    seriesIndex = j;
+                    break;
+                }
+            }
+            if (seriesIndex < 0){
+                seriesIndex = seriesNames.length;
+                seriesNames.push(dataPoint.seriesName);
+                seriesByClassStart.push([]);
+                for (var l = 0; l < countsByClass.length; l++){
+                    seriesByClassStart[seriesByClassStart.length - 1].push({ 'date': countsByClass[l].date, 'sum': 0 });
+                }
+                graphData.push([]);
+            }
+            for (var k = 0; k < countsByClass.length; k++){
+                if (Date.parse(countsByClass[k].date) == dataPoint.classStart){
+                    countsByClass[k].sum++;
+                    seriesByClassStart[seriesIndex][k].sum += dataPoint.dataVal;
+                }
+            }
         }
-      }
-      if (seriesIndex < 0){
-        seriesIndex = seriesNames.length;
-        seriesNames.push(dataPoint.seriesName);
-        seriesByClassStart.push([]);
-        for (var l = 0; l < countsByClass.length; l++){
-          seriesByClassStart[seriesByClassStart.length - 1].push({ 'date': countsByClass[l].date, 'sum': 0 });
-        }
-        graphData.push([]);
-      }
-      for (var k = 0; k < countsByClass.length; k++){
-        if (Date.parse(countsByClass[k].date) == dataPoint.classStart){
-          countsByClass[k].sum++;
-          seriesByClassStart[seriesIndex][k].sum += dataPoint.dataVal;
-        }
-      }
     }
-  }
 
-  for (var s = 0; s < graphData.length; s++){
-    for (var g = 0; g < seriesByClassStart[s].length; g++){
-      var xVal = Date.parse(seriesByClassStart[s][g].date);
-      var yVal = null;
-      if (countsByClass[g] && countsByClass[g].sum > 0){
-        if (chartType == 'percentage'){
-          yVal = seriesByClassStart[s][g].sum / countsByClass[g].sum * 100;
+    for (var s = 0; s < graphData.length; s++){
+        for (var g = 0; g < seriesByClassStart[s].length; g++){
+            var xVal = Date.parse(seriesByClassStart[s][g].date);
+            var yVal = null;
+            if (countsByClass[g] && countsByClass[g].sum > 0){
+                if (chartType == 'percentage'){
+                    yVal = seriesByClassStart[s][g].sum / countsByClass[g].sum * 100;
+                }
+                else { //wage at placement case: average wage
+                    yVal = seriesByClassStart[s][g].sum / countsByClass[g].sum;
+                }
+            }
+            if (xVal && !isNaN(xVal) && yVal){
+                graphData[s].push({ 'x': xVal, 'y': yVal });
+            }
         }
-        else { //wage at placement case: average wage
-          yVal = seriesByClassStart[s][g].sum / countsByClass[g].sum;
-        }
-      }
-      if (xVal && !isNaN(xVal) && yVal){
-        graphData[s].push({ 'x': xVal, 'y': yVal });
-      }
     }
-  }
 
-  //clean up calc-assistive data before publishing to graph
-  var delIndex = seriesNames.indexOf('calcAssist');
-  if (delIndex >= 0){
-    seriesNames.splice(delIndex, 1);
-    graphData.splice(delIndex, 1);
-  }
-  return { 'chartType': chartType, 'seriesNames': seriesNames, 'graphData': graphData };
+    //clean up calc-assistive data before publishing to graph
+    var delIndex = seriesNames.indexOf('calcAssist');
+    if (delIndex >= 0){
+        seriesNames.splice(delIndex, 1);
+        graphData.splice(delIndex, 1);
+    }
+    console.log('seriesNames:', seriesNames);
+    console.log('seriesByClassStart:', seriesByClassStart);
+    console.log('graphData:', graphData);
+    console.log('countsByClass:', countsByClass);
+    return { 'seriesNames': seriesNames, 'graphData': graphData };
 }
 
 
 
 function lineGraphData(rowData, yFieldName, startDate, endDate){
-  /*Convention: if this function returns null, either we do not have data, or the individual falls
-  outside the specified date range.  If this function returns false, we *do* have applicable data
-  for that individual, and the data value in question is equal to false.*/
-  var rowDataVal = null;
-  var rowSeriesBin = null; //the series name to which rowDataVal will be added
-  var classStart = Date.parse(rowData.classStart);
-  if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
-  var adjStartDate = new Date(startDate);
-  adjStartDate.setDate(adjStartDate.getDate() - 1);
-  if (classStart < adjStartDate || classStart > endDate) return null;
-  switch (yFieldName){
-    case 'Gender':{
-      if (rowData.female) rowSeriesBin = 'Female';
-      else rowSeriesBin = 'Male';
-      rowDataVal = 1;
-      break;
+    /*Convention: if this function returns null, either we do not have data, or the individual falls
+     outside the specified date range.  If this function returns false, we *do* have applicable data
+     for that individual, and the data value in question is equal to false.*/
+    var rowDataVal = null;
+    var rowSeriesBin = null; //the series name to which rowDataVal will be added
+    var classStart = Date.parse(rowData.classStart);
+    if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
+    var adjStartDate = new Date(startDate);
+    adjStartDate.setDate(adjStartDate.getDate() - 1);
+    if (classStart < adjStartDate || classStart > endDate) return null;
+    switch (yFieldName){
+        case 'Gender':{
+            if (rowData.female) rowSeriesBin = 'Female';
+            else rowSeriesBin = 'Male';
+            rowDataVal = 1;
+            break;
+        }
+        case 'Age':{ //special case...binned number groups
+            if (rowData.ageAtStart){
+                var age = rowData.ageAtStart;
+                rowDataVal = 1;
+                if (age < 18) rowSeriesBin = 'Under 18';
+                else if (age < 24) rowSeriesBin = '18 to 24';
+                else if (age < 30) rowSeriesBin = '24 to 30';
+                else if (age < 40) rowSeriesBin = '30 to 40';
+                else if (age < 50) rowSeriesBin = '40 to 50';
+                else rowSeriesBin = 'Over 50';
+            }
+            break;
+        }
+        case 'Race':{ //String
+            if (rowData.ethnicity) {
+                rowSeriesBin = rowData.ethnicity;
+                rowDataVal = 1;
+            }
+            break;
+        }
+        case 'Veteran Status':{
+            if (rowData.veteran) {
+                rowSeriesBin = 'Veteran';
+                rowDataVal = 1;
+            }
+            else {
+                rowSeriesBin = 'calcAssist';
+                rowDataVal = 1;
+            }
+            break;
+        }
+        case 'Wage at Placement':{
+            if (rowData.wages && rowData.wages.length > 0){
+                rowDataVal = rowData.wages[0];
+                rowSeriesBin = 'Wage at Placement';
+            }
+            break;
+        }
+        case 'Placement Rates':{
+            if (rowData.employHistory.start) {
+                rowDataVal = 1;
+                rowSeriesBin = 'Placement Rate';
+            }
+            else {
+                rowSeriesBin = 'calcAssist';
+                rowDataVal = 1;
+            }
+            break;
+        }
+        case 'Graduation Rates':{
+            if (rowData.gradDate) {
+                rowDataVal = 1;
+                rowSeriesBin = 'Graduation Rate';
+            }
+            else {
+                rowSeriesBin = 'calcAssist';
+                rowDataVal = 1;
+            }
+            break;
+        }
+        default: {}
     }
-    case 'Age':{ //special case...binned number groups
-      if (rowData.ageAtStart){
-        var age = rowData.ageAtStart;
-        rowDataVal = 1;
-        if (age < 18) rowSeriesBin = 'Under 18';
-        else if (age < 24) rowSeriesBin = '18 to 24';
-        else if (age < 30) rowSeriesBin = '24 to 30';
-        else if (age < 40) rowSeriesBin = '30 to 40';
-        else if (age < 50) rowSeriesBin = '40 to 50';
-        else rowSeriesBin = 'Over 50';
-      }
-      break;
-    }
-    case 'Race':{ //String
-      if (rowData.ethnicity) {
-        rowSeriesBin = rowData.ethnicity;
-        rowDataVal = 1;
-      }
-      break;
-    }
-    case 'Veteran Status':{
-      if (rowData.veteran) {
-        rowSeriesBin = 'Veteran';
-        rowDataVal = 1;
-      }
-      else {
-        rowSeriesBin = 'calcAssist';
-        rowDataVal = 1;
-      }
-      break;
-    }
-    case 'Wage at Placement':{
-      if (rowData.wages && rowData.wages.length > 0){
-        rowDataVal = rowData.wages[0];
-        rowSeriesBin = 'Wage at Placement';
-      }
-      break;
-    }
-    case 'Placement Rates':{
-      if (rowData.employHistory.start) {
-        rowDataVal = 1;
-        rowSeriesBin = 'Placement Rate';
-      }
-      else {
-        rowSeriesBin = 'calcAssist';
-        rowDataVal = 1;
-      }
-      break;
-    }
-    case 'Graduation Rates':{
-      if (rowData.gradDate) {
-        rowDataVal = 1;
-        rowSeriesBin = 'Graduation Rate';
-      }
-      else {
-        rowSeriesBin = 'calcAssist';
-        rowDataVal = 1;
-      }
-      break;
-    }
-    default: {}
-  }
-  if (rowDataVal === null) return null;
-  else return { 'seriesName': rowSeriesBin, 'classStart': classStart, 'dataVal': rowDataVal };
+    if (rowDataVal === null) return null;
+    else return { 'seriesName': rowSeriesBin, 'classStart': classStart, 'dataVal': rowDataVal };
 }
 
 
@@ -955,7 +962,7 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
 
 function genLineGraph(rowData, yFieldName, startDate, endDate){
     console.log('yo, line chart');
-    var gWidth = 850;
+    var gWidth = 800;
     var gHeight = 500;
     var pad = 67;
     var allData = buildLineData(rowData, yFieldName, startDate, endDate);
@@ -966,7 +973,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     var legendInfo = [];
     for (var i = 0; i < series.length; i++){
-      legendInfo.push({ 'name': series[i], 'color': palette(i) });
+        legendInfo.push({ 'name': series[i], 'color': palette(i) });
     }
 
     //var xRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.x; });
@@ -982,7 +989,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     var xScale = d3.time.scale()
         .domain([startDate, endDate])
-        .range([pad, gWidth - 250]);
+        .range([pad, gWidth - pad * 2]);
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
@@ -999,7 +1006,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     d3.select("#lineSVG").remove(); //clear chart for rebuild
     d3.select("#legendArea").remove(); //clear line graph legend
 
-    var svg = d3.select('#line')
+    var svg = d3.select('.lineControls')
         .append("svg")
         .attr("id", "lineSVG")
         .attr("width", gWidth)
@@ -1031,7 +1038,6 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .style("text-anchor", "end")
         .text(yAxisLabel);
 
-
     var linePath = svg.selectAll("g.line").data(gData);
 
     linePath.enter().append("g")
@@ -1055,7 +1061,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     legend.selectAll("rect").data(gData).enter()
        .append("rect")
-       .attr("x", 0)
+       .attr("x", 5)
        .attr("y", function(d, i){ return i * 24; })
        .attr("width", 15).attr("height", 15)
        .style("fill", function(d) {
@@ -1063,7 +1069,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
        });
 
     legend.selectAll("text").data(gData).enter()
-       .append("text").attr("x", 20)
+       .append("text").attr("x", 25)
        .attr("y", function(d, i){ return i *  24 + 11; })
        .text(function(d) {
            return legendInfo[gData.indexOf(d)].name;
