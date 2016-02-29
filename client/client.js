@@ -726,23 +726,48 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
         seriesNames.push(dataPoint.seriesName);
         seriesByClassStart.push([]);
         for (var l = 0; l < countsByClass.length; l++){
-          seriesByClassStart[seriesByClassStart.length - 1].push({ 'date': dataPoint.classStart, 'sum': 0 });
+          seriesByClassStart[seriesByClassStart.length - 1].push({ 'date': countsByClass[l].date, 'sum': 0 });
         }
         graphData.push([]);
       }
       for (var k = 0; k < countsByClass.length; k++){
         if (Date.parse(countsByClass[k].date) == dataPoint.classStart){
           countsByClass[k].sum++;
-          seriesByClassStart[seriesIndex][k].sum++;
+          seriesByClassStart[seriesIndex][k].sum += dataPoint.dataVal;
         }
       }
     }
+  }
+
+  for (var s = 0; s < graphData.length; s++){
+    for (var g = 0; g < seriesByClassStart[s].length; g++){
+      var xVal = Date.parse(seriesByClassStart[s][g].date);
+      var yVal = null;
+      if (countsByClass[g] && countsByClass[g].sum > 0){
+        if (chartType == 'percentage'){
+          yVal = seriesByClassStart[s][g].sum / countsByClass[g].sum * 100;
+        }
+        else { //wage at placement case: average wage
+          yVal = seriesByClassStart[s][g].sum / countsByClass[g].sum;
+        }
+      }
+      if (xVal && !isNaN(xVal) && yVal){
+        graphData[s].push({ 'x': xVal, 'y': yVal });
+      }
+    }
+  }
+
+  //clean up calc-assistive data before publishing to graph
+  var delIndex = seriesNames.indexOf('calcAssist');
+  if (delIndex >= 0){
+    seriesNames.splice(delIndex, 1);
+    graphData.splice(delIndex, 1);
   }
   console.log('seriesNames:', seriesNames);
   console.log('seriesByClassStart:', seriesByClassStart);
   console.log('graphData:', graphData);
   console.log('countsByClass:', countsByClass);
-  //return { 'seriesNames': seriesNames, 'graphData': graphData };
+  return { 'seriesNames': seriesNames, 'graphData': graphData };
 }
 
 
@@ -755,7 +780,9 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
   var rowSeriesBin = null; //the series name to which rowDataVal will be added
   var classStart = Date.parse(rowData.classStart);
   if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
-  if (classStart < startDate || classStart > endDate) return null;
+  var adjStartDate = new Date(startDate);
+  adjStartDate.setDate(adjStartDate.getDate() - 1);
+  if (classStart < adjStartDate || classStart > endDate) return null;
   switch (yFieldName){
     case 'Gender':{
       if (rowData.female) rowSeriesBin = 'Female';
@@ -788,6 +815,10 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
         rowSeriesBin = 'Veteran';
         rowDataVal = 1;
       }
+      else {
+        rowSeriesBin = 'calcAssist';
+        rowDataVal = 1;
+      }
       break;
     }
     case 'Wage at Placement':{
@@ -798,13 +829,25 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
       break;
     }
     case 'Placement Rates':{
-      if (rowData.employHistory.start) rowDataVal = 1;
-      rowSeriesBin = 'Placement Rate';
+      if (rowData.employHistory.start) {
+        rowDataVal = 1;
+        rowSeriesBin = 'Placement Rate';
+      }
+      else {
+        rowSeriesBin = 'calcAssist';
+        rowDataVal = 1;
+      }
       break;
     }
     case 'Graduation Rates':{
-      if (rowData.gradDate) rowDataVal = 1;
-      rowSeriesBin = 'Graduation Rate';
+      if (rowData.gradDate) {
+        rowDataVal = 1;
+        rowSeriesBin = 'Graduation Rate';
+      }
+      else {
+        rowSeriesBin = 'calcAssist';
+        rowDataVal = 1;
+      }
       break;
     }
     default: {}
@@ -822,9 +865,10 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     var gWidth = 800;
     var gHeight = 500;
     var pad = 60;
-    var gData = genLineData();
-    //var gData = buildLineData(...).graphData;
-    //var series = buildLineData(...).seriesNames;
+    var allData = buildLineData(rowData, yFieldName, startDate, endDate);
+    // var gData = genLineData();
+    var gData = allData.graphData;
+    var series = allData.seriesNames;
     var palette = d3.scale.category10();
 
     //LEGEND INFO//
@@ -837,7 +881,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     //    legendInfo.push({'name': $scope.tableData[i].Name, 'color': palette(i)});
     //}
 
-    buildLineData(rowData, yFieldName, startDate, endDate);
+
 
     var yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
     //var xRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.x; });
@@ -857,7 +901,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .range([gHeight - pad, pad]);
 
 
-    d3.select("lineControls.svg").remove(); //clear chart for rebuild
+    d3.select("#lineSVG").remove(); //clear chart for rebuild
 
     var svg = d3.select('.lineControls')
         .append("svg")
