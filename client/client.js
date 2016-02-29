@@ -70,6 +70,7 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.getTopFive = getTopFiveEmployers($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.retentionData = allEmployedAtMilestones($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
         $scope.generatePieCharts();
+        $scope.genLineGraph($scope.smartSheetData, $scope.selectedLineGraph, Date.parse($scope.startDate), Date.parse($scope.endDate));
     };
 
 
@@ -763,11 +764,7 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
     seriesNames.splice(delIndex, 1);
     graphData.splice(delIndex, 1);
   }
-  console.log('seriesNames:', seriesNames);
-  console.log('seriesByClassStart:', seriesByClassStart);
-  console.log('graphData:', graphData);
-  console.log('countsByClass:', countsByClass);
-  return { 'seriesNames': seriesNames, 'graphData': graphData };
+  return { 'chartType': chartType, 'seriesNames': seriesNames, 'graphData': graphData };
 }
 
 
@@ -876,10 +873,16 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
       legendInfo.push({ 'name': series[i], 'color': palette(i) });
     }
 
-
-
-    var yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
     //var xRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.x; });
+    // var yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
+
+    var yRange = [0, 100];
+    if (allData.chartType == 'average'){ //special case: y-scale for wage chart
+      yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
+      yRange[0] /= 1.5;
+      yRange[1] *= 1.25;
+    }
+
     var xScale = d3.time.scale()
         .domain([startDate, endDate])
         .range([pad, gWidth - pad * 2]);
