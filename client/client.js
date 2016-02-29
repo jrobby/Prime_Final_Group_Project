@@ -871,15 +871,10 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     var series = allData.seriesNames;
     var palette = d3.scale.category10();
 
-    //LEGEND INFO//
-    //legendInfo = [];
-    //for (var i = 0; i < $scope.tableData.length; i++){
-    //    gData.push([]);
-    //    for (var j = 0; j < $scope.tableData[i].AC_monthly_kWh.length; j++){
-    //        gData[gData.length - 1].push({x: j, y:  $scope.tableData[i].AC_monthly_kWh[j]});
-    //    }
-    //    legendInfo.push({'name': $scope.tableData[i].Name, 'color': palette(i)});
-    //}
+    var legendInfo = [];
+    for (var i = 0; i < series.length; i++){
+      legendInfo.push({ 'name': series[i], 'color': palette(i) });
+    }
 
 
 
@@ -933,27 +928,27 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     /////////////////////
     //LEGEND STUFF HERE//
     /////////////////////
-    //var legend = svg.append("g")
-    //    .attr("class", "legend")
-    //    .attr("height", 100)
-    //    .attr("width", 100)
-    //    .attr('transform', 'translate(0,20)');
-    //
-    //legend.selectAll("rect").data(gData).enter()
-    //    .append("rect")
-    //    .attr("x", gWidth - 115)
-    //    .attr("y", function(d, i){ return i * 20 + 20; })
-    //    .attr("width", 10).attr("height", 10)
-    //    .style("fill", function(d) {
-    //        return legendInfo[gData.indexOf(d)].color;
-    //    });
-    //
-    //legend.selectAll("text").data(gData).enter()
-    //    .append("text").attr("x", gWidth - 100)
-    //    .attr("y", function(d, i){ return i *  20 + 29; })
-    //    .text(function(d) {
-    //        return legendInfo[gData.indexOf(d)].name;
-    //    });
+    var legend = svg.append("g")
+       .attr("class", "legend")
+       .attr("height", 100)
+       .attr("width", 100)
+       .attr('transform', 'translate(0,20)');
+
+    legend.selectAll("rect").data(gData).enter()
+       .append("rect")
+       .attr("x", gWidth - 115)
+       .attr("y", function(d, i){ return i * 20 + 20; })
+       .attr("width", 10).attr("height", 10)
+       .style("fill", function(d) {
+           return legendInfo[gData.indexOf(d)].color;
+       });
+
+    legend.selectAll("text").data(gData).enter()
+       .append("text").attr("x", gWidth - 100)
+       .attr("y", function(d, i){ return i *  20 + 29; })
+       .text(function(d) {
+           return legendInfo[gData.indexOf(d)].name;
+       });
 }
 
 
