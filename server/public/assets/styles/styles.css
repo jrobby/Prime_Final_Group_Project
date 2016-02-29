@@ -28,8 +28,6 @@ h1, h3, h4, h5 {
 /*////////////////////*/
 .totalsTable, .dataArea, .controlPanel{
     float: left;
-    /*border: 2px solid black;*/
-    /*border-radius: 4px;*/
     height: 490px;
 }
 .totalsTable {
@@ -38,9 +36,6 @@ h1, h3, h4, h5 {
     width: 33%;
     margin-left: .5%;
     overflow-y: scroll;
-}
-.tableMain {
-
 }
 .tableColumn{
     float: left;
@@ -79,9 +74,6 @@ h1, h3, h4, h5 {
     width: 25%;
     margin-bottom: 12px;
 }
-.underlineSpan {
-  text-decoration: underline;
-}
 .boldSpan{
     font-weight: bold;
 }
@@ -106,8 +98,16 @@ h1, h3, h4, h5 {
 /*///////////////////////*/
 /*CHART AND GRAPH SECTION*/
 /*///////////////////////*/
+.chartAndControls{
+    padding: 0;
+    margin: 0 0.5% 0 0.5%;
+    width: 65%;
+    float: left;
+    border: 2px solid black;
+    border-radius: 4px;
+    height: 490px;
+}
 .dataArea{
-    /*margin-left: .5%;*/
     width: 76%;
 }
 svg{
@@ -116,40 +116,47 @@ svg{
     text-align: center;
 }
 .plusIcon{
-    height: 64px;
-    width: 64px;
+    height: 48px;
+    width: 48px;
     display: block;
     margin-left: auto;
-    margin-top: -14px;
+    margin-top: -18px;
 }
 .popUpInfo{
     display: block;
-    margin: -200px 10px 0 auto;
+    margin: -186px 4px 0 auto;
     border: 1px solid black;
     border-radius: 4px;
     width: 130px;
     height: 120px;
 }
+.verticalRule{
+    margin: 0 .25% 0 .25%;
+    width: 2px;
+    background-color: lightgray;
+    height: 100%;
+    float: left;
+}
 .controlPanel{
     width: 22%;
     margin: 0 .5% 0 .5%;
 }
-.genButton{
-    display: block;
-    margin: auto;
-    width: 100%;
-    height: 50px;
-}
+/*.genButton{*/
+    /*display: block;*/
+    /*margin: auto;*/
+    /*width: 100%;*/
+    /*height: 50px;*/
+/*}*/
 select{
     display: block;
     margin: auto;
     width: 98%;
 }
+.demographicDropdown, .progressDropdown, .lineGraphDropdown {
+    text-align: center;
+}
 .dropdownHeading{
     margin-top: 60px;
-}
-.demographicDropdown, .progressDropdown, .lineGraphDropdown {
-  text-align: center;
 }
 .progressDropdown{
     margin-bottom: 60px;
@@ -198,7 +205,7 @@ h2.chartTitle {
 }                                                           /* NEW */
 rect {                                                      /* NEW */
     stroke-width: 2;                                          /* NEW */
-}                                                           /* NEW */
+}
 
 #chart{
     /*border: solid black;*/
@@ -207,20 +214,16 @@ rect {                                                      /* NEW */
 .pieLegend {                                                   /* NEW */
     font-size: 12px;                                          /* NEW */
 }                                                           /* NEW */
-
 svg {
     margin:auto;
 }
-
 #pieHeading{
     margin-top:5px;
     margin-bottom: 5px;
 }
-
 #chart {
     height: 400px;
     margin: 0 auto;
-    /* NEW */
     position: relative;
     width: 650px;
 
@@ -241,28 +244,20 @@ svg {
     float:left;
 }
 .legend {
-    /*font-size: 12px;*/
     border: solid orange;
 }
 
 rect {
     cursor: pointer;
-    /* NEW */
     stroke-width: 2;
     border: solid red;
 }
 rect.disabled {
-    /* NEW */
     fill: transparent !important;
-    /* NEW */
 }
-/* NEW */
 h1 {
-    /* NEW */
     font-size: 14px;
-    /* NEW */
     text-align: center;
-    /* NEW */
 }
 
 .label{
@@ -274,25 +269,6 @@ h1 {
     padding: 0;
     /*border: solid blue;*/
     font-size: 12px;
-
-}
-
-.verticalRule{
-    margin-left: 0.25%;
-    width: 1px;
-    background-color: gray;
-    height: 480px;
-    float: left;
-}
-
-.chartAndControls{
-    padding: 0;
-    margin: 0 0.5% 0 0.5%;
-    width: 65%;
-    float: left;
-    border: 2px solid black;
-    border-radius: 4px;
-    height: 490px;
 }
 
 #legendArea {

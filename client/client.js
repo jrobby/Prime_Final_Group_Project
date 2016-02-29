@@ -1007,11 +1007,22 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     var yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(8);
 
-    svg.append("g").attr("class", "axis")
-        .attr("transform", "translate(0," + (gHeight - pad) + ")").call(xAxis);
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (gHeight - pad) + ")")
+        .call(xAxis);
 
-    svg.append("g").attr("class", "axis")
-        .attr("transform", "translate(" + pad + ",0)").call(yAxis);
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + pad + ",0)")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("x", -200)
+        .attr("dy", "-3em")
+        .style("text-anchor", "end")
+        .text("Percent (%)");
 
     var linePath = svg.selectAll("g.line").data(gData);
 
