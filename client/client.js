@@ -707,14 +707,12 @@ function slicePieByGender(rows){
             numberOfFemales++;
             if (rows[i].employHistory.start && rows[i].wages.length > 0){
                 totalFemaleSalaries+=firstWage;
-
             }
 
         } else {
             numberOfMales++;
             if (rows[i].employHistory.start && rows[i].wages.length > 0){
                 totalMaleSalaries+=firstWage;
-
             }
         }
     };
