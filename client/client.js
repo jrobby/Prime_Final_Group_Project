@@ -962,9 +962,9 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
 
 function genLineGraph(rowData, yFieldName, startDate, endDate){
     console.log('yo, line chart');
-    var gWidth = 800;
-    var gHeight = 500;
-    var pad = 67;
+    var gWidth = 720;
+    var gHeight = 480;
+    var pad = 50;
     var allData = buildLineData(rowData, yFieldName, startDate, endDate);
     // var gData = genLineData();
     var gData = allData.graphData;
@@ -1002,6 +1002,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .domain([yRange[0], yRange[1]])
         .range([gHeight - pad, pad]);
 
+    var yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(8);
 
     d3.select("#lineSVG").remove(); //clear chart for rebuild
     d3.select("#legendArea").remove(); //clear line graph legend
@@ -1013,7 +1014,11 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .attr("height", gHeight)
         .attr("opacity", "1");
 
-    var yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(8);
+    svg.append("text")
+        .attr("x", gWidth / 2)
+        .attr("y", 40)
+        .style("text-anchor", "middle")
+        .text("Title");
 
     svg.append("g")
         .attr("class", "axis")
@@ -1034,7 +1039,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
         .attr("x", -200)
-        .attr("dy", "-3em")
+        .attr("dy", "-2.8em")
         .style("text-anchor", "end")
         .text(yAxisLabel);
 
