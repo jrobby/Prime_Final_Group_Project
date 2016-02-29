@@ -155,19 +155,15 @@
 
     <div class="pieControls" ng-show="chartTab == 'pie'">
         <h5 class="dropdownHeading">Demographic Data</h5>
-        <select class="demographicDropdown" ng-model="selectedDemographic" ng-options="demographic for demographic in demographicList"></select>
+        <select class="demographicDropdown" ng-model="selectedDemographic" ng-options="demographic for demographic in demographicList" ng-change="generatePieCharts(startDate, endDate)"></select>
 
         <h5 class="dropdownHeading">Program Progress</h5>
-        <select class="progressDropdown" ng-model="selectedProgress" ng-options="progress for progress in progressList"></select>
-
-        <button ng-click="generatePieCharts(startDate, endDate)" class="genButton">Generate Pie Chart</button>
+        <select class="progressDropdown" ng-model="selectedProgress" ng-options="progress for progress in progressList" ng-change="generatePieCharts(startDate, endDate)"></select>
     </div>
 
     <div class="lineControls" ng-show="chartTab == 'line'">
         <h5 class="dropdownHeading">Demographic Data</h5>
-        <select class="lineGraphDropdown" ng-model="selectedLineGraph" ng-options="lineGraph for lineGraph in lineGraphList"></select>
-
-        <button ng-click="genLineGraph(smartSheetData, selectedLineGraph, startDate, endDate)" class="genButton">Generate Line Graph</button>
+        <select class="lineGraphDropdown" ng-model="selectedLineGraph" ng-options="lineGraph for lineGraph in lineGraphList" ng-change="genLineGraph(smartSheetData, selectedLineGraph, startDate, endDate)"></select>
     </div>
 </div>
 
