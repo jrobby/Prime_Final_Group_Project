@@ -862,7 +862,7 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
 
 function genLineGraph(rowData, yFieldName, startDate, endDate){
     console.log('yo, line chart');
-    var gWidth = 800;
+    var gWidth = 700;
     var gHeight = 500;
     var pad = 60;
     var allData = buildLineData(rowData, yFieldName, startDate, endDate);
@@ -932,20 +932,20 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
        .attr("class", "legend")
        .attr("height", 100)
        .attr("width", 100)
-       .attr('transform', 'translate(0,20)');
+       .attr('transform', 'translate(-50,30)');
 
     legend.selectAll("rect").data(gData).enter()
        .append("rect")
-       .attr("x", gWidth - 115)
-       .attr("y", function(d, i){ return i * 20 + 20; })
-       .attr("width", 10).attr("height", 10)
+       .attr("x", gWidth - 120)
+       .attr("y", function(d, i){ return i * 24 + 20; })
+       .attr("width", 15).attr("height", 15)
        .style("fill", function(d) {
            return legendInfo[gData.indexOf(d)].color;
        });
 
     legend.selectAll("text").data(gData).enter()
        .append("text").attr("x", gWidth - 100)
-       .attr("y", function(d, i){ return i *  20 + 29; })
+       .attr("y", function(d, i){ return i *  24 + 31; })
        .text(function(d) {
            return legendInfo[gData.indexOf(d)].name;
        });
