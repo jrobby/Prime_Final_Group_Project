@@ -2,6 +2,7 @@
  * Created by jeremycloutier on 2/16/16.
  */
 var app = angular.module('myApp', ['ngRoute']);
+var CALC_ASSIST = 'calcAssist';
 
 app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', function($scope, $location, SmartSheetService){
 
@@ -753,28 +754,6 @@ function slicePieByVeteran(rows){
 
 
 // D3 LINE GRAPHS
-function genLineData(){
-  var fakeData = [
-      [
-          { x: new Date(2012, 5, 7), y: 2},
-          { x: new Date(2012, 8, 7), y: 4},
-          { x: new Date(2013, 10, 7), y: 6},
-          { x: new Date(2014, 11, 7), y: 7},
-          { x: new Date(2015, 12, 7), y: 9}
-
-      ],
-      [
-          { x: new Date(2012, 5, 7), y: 10},
-          { x: new Date(2012, 8, 7), y: 8},
-          { x: new Date(2013, 10, 7), y: 6},
-          { x: new Date(2014, 11, 7), y: 6},
-          { x: new Date(2015, 12, 7), y: 5}
-      ]
-  ];
-    return fakeData;
-}
-
-
 /*Given the name of the field to be line-graphed: assembles the data for D3
  to use.*/
 function buildLineData(allRows, yFieldName, startDate, endDate){
@@ -858,16 +837,12 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
     }
 
     //clean up calc-assistive data before publishing to graph
-    var delIndex = seriesNames.indexOf('calcAssist');
+    var delIndex = seriesNames.indexOf(CALC_ASSIST);
     if (delIndex >= 0){
         seriesNames.splice(delIndex, 1);
         graphData.splice(delIndex, 1);
     }
-    console.log('seriesNames:', seriesNames);
-    console.log('seriesByClassStart:', seriesByClassStart);
-    console.log('graphData:', graphData);
-    console.log('countsByClass:', countsByClass);
-    return { 'seriesNames': seriesNames, 'graphData': graphData };
+    return { 'chartType': chartType, 'seriesNames': seriesNames, 'graphData': graphData, title: yFieldName + " by Class Start Date" };
 }
 
 
@@ -916,7 +891,7 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
                 rowDataVal = 1;
             }
             else {
-                rowSeriesBin = 'calcAssist';
+                rowSeriesBin = CALC_ASSIST;
                 rowDataVal = 1;
             }
             break;
@@ -934,7 +909,7 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
                 rowSeriesBin = 'Placement Rate';
             }
             else {
-                rowSeriesBin = 'calcAssist';
+                rowSeriesBin = CALC_ASSIST;
                 rowDataVal = 1;
             }
             break;
@@ -945,7 +920,7 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
                 rowSeriesBin = 'Graduation Rate';
             }
             else {
-                rowSeriesBin = 'calcAssist';
+                rowSeriesBin = CALC_ASSIST;
                 rowDataVal = 1;
             }
             break;
@@ -969,6 +944,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     // var gData = genLineData();
     var gData = allData.graphData;
     var series = allData.seriesNames;
+    var title = allData.title;
     var palette = d3.scale.category10();
 
     var legendInfo = [];
@@ -980,6 +956,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     // var yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
     var yAxisLabel = 'Percent (%)';
     var yRange = [0, 100];
+    console.log('chartType:', allData.chartType);
     if (allData.chartType == 'average'){ //special case: y-scale for wage chart
       yAxisLabel = 'Average Wage ($/hr)';
       yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
@@ -1018,7 +995,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .attr("x", gWidth / 2)
         .attr("y", 40)
         .style("text-anchor", "middle")
-        .text("Title");
+        .text(title);
 
     svg.append("g")
         .attr("class", "axis")
