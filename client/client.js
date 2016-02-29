@@ -842,7 +842,7 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
         seriesNames.splice(delIndex, 1);
         graphData.splice(delIndex, 1);
     }
-    return { 'chartType': chartType, 'seriesNames': seriesNames, 'graphData': graphData, title: yFieldName + " by Class Start Date" };
+    return { 'chartType': chartType, 'seriesNames': seriesNames, 'graphData': graphData, 'title': yFieldName + " Over Time" };
 }
 
 
@@ -1043,7 +1043,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     legend.selectAll("rect").data(gData).enter()
        .append("rect")
-       .attr("x", 5)
+       .attr("x", 0)
        .attr("y", function(d, i){ return i * 24; })
        .attr("width", 15).attr("height", 15)
        .style("fill", function(d) {
@@ -1051,7 +1051,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
        });
 
     legend.selectAll("text").data(gData).enter()
-       .append("text").attr("x", 25)
+       .append("text").attr("x", 20)
        .attr("y", function(d, i){ return i *  24 + 11; })
        .text(function(d) {
            return legendInfo[gData.indexOf(d)].name;
