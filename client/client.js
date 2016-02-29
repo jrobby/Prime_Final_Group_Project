@@ -957,7 +957,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     console.log('yo, line chart');
     var gWidth = 850;
     var gHeight = 500;
-    var pad = 60;
+    var pad = 67;
     var allData = buildLineData(rowData, yFieldName, startDate, endDate);
     // var gData = genLineData();
     var gData = allData.graphData;
@@ -971,9 +971,10 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     //var xRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.x; });
     // var yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
-
+    var yAxisLabel = 'Percent (%)';
     var yRange = [0, 100];
     if (allData.chartType == 'average'){ //special case: y-scale for wage chart
+      yAxisLabel = 'Average Wage ($/hr)';
       yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
       yRange[0] /= 1.5;
       yRange[1] *= 1.25;
@@ -1010,7 +1011,13 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     svg.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0," + (gHeight - pad) + ")")
-        .call(xAxis);
+        .call(xAxis)
+        .append("text")
+        .attr("y", 48)
+        .attr("x", 400)
+        // .attr("dy", "-3em")
+        .style("text-anchor", "end")
+        .text('Class Start Date');
 
     svg.append("g")
         .attr("class", "axis")
@@ -1022,7 +1029,8 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .attr("x", -200)
         .attr("dy", "-3em")
         .style("text-anchor", "end")
-        .text("Percent (%)");
+        .text(yAxisLabel);
+
 
     var linePath = svg.selectAll("g.line").data(gData);
 
@@ -1047,7 +1055,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     legend.selectAll("rect").data(gData).enter()
        .append("rect")
-       .attr("x", 5)
+       .attr("x", 0)
        .attr("y", function(d, i){ return i * 24; })
        .attr("width", 15).attr("height", 15)
        .style("fill", function(d) {
@@ -1055,7 +1063,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
        });
 
     legend.selectAll("text").data(gData).enter()
-       .append("text").attr("x", 25)
+       .append("text").attr("x", 20)
        .attr("y", function(d, i){ return i *  24 + 11; })
        .text(function(d) {
            return legendInfo[gData.indexOf(d)].name;
