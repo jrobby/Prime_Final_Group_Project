@@ -142,7 +142,10 @@
     <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-show="chartTab == 'pie'" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
 
     <div ng-show="averageShow" class="popUpInfo">
-        <h5>Salary by Demographic</h5>
+        <h5>Average starting wage by {{selectedDemographic}}</h5>
+        <div ng-repeat="x in dataset">
+            {{x.label}}: ${{x.averageSalary}}/hr
+        </div>
     </div>
 
 </div>

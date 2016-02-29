@@ -554,7 +554,7 @@ function getRange(allRows, startDate, endDate, selected){
           } return range;
       }
 }
-
+//Slice pie by selected demographic
 function slicePieByAge(rows){
     var numUnder18 = 0;
     var num18to24 = 0;
@@ -563,59 +563,130 @@ function slicePieByAge(rows){
     var num40to50 = 0;
     var numOver50 = 0;
 
+    var salarySumUnder18 = 0;
+    var salarySum18_24 = 0;
+    var salarySum24_30 = 0;
+    var salarySum30_40 = 0;
+    var salarySum40_50 = 0;
+    var salarySum50Up = 0;
+
+
     for (var i = 0; i < rows.length;i++){
         var age = rows[i].ageAtStart;
 
+        //var firstWage = rows[i].wages[0];
+
         if (age<18){
-            numUnder18++
+            numUnder18++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                salarySumUnder18+=rows[i].wages[0];
+                console.log('salarySumUnder18 update', salarySumUnder18);
+            }
         }else if (age<24) {
-            num18to24++
+            num18to24++;
+            console.log('count 18 to 24', num18to24);
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                salarySum18_24+=(rows[i].wages[0]).toFixed(2);
+                console.log('salarySum18to24 update', salarySum18_24);
+            }
         } else if( age < 30){
-            num24to30++
+            num24to30++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                salarySum24_30+=rows[i].wages[0];
+                console.log('salarySum24to30 update', salarySum24_30);
+            }
         } else if (age < 40){
-            num30to40++
+            num30to40++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                salarySum30_40+=rows[i].wages[0]
+            }
         } else if (age <50) {
-            num40to50++
-        } else numOver50++
+            num40to50++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                salarySum40_50+=rows[i].wages[0]
+            }
+        } else {
+            numOver50++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                salarySum50Up+=rows[i].wages[0]
+            }
+        }
+
+
+
     }
 
     return [
-        {label: 'Under 18', count: numUnder18},
-         {label: 'Between 18 and 24', count: num18to24},
-         {label: 'Between 24 and 30', count: num24to30},
-         {label: 'Between 30 and 40', count: num30to40},
-         {label: 'Between 40 and 50', count: num40to50},
-         {label: 'Over 50', count: numOver50}
-       ];
+        {label: 'Under 18', count: numUnder18, averageSalary:(salarySumUnder18/numUnder18).toFixed(2)},
+        {label: '18 to 24', count: num18to24, averageSalary:(salarySum18_24/num18to24).toFixed(2)},
+        {label: '24 to 30', count: num24to30, averageSalary:(salarySum24_30/num24to30).toFixed(2)},
+        {label: '30 to 40', count: num30to40, averageSalary:(salarySum30_40/num30to40).toFixed(2)},
+        {label: '40 to 50', count: num40to50, averageSalary:(salarySum40_50/num40to50).toFixed(2)},
+        {label: 'Over 50', count: numOver50, averageSalary:(salarySum50Up/numOver50).toFixed(2)}
+    ];
 }
 
 function slicePieByRace(rows){
+
     var numberOfBlacks=0;
     var numberOfWhites=0;
     var numberOfLatinos=0;
     var numberOfAsians =0;
     var numberOfOthers=0;
 
-    for (var i = 0; i < rows.length;i++){
+    var totalBlackSalaries = 0;
+    var totalWhiteSalaries = 0;
+    var totalLatinoSalaries = 0;
+    var totalAsianSalaries = 0;
+    var totalOtherSalaries = 0;
+
+
+
+    for (var i = 0; i < rows.length; i++){
         var ethnicity = rows[i].ethnicity;
+        var firstWage = rows[i].wages[0];
+
         if (ethnicity=="Black / African American"){
             numberOfBlacks++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                totalBlackSalaries+=firstWage;
+                console.log('totalBlackSalary update:', totalBlackSalaries)
+            }
+
         }else if(ethnicity=="White"){
             numberOfWhites++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                totalWhiteSalaries+=firstWage;
+                console.log('totalWhiteSalary update:', totalWhiteSalaries);
+            }
         }else if(ethnicity=="Hispanic / Latino"){
-            numberOfLatinos++
+            numberOfLatinos++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                totalLatinoSalaries+=firstWage;
+                console.log('totalLatinoSalary update:', totalLatinoSalaries);
+            }
         }else if(ethnicity=="Other, Multi-Racial"){
             numberOfOthers++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                totalOtherSalaries+=firstWage;
+                console.log('totalOtherSalary update:', totalOtherSalaries);
+            }
         }else if(ethnicity=="Asian"){
             numberOfAsians++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                totalAsianSalaries+=firstWage;
+                console.log('totalAsianSalary update:', totalAsianSalaries);
+            }
         }
     };
+
+
     return [
-        {label:'Black', count:numberOfBlacks},
-        {label:'White', count:numberOfWhites},
-        {label:'Latino', count:numberOfLatinos},
-        {label:'Asian', count:numberOfAsians},
-        {label:'Other', count:numberOfOthers}
+        {label:'Black', count:numberOfBlacks, averageSalary: (totalBlackSalaries/numberOfBlacks).toFixed(2)},
+        {label:'White', count:numberOfWhites, averageSalary: (totalWhiteSalaries/numberOfWhites).toFixed(2)},
+        {label:'Latino', count:numberOfLatinos, averageSalary: (totalLatinoSalaries/numberOfLatinos).toFixed(2)},
+        {label:'Asian', count:numberOfAsians, averageSalary: (totalAsianSalaries/numberOfAsians).toFixed(2)},
+        {label:'Other', count:numberOfOthers, averageSalary: (totalOtherSalaries/numberOfOthers).toFixed(2)}
     ];
 
 
@@ -624,34 +695,59 @@ function slicePieByRace(rows){
 function slicePieByGender(rows){
     var numberOfMales = 0;
     var numberOfFemales=0;
+    var totalFemaleSalaries = 0;
+    var totalMaleSalaries = 0;
 
     for (var i = 0; i < rows.length;i++){
+
         var female = rows[i].female;
+        var firstWage = rows[i].wages[0];
+
         if (female){
-            numberOfFemales++
+            numberOfFemales++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                totalFemaleSalaries+=firstWage;
+
+            }
+
         } else {
             numberOfMales++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                totalMaleSalaries+=firstWage;
+
+            }
         }
     };
-    return [ {label:'Male', count:numberOfMales},
-        {label:'Female', count:numberOfFemales}
+    return [ {label:'Male', count:numberOfMales, averageSalary: (totalMaleSalaries/numberOfMales).toFixed(2)},
+        {label:'Female', count:numberOfFemales, averageSalary: (totalFemaleSalaries/numberOfFemales).toFixed(2)}
     ];
 }
 
 function slicePieByVeteran(rows){
     var numberOfVeterans = 0;
     var numberOfNonVeterans = 0;
+    var totalVetSalary = 0;
+    var totalNonVetSalary = 0;
 
     for (var i = 0; i < rows.length;i++){
         if (rows[i].veteran){
             numberOfVeterans++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                totalVetSalary+=rows[i].wages[0];
+
+            }
         } else {
             numberOfNonVeterans++;
+            if (rows[i].employHistory.start && rows[i].wages.length > 0){
+                totalNonVetSalary+=rows[i].wages[0];
+
+            }
         }
     }
-    return [{label:'Veteran', count:numberOfVeterans},
-        {label:'Non-veterans', count:numberOfNonVeterans}];
+    return [{label:'Veteran', count:numberOfVeterans, averageSalary: (totalVetSalary/numberOfVeterans).toFixed(2)},
+        {label:'Non-veterans', count:numberOfNonVeterans, averageSalary: (totalNonVetSalary/numberOfNonVeterans).toFixed(2)}];
 }
+
 
 // D3 LINE GRAPHS
 function genLineData(){
