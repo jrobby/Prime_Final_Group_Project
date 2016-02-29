@@ -130,6 +130,9 @@ svg{
     width: 130px;
     height: 120px;
 }
+.lineGraphTitle{
+    font-size: 24px;
+}
 .verticalRule{
     margin: 0 .25% 0 .25%;
     width: 2px;

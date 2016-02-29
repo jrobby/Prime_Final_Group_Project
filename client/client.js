@@ -148,7 +148,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return milestoneRetentionRates;
     }
 
-
     //[[AVERAGE WAGE AT PLACEMENT]]///////
     function computeAveragePlacedWage(allRows, startDate, endDate){
         var sumOfWages = 0;
@@ -165,7 +164,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         return (sumOfWages / numPlaced).toFixed(2);
     }
 
-
     function getWageAtPlacement(rowData, startDate, endDate){
         var classStart = Date.parse(rowData.classStart);
         if (isNaN(classStart) || isNaN(startDate) || isNaN(endDate)) return null;
@@ -174,7 +172,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         }
         return null;
     }
-
 
     //[[AVERAGE CURRENT WAGE ]]///CURRENT //CURRENT //CURRENT //CURRENT //CURRENT //
     function computeAverageCurrentWage(allRows, startDate, endDate){
@@ -270,7 +267,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
                     employers[tempString]++;
                 }
             }
-
         }
 
         $scope.sortedEmployers = sortObject(employers);
@@ -280,7 +276,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         }
         return $scope.topFive;
     }
-
 
     //Generate Pie Chart function
     $scope.generatePieCharts = function () {
@@ -292,8 +287,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
         //for chart heading display
         $scope.selectedDisplay = $scope.selectedProgress;
-
-        // Get all that data, yo
 
         //var allRows=$scope.smartSheetData;
         var rowsInPie = [];
@@ -360,7 +353,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
         legendpop.append('div')
             .attr('class', 'percent');
-
 
         dataset.forEach(function (d) {
             d.count = +d.count;
@@ -456,7 +448,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             .text(function (d) {
                 return d;
             });
-
     }
     //end of generatePieCharts function
 
@@ -615,9 +606,6 @@ function slicePieByAge(rows){
                 salarySum50Up+=rows[i].wages[0]
             }
         }
-
-
-
     }
 
     return [
@@ -643,7 +631,6 @@ function slicePieByRace(rows){
     var totalLatinoSalaries = 0;
     var totalAsianSalaries = 0;
     var totalOtherSalaries = 0;
-
 
 
     for (var i = 0; i < rows.length; i++){
@@ -684,7 +671,6 @@ function slicePieByRace(rows){
         }
     };
 
-
     return [
         {label:'Black', count:numberOfBlacks, averageSalary: (totalBlackSalaries/numberOfBlacks).toFixed(2)},
         {label:'White', count:numberOfWhites, averageSalary: (totalWhiteSalaries/numberOfWhites).toFixed(2)},
@@ -692,8 +678,6 @@ function slicePieByRace(rows){
         {label:'Asian', count:numberOfAsians, averageSalary: (totalAsianSalaries/numberOfAsians).toFixed(2)},
         {label:'Other', count:numberOfOthers, averageSalary: (totalOtherSalaries/numberOfOthers).toFixed(2)}
     ];
-
-
 }
 
 function slicePieByGender(rows){
@@ -845,8 +829,6 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
     return { 'chartType': chartType, 'seriesNames': seriesNames, 'graphData': graphData, 'title': yFieldName + " Over Time" };
 }
 
-
-
 function lineGraphData(rowData, yFieldName, startDate, endDate){
     /*Convention: if this function returns null, either we do not have data, or the individual falls
      outside the specified date range.  If this function returns false, we *do* have applicable data
@@ -931,13 +913,9 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
     else return { 'seriesName': rowSeriesBin, 'classStart': classStart, 'dataVal': rowDataVal };
 }
 
-
-//$scope.lineGraphList = ['Gender', 'Age', 'Race', 'Veteran Status', 'Wage at Placement','Placement Rates', 'Graduation Rates'];
-
-
 function genLineGraph(rowData, yFieldName, startDate, endDate){
     console.log('yo, line chart');
-    var gWidth = 720;
+    var gWidth = 636;
     var gHeight = 480;
     var pad = 50;
     var allData = buildLineData(rowData, yFieldName, startDate, endDate);
@@ -966,7 +944,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     var xScale = d3.time.scale()
         .domain([startDate, endDate])
-        .range([pad, gWidth - pad * 2]);
+        .range([pad, gWidth - (pad / 4)]);
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
@@ -995,6 +973,8 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .attr("x", gWidth / 2)
         .attr("y", 40)
         .style("text-anchor", "middle")
+        .style("font-size", "24px")
+        .style("font-weight", "500")
         .text(title);
 
     svg.append("g")
@@ -1002,8 +982,8 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .attr("transform", "translate(0," + (gHeight - pad) + ")")
         .call(xAxis)
         .append("text")
-        .attr("y", 48)
-        .attr("x", 400)
+        .attr("y", 46)
+        .attr("x", (gWidth / 2) + pad)
         // .attr("dy", "-3em")
         .style("text-anchor", "end")
         .text('Class Start Date');
@@ -1039,7 +1019,6 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     var legend = legendSpace.append("g")
        .attr("class", "legend");
-      //  .attr('transform', 'translate(-85,200)');
 
     legend.selectAll("rect").data(gData).enter()
        .append("rect")
@@ -1057,7 +1036,6 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
            return legendInfo[gData.indexOf(d)].name;
        });
 }
-
 
 //[][][] Factory to get Smartsheet data [][][][[[[[]]]]]
 app.factory('SmartSheetService', ['$http', function($http){
