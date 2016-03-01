@@ -13,14 +13,18 @@
     text-align: center;
     margin-right: 10%;
 }
+.mainContent{
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 0;
+    margin: 0 .5% 0 .5%;
+    height: 491px;
+}
 p{
     margin-bottom: .5%;
 }
 h1, h3, h4, h5 {
     text-align: center;
-}
-.avgWageHeading{
-    margin-bottom: 19px;
 }
 /*////////////////////*/
 /*TOTALS TABLE SECTION*/
@@ -30,10 +34,7 @@ h1, h3, h4, h5 {
     height: 490px;
 }
 .totalsTable {
-    border: 2px solid black;
-    border-radius: 4px;
     width: 33%;
-    margin-left: .5%;
     overflow-y: scroll;
 }
 .tableColumn{
@@ -60,6 +61,9 @@ h1, h3, h4, h5 {
     border-bottom: 1px solid black;
     height: 30px;
     margin-bottom: 18px;
+}
+.avgWageHeading{
+    margin-bottom: 21px;
 }
 /*/////////////////////////////////////////////////////////////////*/
 /*RETENTION, SALARY CALCULATOR, AND EMPLOYERS SECTION TABLE SECTION*/
@@ -99,10 +103,9 @@ h1, h3, h4, h5 {
 /*///////////////////////*/
 .chartAndControls{
     padding: 0;
-    margin: 0 0.5% 0 0.5%;
-    width: 65.5%;
+    margin: 0;
+    width: 66%;
     float: left;
-    border: 2px solid black;
     border-radius: 4px;
     height: 490px;
 }
@@ -133,15 +136,15 @@ svg{
     font-size: 24px;
 }
 .verticalRule{
-    margin: 0 .25% 0 .25%;
-    width: 2px;
-    background-color: lightgray;
-    height: 100%;
+    margin: 4px .25% 4px .25%;
+    border: 1px solid lightgray;
+    border-radius: 1px;
+    height: 482px;
     float: left;
 }
 .controlPanel{
-    width: 22%;
-    margin: 0 .5% 0 .5%;
+    width: 23%;
+    padding-left: 4px;
 }
 select{
     display: block;

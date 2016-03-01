@@ -18,6 +18,7 @@
     <p>Start Date: <input type="date" ng-model="startDate" ng-value="{{startDate | date: 'yyyy-MM-dd'}}"> End Date: <input type="date" ng-model="endDate" ng-value="{{endDate | date: 'yyyy-MM-dd'}}"><button class="dateSelect" ng-click="submitDate()">Select</button></p>
 </form>
 <!--MAIN LAYOUT ELEMENTS: TOTALS TABLE, DATA AREA, AND CONTROL PANEL-->
+<div class="mainContent">
 <div class="totalsTable">
     <img src="../assets/img/IT_READY_300dpi.jpg" alt="IT_Ready_Logo" class="ITlogo">
     <div class="tableMain">
@@ -125,6 +126,9 @@
         <br>
     </div>
 </div>
+
+<div class="verticalRule"></div>
+
 <!--DATA AREA: GRAPHS AND CHARTS DISPLAY HERE-->
 <div class="chartAndControls">
 
@@ -171,6 +175,8 @@
         <h5 class="dropdownHeading">Demographic Data</h5>
         <select class="lineGraphDropdown" ng-model="selectedLineGraph" ng-options="lineGraph for lineGraph in lineGraphList" ng-change="genLineGraph(smartSheetData, selectedLineGraph, startDate, endDate)"></select>
     </div>
+</div>
+
 </div>
 
 </div>
