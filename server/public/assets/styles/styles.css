@@ -144,12 +144,6 @@ svg{
     width: 22%;
     margin: 0 .5% 0 .5%;
 }
-/*.genButton{*/
-    /*display: block;*/
-    /*margin: auto;*/
-    /*width: 100%;*/
-    /*height: 50px;*/
-/*}*/
 select{
     display: block;
     margin: auto;
@@ -196,24 +190,18 @@ h2.chartTitle {
     shape-rendering: crispEdges;
 }
 .line {
-    stroke-width: 3px;
+    stroke-width: 4px;
     fill: none;
 }
 .legend text {
     font: 11px "Arial", sans-serif;
 }
-
 .pieLegend {                                                   /* NEW */
     font-size: 12px;                                          /* NEW */
 }                                                           /* NEW */
 rect {                                                      /* NEW */
     stroke-width: 2;                                          /* NEW */
 }
-
-#chart{
-    /*border: solid black;*/
-}
-
 .pieLegend {                                                   /* NEW */
     font-size: 12px;                                          /* NEW */
 }                                                           /* NEW */
@@ -249,7 +237,6 @@ svg {
 .legend {
     border: solid orange;
 }
-
 rect {
     cursor: pointer;
     stroke-width: 2;
@@ -262,7 +249,6 @@ h1 {
     font-size: 14px;
     text-align: center;
 }
-
 .label{
     color:black;
     width: 250%;
@@ -270,7 +256,6 @@ h1 {
     align-content: center;
     margin:auto;
     padding: 0;
-    /*border: solid blue;*/
     font-size: 12px;
 }
 

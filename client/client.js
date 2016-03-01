@@ -1007,7 +1007,7 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .enter().append('circle')
         .attr('cx', function (d) { return xScale(d.x); })
         .attr('cy', function (d) { return yScale(d.y); })
-        .attr('r', 2)
+        .attr('r', 3)
         .style("fill", "white");
     /////////////////////
     //LEGEND STUFF HERE//
