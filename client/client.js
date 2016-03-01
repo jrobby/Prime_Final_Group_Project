@@ -8,7 +8,7 @@ var CALC_ASSIST = 'calcAssist';
 //***Category / Dropdown Names***
 var GENDER_CAT = 'Gender';
 var AGE_CAT = 'Age';
-var RACE_CAT = 'Race';
+var RACE_CAT = 'Race/Ethnicity';
 var VET_CAT = 'Veteran Status';
 var WAGE_CAT = 'Wage at Placement';
 var PLACE_CAT = 'Placement Rates';
@@ -358,18 +358,18 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         if ($scope.selectedDemographic == RACE_CAT) {
             //    Get Race Data
             dataset = slicePieByRace(rowsInPie, adjStartDate, Date.parse($scope.endDate));
-            $scope.pieHeading = "Race"
+            $scope.pieHeading = RACE_CAT;
         } else if ($scope.selectedDemographic==AGE_CAT){
             dataset = slicePieByAge(rowsInPie);
-            $scope.pieHeading = "Age";
+            $scope.pieHeading = AGE_CAT;
         } else if ($scope.selectedDemographic == GENDER_CAT) {
             //    Get Gender Data
             dataset = slicePieByGender(rowsInPie);
-            $scope.pieHeading = "Gender"
+            $scope.pieHeading = GENDER_CAT;
         } else if ($scope.selectedDemographic == VET_CAT) {
             //    Get Veteran Status Data
             dataset = slicePieByVeteran(rowsInPie);
-            $scope.pieHeading = "Veteran Status"
+            $scope.pieHeading = VET_CAT;
         }
 
 
