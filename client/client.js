@@ -74,7 +74,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
         $scope.genLineGraph($scope.smartSheetData, $scope.selectedLineGraph, Date.parse($scope.startDate), Date.parse($scope.endDate));
     };
 
-
     function employedAtMilestones(rowData, startDate, endDate, milestoneDays){
         var milestoneHistory = { };
         //how to check against start/end date?  Need to say "no data available" or "-" if not enough time has elapsed to calculate?
@@ -208,8 +207,6 @@ $scope.calcAvgSalary = function(){
     if ($scope.serverPlus){$scope.tempCertArray.push("serverPlus");}
     if ($scope.securityPlus){$scope.tempCertArray.push("securityPlus");}
     if ($scope.otherCert){$scope.tempCertArray.push("otherCert");}
-
-    // $scope.getAverageSalary = getAvgSalary($scope.tempCertArry, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
     var adjStartDate = new Date($scope.startDate);
     adjStartDate.setDate(adjStartDate.getDate() - 1);
     $scope.calculatedSalary = getAvgSalary($scope.tempCertArray, $scope.smartSheetData, adjStartDate, Date.parse($scope.endDate));
@@ -288,7 +285,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         //for chart heading display
         $scope.selectedDisplay = $scope.selectedProgress;
 
-        //var allRows=$scope.smartSheetData;
         var rowsInPie = [];
         var dataset = [];
         $scope.pieHeading = "";
@@ -569,8 +565,6 @@ function slicePieByAge(rows){
     for (var i = 0; i < rows.length;i++){
         var age = rows[i].ageAtStart;
 
-        //var firstWage = rows[i].wages[0];
-
         if (age<18){
             numUnder18++;
             if (rows[i].employHistory.start && rows[i].wages.length > 0){
@@ -738,8 +732,7 @@ function slicePieByVeteran(rows){
 
 
 // D3 LINE GRAPHS
-/*Given the name of the field to be line-graphed: assembles the data for D3
- to use.*/
+/*Given the name of the field to be line-graphed: assembles the data for D3 to use.*/
 function buildLineData(allRows, yFieldName, startDate, endDate){
     var dataPoint = null;
     var seriesNames = [];
@@ -919,7 +912,6 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
     var gHeight = 480;
     var pad = 50;
     var allData = buildLineData(rowData, yFieldName, startDate, endDate);
-    // var gData = genLineData();
     var gData = allData.graphData;
     var series = allData.seriesNames;
     var title = allData.title;
@@ -930,8 +922,6 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         legendInfo.push({ 'name': series[i], 'color': palette(i) });
     }
 
-    //var xRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.x; });
-    // var yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });
     var yAxisLabel = 'Percent (%)';
     var yRange = [0, 100];
     console.log('chartType:', allData.chartType);
@@ -984,7 +974,6 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .append("text")
         .attr("y", 46)
         .attr("x", (gWidth / 2) + pad)
-        // .attr("dy", "-3em")
         .style("text-anchor", "end")
         .text('Class Start Date');
 
@@ -1012,6 +1001,13 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
         .x(function (d) { return xScale(d.x); })
         .y(function (d) { return yScale(d.y); })
     );
+
+    linePath.selectAll('circle')
+        .data(function (d) { return d; })
+        .enter().append('circle')
+        .attr('cx', function (d) { return xScale(d.x); })
+        .attr('cy', function (d) { return yScale(d.y); })
+        .attr('r', 2);
     /////////////////////
     //LEGEND STUFF HERE//
     /////////////////////
