@@ -159,7 +159,7 @@
         <li><a href="javascript:void(0); " ng-class="{selected: chartTab=='line'}" ng-click="chartTab = 'line'">Line</a></li>
     </ul>
 
-    <div class="pieControls" ng-show="chartTab == 'pie'">
+    <div id="pieControlPanel" class="pieControls" ng-show="chartTab == 'pie'">
         <h5 class="dropdownHeading">Demographic Data</h5>
         <select class="demographicDropdown" ng-model="selectedDemographic" ng-options="demographic for demographic in demographicList" ng-change="generatePieCharts(startDate, endDate)"></select>
 

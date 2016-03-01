@@ -339,6 +339,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
     $scope.generatePieCharts = function () {
 
         d3.select("svg").remove();
+        d3.select("#pieLegend").remove(); //clear legend
 
         var adjStartDate = new Date($scope.startDate);
         adjStartDate.setDate(adjStartDate.getDate() - 1);
@@ -374,14 +375,12 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
         $scope.pieWageInfo = $scope.generatePieWages(dataset);
 
-
         $scope.dataset = dataset;
         var width = 650;
         var height = 400;
 
         var radius = Math.min(width, height) / 2;
-        var legendRectSize = 18;
-        var legendSpacing = 4;
+        var legendRectSize = 15;
 
         var color = d3.scale.category10();
         var svg = d3.select('#chart')
@@ -450,61 +449,29 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             legendpop.style('display', 'none');
         });
 
-        var legend = svg.selectAll('.legend')
+        var svgLegend = d3.select('#pieControlPanel')
+            .append('svg')
+            .attr('id', 'legendArea')
+            .attr('id', 'pieLegend')
+            .append('g');
+
+        var legend = svgLegend.selectAll('.legend')
             .data(color.domain())
             .enter()
             .append('g')
-            .attr('class', 'legend')
-            .attr('transform', function (d, i) {
-                var height = legendRectSize + legendSpacing;
-                var offset = height * color.domain().length / 2;
-                var horz = -17 * legendRectSize;
-                var vert = (i * height - offset) -140;
-                return 'translate(' + horz + ',' + vert + ')';
-            });
+            .attr('class', 'legend');
 
         legend.append('rect')
+            .attr("x", 0)
+            .attr("y", function(d, i){ return i * 24; })
             .attr('width', legendRectSize)
             .attr('height', legendRectSize)
             .style('fill', color)
-            .style('stroke', color)
-            .on('click', function (label) {
-                var rect = d3.select(this);
-                var enabled = true;
-                var totalEnabled = d3.sum(dataset.map(function (d) {
-                    return (d.enabled) ? 1 : 0;
-                }));
-
-                if (rect.attr('class') === 'disabled') {
-                    rect.attr('class', '');
-                } else {
-                    if (totalEnabled < 2) return;
-                    rect.attr('class', 'disabled');
-                    enabled = false;
-                }
-
-                pie.value(function (d) {
-                    if (d.label === label) d.enabled = enabled;
-                    console.log('d.label, d.enabled', d.label, d.enabled);
-                    return (d.enabled) ? d.count : 0;
-                });
-
-                path = path.data(pie(dataset));
-
-                path.transition()
-                    .duration(750)
-                    .attrTween('d', function (d) {
-                        var interpolate = d3.interpolate(this._current, d);
-                        this._current = interpolate(0);
-                        return function (t) {
-                            return arc(interpolate(t));
-                        };
-                    });
-            });
+            .style('stroke', color);
 
         legend.append('text')
-            .attr('x', legendRectSize + legendSpacing)
-            .attr('y', legendRectSize - legendSpacing)
+            .attr("x", 20)
+            .attr("y", function(d, i){ return i *  24 + 11; })
             .text(function (d) {
                 return d;
             });
