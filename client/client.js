@@ -298,6 +298,40 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         return $scope.topFive;
     }
 
+
+    $scope.generatePieWages = function(pieData){
+      var storage = [];
+      var adjStartDate = new Date($scope.startDate);
+      adjStartDate.setDate(adjStartDate.getDate() - 1);
+
+      for (var i = 0; i < pieData.length; i++){
+         storage.push({'name': pieData[i].label,
+         'sumWages': 0, 'countWages': 0, 'averageWage': 0});
+      }
+
+      for (var j = 0; j < $scope.smartSheetData.length; j++){
+        var row = $scope.smartSheetData[j];
+        var wage = getWageAtPlacement(row, adjStartDate, Date.parse($scope.endDate));
+        var seriesData = lineGraphData(row, $scope.selectedDemographic, adjStartDate, Date.parse($scope.endDate));
+        if (wage && seriesData){
+          var series = seriesData.seriesName;
+          for (var k = 0; k < storage.length; k++){
+            if (series == storage[k].name){
+              storage[k].countWages++;
+              storage[k].sumWages += wage;
+            }
+          }
+        }
+      }
+      for (var k = 0; k < storage.length; k++){
+        if (storage[k].countWages > 0){
+          storage[k].averageWage = (storage[k].sumWages / storage[k].countWages).toFixed(2);
+        }
+      }
+      console.log('storage:', storage);
+      return storage;
+    }
+
     //Generate Pie Chart function
     $scope.generatePieCharts = function () {
 
@@ -334,8 +368,11 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             $scope.pieHeading = "Veteran Status"
         }
 
+
+        $scope.pieWageInfo = $scope.generatePieWages(dataset);
+
+
         $scope.dataset = dataset;
-        console.log('$scope.dataset', $scope.dataset);
         var width = 650;
         var height = 400;
 
@@ -526,6 +563,10 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
 }]);
 
+
+
+
+
 // functions for our pie chart maker
 function getRange(allRows, startDate, endDate, selected){
     if (isNaN(startDate) || isNaN(endDate)) return null;
@@ -578,180 +619,98 @@ function slicePieByAge(rows){
     var num40to50 = 0;
     var numOver50 = 0;
 
-    var salarySumUnder18 = 0;
-    var salarySum18_24 = 0;
-    var salarySum24_30 = 0;
-    var salarySum30_40 = 0;
-    var salarySum40_50 = 0;
-    var salarySum50Up = 0;
-
-
     for (var i = 0; i < rows.length;i++){
         var age = rows[i].ageAtStart;
 
         if (age<18){
             numUnder18++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                salarySumUnder18+=rows[i].wages[0];
-                console.log('salarySumUnder18 update', salarySumUnder18);
-            }
         }else if (age<24) {
             num18to24++;
-            console.log('count 18 to 24', num18to24);
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                salarySum18_24+=(rows[i].wages[0]).toFixed(2);
-                console.log('salarySum18to24 update', salarySum18_24);
-            }
         } else if( age < 30){
             num24to30++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                salarySum24_30+=rows[i].wages[0];
-                console.log('salarySum24to30 update', salarySum24_30);
-            }
         } else if (age < 40){
             num30to40++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                salarySum30_40+=rows[i].wages[0]
-            }
         } else if (age <50) {
             num40to50++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                salarySum40_50+=rows[i].wages[0]
-            }
         } else {
             numOver50++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                salarySum50Up+=rows[i].wages[0]
-            }
         }
     }
 
     return [
-        {label: UNDER_18, count: numUnder18, averageSalary:(salarySumUnder18/numUnder18).toFixed(2)},
-        {label: EIGHTEEN_TO_24, count: num18to24, averageSalary:(salarySum18_24/num18to24).toFixed(2)},
-        {label: TWENTY_FOUR_TO_30, count: num24to30, averageSalary:(salarySum24_30/num24to30).toFixed(2)},
-        {label: THIRTY_TO_FORTY, count: num30to40, averageSalary:(salarySum30_40/num30to40).toFixed(2)},
-        {label: FORTY_TO_FIFTY, count: num40to50, averageSalary:(salarySum40_50/num40to50).toFixed(2)},
-        {label: OVER_FIFTY, count: numOver50, averageSalary:(salarySum50Up/numOver50).toFixed(2)}
+        {label: UNDER_18, count: numUnder18},
+        {label: EIGHTEEN_TO_24, count: num18to24},
+        {label: TWENTY_FOUR_TO_30, count: num24to30},
+        {label: THIRTY_TO_FORTY, count: num30to40},
+        {label: FORTY_TO_FIFTY, count: num40to50},
+        {label: OVER_FIFTY, count: numOver50}
     ];
 }
 
 function slicePieByRace(rows){
-
     var numberOfBlacks=0;
     var numberOfWhites=0;
     var numberOfLatinos=0;
     var numberOfAsians =0;
     var numberOfOthers=0;
 
-    var totalBlackSalaries = 0;
-    var totalWhiteSalaries = 0;
-    var totalLatinoSalaries = 0;
-    var totalAsianSalaries = 0;
-    var totalOtherSalaries = 0;
-
-
     for (var i = 0; i < rows.length; i++){
         var ethnicity = rows[i].ethnicity;
-        var firstWage = rows[i].wages[0];
 
         if (ethnicity=="Black / African American"){
             numberOfBlacks++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                totalBlackSalaries+=firstWage;
-                console.log('totalBlackSalary update:', totalBlackSalaries)
-            }
-
         }else if(ethnicity=="White"){
             numberOfWhites++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                totalWhiteSalaries+=firstWage;
-                console.log('totalWhiteSalary update:', totalWhiteSalaries);
-            }
         }else if(ethnicity=="Hispanic / Latino"){
             numberOfLatinos++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                totalLatinoSalaries+=firstWage;
-                console.log('totalLatinoSalary update:', totalLatinoSalaries);
-            }
         }else if(ethnicity=="Other, Multi-Racial"){
             numberOfOthers++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                totalOtherSalaries+=firstWage;
-                console.log('totalOtherSalary update:', totalOtherSalaries);
-            }
         }else if(ethnicity=="Asian"){
             numberOfAsians++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                totalAsianSalaries+=firstWage;
-                console.log('totalAsianSalary update:', totalAsianSalaries);
-            }
         }
     };
 
     return [
-        {label:'Black', count:numberOfBlacks, averageSalary: (totalBlackSalaries/numberOfBlacks).toFixed(2)},
-        {label:'White', count:numberOfWhites, averageSalary: (totalWhiteSalaries/numberOfWhites).toFixed(2)},
-        {label:'Latino', count:numberOfLatinos, averageSalary: (totalLatinoSalaries/numberOfLatinos).toFixed(2)},
-        {label:'Asian', count:numberOfAsians, averageSalary: (totalAsianSalaries/numberOfAsians).toFixed(2)},
-        {label:'Other', count:numberOfOthers, averageSalary: (totalOtherSalaries/numberOfOthers).toFixed(2)}
+        {label:'Black', count:numberOfBlacks},
+        {label:'White', count:numberOfWhites},
+        {label:'Latino', count:numberOfLatinos},
+        {label:'Asian', count:numberOfAsians},
+        {label:'Other', count:numberOfOthers}
     ];
 }
 
 function slicePieByGender(rows){
     var numberOfMales = 0;
     var numberOfFemales=0;
-    var totalFemaleSalaries = 0;
-    var totalMaleSalaries = 0;
 
     for (var i = 0; i < rows.length;i++){
 
         var female = rows[i].female;
-        var firstWage = rows[i].wages[0];
 
         if (female){
             numberOfFemales++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                totalFemaleSalaries+=firstWage;
-
-            }
-
         } else {
             numberOfMales++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                totalMaleSalaries+=firstWage;
-
-            }
         }
     };
-    return [ {label:MALE, count:numberOfMales, averageSalary: (totalMaleSalaries/numberOfMales).toFixed(2)},
-        {label:FEMALE, count:numberOfFemales, averageSalary: (totalFemaleSalaries/numberOfFemales).toFixed(2)}
+    return [ {label:MALE, count:numberOfMales},
+        {label:FEMALE, count:numberOfFemales}
     ];
 }
 
 function slicePieByVeteran(rows){
     var numberOfVeterans = 0;
     var numberOfNonVeterans = 0;
-    var totalVetSalary = 0;
-    var totalNonVetSalary = 0;
 
     for (var i = 0; i < rows.length;i++){
         if (rows[i].veteran){
             numberOfVeterans++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                totalVetSalary+=rows[i].wages[0];
-
-            }
         } else {
             numberOfNonVeterans++;
-            if (rows[i].employHistory.start && rows[i].wages.length > 0){
-                totalNonVetSalary+=rows[i].wages[0];
-
-            }
         }
     }
-    return [{label:VETERAN, count:numberOfVeterans, averageSalary: (totalVetSalary/numberOfVeterans).toFixed(2)},
-        {label:NON_VETERAN, count:numberOfNonVeterans, averageSalary: (totalNonVetSalary/numberOfNonVeterans).toFixed(2)}];
+    return [{label:VETERAN, count:numberOfVeterans},
+        {label:NON_VETERAN, count:numberOfNonVeterans}];
 }
 
 
@@ -931,7 +890,6 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
 }
 
 function genLineGraph(rowData, yFieldName, startDate, endDate){
-    console.log('yo, line chart');
     var gWidth = 636;
     var gHeight = 480;
     var pad = 50;
@@ -948,7 +906,6 @@ function genLineGraph(rowData, yFieldName, startDate, endDate){
 
     var yAxisLabel = 'Percent (%)';
     var yRange = [0, 100];
-    console.log('chartType:', allData.chartType);
     if (allData.chartType == 'average'){ //special case: y-scale for wage chart
       yAxisLabel = 'Average Wage ($/hr)';
       yRange = d3.extent(d3.merge(gData), function(axisData){ return axisData.y; });

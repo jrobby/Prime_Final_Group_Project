@@ -143,8 +143,8 @@
 
     <div ng-show="averageShow" class="popUpInfo">
         <h5>Average starting wage by {{selectedDemographic}}</h5>
-        <div ng-repeat="x in dataset">
-            {{x.label}}: ${{x.averageSalary}}/hr
+        <div ng-repeat="x in pieWageInfo">
+            {{x.name}}: ${{x.averageWage}}/hr
         </div>
     </div>
 
