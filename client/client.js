@@ -2,7 +2,31 @@
  * Created by jeremycloutier on 2/16/16.
  */
 var app = angular.module('myApp', ['ngRoute']);
+
+//***CONSTANT DECLARATIONS***
 var CALC_ASSIST = 'calcAssist';
+//***Category / Dropdown Names***
+var GENDER_CAT = 'Gender';
+var AGE_CAT = 'Age';
+var RACE_CAT = 'Race';
+var VET_CAT = 'Veteran Status';
+var WAGE_CAT = 'Wage at Placement';
+var PLACE_CAT = 'Placement Rates';
+var GRAD_CAT = 'Graduation Rates';
+//***Series Names / Bins***
+//Gender
+var FEMALE = 'Female';
+var MALE = 'Male';
+//Age
+var UNDER_18 = 'Under 18';
+var EIGHTEEN_TO_24 = '18 to 24';
+var TWENTY_FOUR_TO_30 = '24 to 30';
+var THIRTY_TO_FORTY = '30 to 40';
+var FORTY_TO_FIFTY = '40 to 50';
+var OVER_FIFTY = 'Over 50';
+//Veteran Status
+var VETERAN = 'Veteran';
+var NON_VETERAN = 'Non-Veteran';
 
 app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', function($scope, $location, SmartSheetService){
 
@@ -293,18 +317,18 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         rowsInPie = getRange($scope.smartSheetData, adjStartDate, Date.parse($scope.endDate), $scope.selectedProgress);
 
         //SLICE PIE BY SELECTED DEMOGRAPHIC - RACE, GENDER, VETERAN
-        if ($scope.selectedDemographic == 'Race') {
+        if ($scope.selectedDemographic == RACE_CAT) {
             //    Get Race Data
             dataset = slicePieByRace(rowsInPie);
             $scope.pieHeading = "Race"
-        } else if ($scope.selectedDemographic=='Age'){
+        } else if ($scope.selectedDemographic==AGE_CAT){
             dataset = slicePieByAge(rowsInPie);
             $scope.pieHeading = "Age";
-        } else if ($scope.selectedDemographic == 'Gender') {
+        } else if ($scope.selectedDemographic == GENDER_CAT) {
             //    Get Gender Data
             dataset = slicePieByGender(rowsInPie);
             $scope.pieHeading = "Gender"
-        } else if ($scope.selectedDemographic == 'Veteran Status') {
+        } else if ($scope.selectedDemographic == VET_CAT) {
             //    Get Veteran Status Data
             dataset = slicePieByVeteran(rowsInPie);
             $scope.pieHeading = "Veteran Status"
@@ -480,13 +504,13 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         return arr; // returns array
     }
 
-    $scope.demographicList = ['Gender', 'Age', 'Race', 'Veteran Status']; // More here, possibly?
+    $scope.demographicList = [GENDER_CAT, AGE_CAT, RACE_CAT, VET_CAT]; // More here, possibly?
     $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
-    $scope.lineGraphList = ['Gender', 'Age', 'Race', 'Veteran Status', 'Wage at Placement','Placement Rates', 'Graduation Rates'];
+    $scope.lineGraphList = [GENDER_CAT, AGE_CAT, RACE_CAT, VET_CAT, WAGE_CAT,PLACE_CAT, GRAD_CAT];
 
-    $scope.selectedDemographic = 'Gender';
+    $scope.selectedDemographic = GENDER_CAT;
     $scope.selectedProgress = 'Served';
-    $scope.selectedLineGraph = 'Gender';
+    $scope.selectedLineGraph = GENDER_CAT;
 
     $scope.tab = 'a';
     $scope.chartTab = 'pie';
@@ -603,12 +627,12 @@ function slicePieByAge(rows){
     }
 
     return [
-        {label: 'Under 18', count: numUnder18, averageSalary:(salarySumUnder18/numUnder18).toFixed(2)},
-        {label: '18 to 24', count: num18to24, averageSalary:(salarySum18_24/num18to24).toFixed(2)},
-        {label: '24 to 30', count: num24to30, averageSalary:(salarySum24_30/num24to30).toFixed(2)},
-        {label: '30 to 40', count: num30to40, averageSalary:(salarySum30_40/num30to40).toFixed(2)},
-        {label: '40 to 50', count: num40to50, averageSalary:(salarySum40_50/num40to50).toFixed(2)},
-        {label: 'Over 50', count: numOver50, averageSalary:(salarySum50Up/numOver50).toFixed(2)}
+        {label: UNDER_18, count: numUnder18, averageSalary:(salarySumUnder18/numUnder18).toFixed(2)},
+        {label: EIGHTEEN_TO_24, count: num18to24, averageSalary:(salarySum18_24/num18to24).toFixed(2)},
+        {label: TWENTY_FOUR_TO_30, count: num24to30, averageSalary:(salarySum24_30/num24to30).toFixed(2)},
+        {label: THIRTY_TO_FORTY, count: num30to40, averageSalary:(salarySum30_40/num30to40).toFixed(2)},
+        {label: FORTY_TO_FIFTY, count: num40to50, averageSalary:(salarySum40_50/num40to50).toFixed(2)},
+        {label: OVER_FIFTY, count: numOver50, averageSalary:(salarySum50Up/numOver50).toFixed(2)}
     ];
 }
 
@@ -700,8 +724,8 @@ function slicePieByGender(rows){
             }
         }
     };
-    return [ {label:'Male', count:numberOfMales, averageSalary: (totalMaleSalaries/numberOfMales).toFixed(2)},
-        {label:'Female', count:numberOfFemales, averageSalary: (totalFemaleSalaries/numberOfFemales).toFixed(2)}
+    return [ {label:MALE, count:numberOfMales, averageSalary: (totalMaleSalaries/numberOfMales).toFixed(2)},
+        {label:FEMALE, count:numberOfFemales, averageSalary: (totalFemaleSalaries/numberOfFemales).toFixed(2)}
     ];
 }
 
@@ -726,8 +750,8 @@ function slicePieByVeteran(rows){
             }
         }
     }
-    return [{label:'Veteran', count:numberOfVeterans, averageSalary: (totalVetSalary/numberOfVeterans).toFixed(2)},
-        {label:'Non-veterans', count:numberOfNonVeterans, averageSalary: (totalNonVetSalary/numberOfNonVeterans).toFixed(2)}];
+    return [{label:VETERAN, count:numberOfVeterans, averageSalary: (totalVetSalary/numberOfVeterans).toFixed(2)},
+        {label:NON_VETERAN, count:numberOfNonVeterans, averageSalary: (totalNonVetSalary/numberOfNonVeterans).toFixed(2)}];
 }
 
 
@@ -743,7 +767,7 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
 
     var chartType = 'percentage';
     //Special case: we will display the average wage by class start date...
-    if (yFieldName == 'Wage at Placement') chartType = 'average';
+    if (yFieldName == WAGE_CAT) chartType = 'average';
 
     //Assemble list of groupings (to become x-values) by class start date
     for (var iBin = 0; iBin < allRows.length; iBin++){
@@ -834,35 +858,35 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
     adjStartDate.setDate(adjStartDate.getDate() - 1);
     if (classStart < adjStartDate || classStart > endDate) return null;
     switch (yFieldName){
-        case 'Gender':{
-            if (rowData.female) rowSeriesBin = 'Female';
-            else rowSeriesBin = 'Male';
+        case GENDER_CAT:{
+            if (rowData.female) rowSeriesBin = FEMALE;
+            else rowSeriesBin = MALE;
             rowDataVal = 1;
             break;
         }
-        case 'Age':{ //special case...binned number groups
+        case AGE_CAT:{ //special case...binned number groups
             if (rowData.ageAtStart){
                 var age = rowData.ageAtStart;
                 rowDataVal = 1;
-                if (age < 18) rowSeriesBin = 'Under 18';
-                else if (age < 24) rowSeriesBin = '18 to 24';
-                else if (age < 30) rowSeriesBin = '24 to 30';
-                else if (age < 40) rowSeriesBin = '30 to 40';
-                else if (age < 50) rowSeriesBin = '40 to 50';
-                else rowSeriesBin = 'Over 50';
+                if (age < 18) rowSeriesBin = UNDER_18;
+                else if (age < 24) rowSeriesBin = EIGHTEEN_TO_24;
+                else if (age < 30) rowSeriesBin = TWENTY_FOUR_TO_30;
+                else if (age < 40) rowSeriesBin = THIRTY_TO_FORTY;
+                else if (age < 50) rowSeriesBin = FORTY_TO_FIFTY;
+                else rowSeriesBin = OVER_FIFTY;
             }
             break;
         }
-        case 'Race':{ //String
+        case RACE_CAT:{ //String
             if (rowData.ethnicity) {
                 rowSeriesBin = rowData.ethnicity;
                 rowDataVal = 1;
             }
             break;
         }
-        case 'Veteran Status':{
+        case VET_CAT:{
             if (rowData.veteran) {
-                rowSeriesBin = 'Veteran';
+                rowSeriesBin = VETERAN;
                 rowDataVal = 1;
             }
             else {
@@ -871,14 +895,14 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
             }
             break;
         }
-        case 'Wage at Placement':{
+        case WAGE_CAT:{
             if (rowData.wages && rowData.wages.length > 0){
                 rowDataVal = rowData.wages[0];
                 rowSeriesBin = 'Wage at Placement';
             }
             break;
         }
-        case 'Placement Rates':{
+        case PLACE_CAT:{
             if (rowData.employHistory.start) {
                 rowDataVal = 1;
                 rowSeriesBin = 'Placement Rate';
@@ -889,7 +913,7 @@ function lineGraphData(rowData, yFieldName, startDate, endDate){
             }
             break;
         }
-        case 'Graduation Rates':{
+        case GRAD_CAT:{
             if (rowData.gradDate) {
                 rowDataVal = 1;
                 rowSeriesBin = 'Graduation Rate';
