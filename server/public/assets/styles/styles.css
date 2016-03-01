@@ -6,7 +6,7 @@
 }
 .ITlogo{
     display: block;
-    margin: 6px auto 4px auto;
+    margin: 10px auto 4px auto;
     width: 128px;
 }
 .dateForm{
@@ -20,8 +20,7 @@ h1, h3, h4, h5 {
     text-align: center;
 }
 .avgWageHeading{
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 19px;
 }
 /*////////////////////*/
 /*TOTALS TABLE SECTION*/
@@ -60,7 +59,7 @@ h1, h3, h4, h5 {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     height: 30px;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
 }
 /*/////////////////////////////////////////////////////////////////*/
 /*RETENTION, SALARY CALCULATOR, AND EMPLOYERS SECTION TABLE SECTION*/
