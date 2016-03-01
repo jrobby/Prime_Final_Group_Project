@@ -39,7 +39,6 @@ app.controller('MainController', [ '$scope', '$location', 'SmartSheetService', f
     //returns an array of objects with the columns we need
     SmartSheetService.getSmartSheetData().then(function(response){
         $scope.smartSheetData = response.data;
-        console.log($scope.smartSheetData);
         $scope.submitDate();
     });
 
@@ -315,6 +314,9 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         var seriesData = lineGraphData(row, $scope.selectedDemographic, adjStartDate, Date.parse($scope.endDate));
         if (wage && seriesData){
           var series = seriesData.seriesName;
+          if ($scope.selectedDemographic == VET_CAT){
+            if (series == CALC_ASSIST) series = NON_VETERAN; //special case
+          }
           for (var k = 0; k < storage.length; k++){
             if (series == storage[k].name){
               storage[k].countWages++;
@@ -323,13 +325,14 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
           }
         }
       }
+      var results = [];
       for (var k = 0; k < storage.length; k++){
         if (storage[k].countWages > 0){
           storage[k].averageWage = (storage[k].sumWages / storage[k].countWages).toFixed(2);
+          results.push(storage[k]);
         }
       }
-      console.log('storage:', storage);
-      return storage;
+      return results;
     }
 
     //Generate Pie Chart function
