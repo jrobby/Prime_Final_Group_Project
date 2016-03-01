@@ -102,8 +102,6 @@ h1, h3, h4, h5 {
 /*CHART AND GRAPH SECTION*/
 /*///////////////////////*/
 .chartAndControls{
-    padding: 0;
-    margin: 0;
     width: 66%;
     float: left;
     border-radius: 4px;
@@ -198,15 +196,9 @@ h2.chartTitle {
 .legend text {
     font: 11px "Arial", sans-serif;
 }
-/*.pieLegend {                                                   !* NEW *!*/
-    /*font-size: 12px;                                          !* NEW *!*/
-/*}                                                           !* NEW *!*/
-rect {                                                      /* NEW */
-    stroke-width: 2;                                          /* NEW */
+rect {
+    stroke-width: 2;
 }
-/*.pieLegend {                                                   !* NEW *!*/
-    /*font-size: 12px;                                          !* NEW *!*/
-/*}                                                           !* NEW *!*/
 svg {
     margin:auto;
 }
