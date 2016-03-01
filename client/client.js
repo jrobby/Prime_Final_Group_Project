@@ -311,7 +311,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
       for (var j = 0; j < $scope.smartSheetData.length; j++){
         var row = $scope.smartSheetData[j];
         var wage = getWageAtPlacement(row, adjStartDate, Date.parse($scope.endDate));
-        var seriesData = lineGraphData(row, $scope.selectedDemographic, adjStartDate, Date.parse($scope.endDate));
+        var seriesData = graphSeriesData(row, $scope.selectedDemographic, adjStartDate, Date.parse($scope.endDate));
         if (wage && seriesData){
           var series = seriesData.seriesName;
           if ($scope.selectedDemographic == VET_CAT){
@@ -356,7 +356,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
         //SLICE PIE BY SELECTED DEMOGRAPHIC - RACE, GENDER, VETERAN
         if ($scope.selectedDemographic == RACE_CAT) {
             //    Get Race Data
-            dataset = slicePieByRace(rowsInPie);
+            dataset = slicePieByRace(rowsInPie, adjStartDate, Date.parse($scope.endDate));
             $scope.pieHeading = "Race"
         } else if ($scope.selectedDemographic==AGE_CAT){
             dataset = slicePieByAge(rowsInPie);
@@ -650,36 +650,34 @@ function slicePieByAge(rows){
     ];
 }
 
-function slicePieByRace(rows){
-    var numberOfBlacks=0;
-    var numberOfWhites=0;
-    var numberOfLatinos=0;
-    var numberOfAsians =0;
-    var numberOfOthers=0;
-
+function slicePieByRace(rows, startDate, endDate){
+    var countsByRace = [];
     for (var i = 0; i < rows.length; i++){
-        var ethnicity = rows[i].ethnicity;
-
-        if (ethnicity=="Black / African American"){
-            numberOfBlacks++;
-        }else if(ethnicity=="White"){
-            numberOfWhites++;
-        }else if(ethnicity=="Hispanic / Latino"){
-            numberOfLatinos++;
-        }else if(ethnicity=="Other, Multi-Racial"){
-            numberOfOthers++;
-        }else if(ethnicity=="Asian"){
-            numberOfAsians++;
+        var ethnicityData = graphSeriesData(rows[i], RACE_CAT, startDate, endDate)
+        if (ethnicityData){
+          var seriesName = ethnicityData.seriesName;
+          if (seriesName){
+            if (countsByRace.length == 0){
+              countsByRace.push({ 'label': seriesName, 'count': 1 });
+            }
+            else {
+              for (var j = 0; j < countsByRace.length; j++){
+                if (countsByRace[j].label == seriesName){
+                  countsByRace[j].count++;
+                  break;
+                }
+                else {
+                  if (j == countsByRace.length - 1){
+                    countsByRace.push({ 'label': seriesName, 'count': 1 });
+                    break;
+                  }
+                }
+              }
+            }
+          }
         }
-    };
-
-    return [
-        {label:'Black', count:numberOfBlacks},
-        {label:'White', count:numberOfWhites},
-        {label:'Latino', count:numberOfLatinos},
-        {label:'Asian', count:numberOfAsians},
-        {label:'Other', count:numberOfOthers}
-    ];
+    }
+    return countsByRace;
 }
 
 function slicePieByGender(rows){
@@ -755,7 +753,7 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
     for (var i = 0; i < allRows.length; i++){
         var seriesIndex = -1;
         var classIndex = -1;
-        dataPoint = lineGraphData(allRows[i], yFieldName, startDate, endDate);
+        dataPoint = graphSeriesData(allRows[i], yFieldName, startDate, endDate);
         if (dataPoint){
             for (var j = 0; j < seriesNames.length; j++){
                 if (seriesNames[j] == dataPoint.seriesName){
@@ -808,7 +806,7 @@ function buildLineData(allRows, yFieldName, startDate, endDate){
     return { 'chartType': chartType, 'seriesNames': seriesNames, 'graphData': graphData, 'title': yFieldName + " Over Time" };
 }
 
-function lineGraphData(rowData, yFieldName, startDate, endDate){
+function graphSeriesData(rowData, yFieldName, startDate, endDate){
     /*Convention: if this function returns null, either we do not have data, or the individual falls
      outside the specified date range.  If this function returns false, we *do* have applicable data
      for that individual, and the data value in question is equal to false.*/
