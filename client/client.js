@@ -451,7 +451,6 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
 
         var svgLegend = d3.select('#pieControlPanel')
             .append('svg')
-            .attr('id', 'legendArea')
             .attr('id', 'pieLegend')
             .append('g');
 
@@ -466,8 +465,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             .attr("y", function(d, i){ return i * 24; })
             .attr('width', legendRectSize)
             .attr('height', legendRectSize)
-            .style('fill', color)
-            .style('stroke', color);
+            .style('fill', color);
 
         legend.append('text')
             .attr("x", 20)

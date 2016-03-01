@@ -155,13 +155,13 @@ select{
     text-align: center;
 }
 .dropdownHeading{
-    margin-top: 60px;
+    margin-top: 32px;
 }
 .progressDropdown{
-    margin-bottom: 60px;
+    margin-bottom: 28px;
 }
 .lineGraphDropdown{
-    margin-bottom: 50px;
+    margin-bottom: 103px;
 }
 .footer{
     text-align: center;
@@ -198,15 +198,15 @@ h2.chartTitle {
 .legend text {
     font: 11px "Arial", sans-serif;
 }
-.pieLegend {                                                   /* NEW */
-    font-size: 12px;                                          /* NEW */
-}                                                           /* NEW */
+/*.pieLegend {                                                   !* NEW *!*/
+    /*font-size: 12px;                                          !* NEW *!*/
+/*}                                                           !* NEW *!*/
 rect {                                                      /* NEW */
     stroke-width: 2;                                          /* NEW */
 }
-.pieLegend {                                                   /* NEW */
-    font-size: 12px;                                          /* NEW */
-}                                                           /* NEW */
+/*.pieLegend {                                                   !* NEW *!*/
+    /*font-size: 12px;                                          !* NEW *!*/
+/*}                                                           !* NEW *!*/
 svg {
     margin:auto;
 }
@@ -219,7 +219,6 @@ svg {
     margin: 0 auto;
     position: relative;
     width: 650px;
-
 }
 .tooltips {
     background: #eee ;
@@ -264,4 +263,9 @@ h1 {
 #legendArea {
   height: 300px;
   width: 100%;
+}
+
+#pieLegend{
+    height: 209px;
+    width: 100%;
 }

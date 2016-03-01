@@ -169,11 +169,13 @@
 
         <h5 class="dropdownHeading">Program Progress</h5>
         <select class="progressDropdown" ng-model="selectedProgress" ng-options="progress for progress in progressList" ng-change="generatePieCharts(startDate, endDate)"></select>
+        <h5>Pie Chart Legend</h5>
     </div>
 
     <div id="lineControlPanel" class="lineControls" ng-show="chartTab == 'line'">
         <h5 class="dropdownHeading">Demographic Data</h5>
         <select class="lineGraphDropdown" ng-model="selectedLineGraph" ng-options="lineGraph for lineGraph in lineGraphList" ng-change="genLineGraph(smartSheetData, selectedLineGraph, startDate, endDate)"></select>
+        <h5>Line Graph Legend</h5>
     </div>
 </div>
 
