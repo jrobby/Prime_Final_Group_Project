@@ -5,7 +5,7 @@ var app = angular.module('myApp', ['ngRoute']);
 
 //***CONSTANT DECLARATIONS***
 var CALC_ASSIST = 'calcAssist';
-//***Category / Dropdown Names***
+//***Demographics: Category / Dropdown Names***
 var GENDER_CAT = 'Gender';
 var AGE_CAT = 'Age';
 var RACE_CAT = 'Race/Ethnicity';
@@ -13,6 +13,11 @@ var VET_CAT = 'Veteran Status';
 var WAGE_CAT = 'Wage at Placement';
 var PLACE_CAT = 'Placement Rates';
 var GRAD_CAT = 'Graduation Rates';
+//***Program Progress: Category / Dropdown Names***
+var SERVED_CAT = 'Served';
+var COMPLETED_CAT = 'Completed';
+var CERT_CAT = 'Certified A+';
+var PLACED_CAT = 'Placed';
 //***Series Names / Bins***
 //Gender
 var FEMALE = 'Female';
@@ -511,11 +516,11 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
     }
 
     $scope.demographicList = [GENDER_CAT, AGE_CAT, RACE_CAT, VET_CAT]; // More here, possibly?
-    $scope.progressList = ['Served', 'Completed', 'Certified A+', 'Placed'];
+    $scope.progressList = [SERVED_CAT, COMPLETED_CAT, CERT_CAT, PLACED_CAT];
     $scope.lineGraphList = [GENDER_CAT, AGE_CAT, RACE_CAT, VET_CAT, WAGE_CAT,PLACE_CAT, GRAD_CAT];
 
     $scope.selectedDemographic = GENDER_CAT;
-    $scope.selectedProgress = 'Served';
+    $scope.selectedProgress = SERVED_CAT;
     $scope.selectedLineGraph = GENDER_CAT;
 
     $scope.tab = 'a';
@@ -541,7 +546,7 @@ function getRange(allRows, startDate, endDate, selected){
     if (isNaN(startDate) || isNaN(endDate)) return null;
 
     var range = [];
-    if(selected == "Served"){
+    if(selected == SERVED_CAT){
       for (var i = 0; i < allRows.length;i++){
           var classStart = Date.parse(allRows[i].classStart);
           if (isNaN(classStart)) continue;
@@ -550,7 +555,7 @@ function getRange(allRows, startDate, endDate, selected){
             range.push(allRows[i]);
           }
         } return range;
-      } else if (selected == "Completed"){
+      } else if (selected == COMPLETED_CAT){
         for (var i = 0; i < allRows.length;i++){
             var classStart = Date.parse(allRows[i].classStart);
             if (isNaN(classStart)) continue;
@@ -559,7 +564,7 @@ function getRange(allRows, startDate, endDate, selected){
               range.push(allRows[i]);
             }
           } return range;
-      } else if (selected == "Certified A+") {
+      } else if (selected == CERT_CAT) {
         for (var i = 0; i < allRows.length;i++){
             var classStart = Date.parse(allRows[i].classStart);
             if (isNaN(classStart)) continue;
@@ -568,7 +573,7 @@ function getRange(allRows, startDate, endDate, selected){
               range.push(allRows[i]);
             }
           } return range;
-      } else if (selected == "Placed"){
+      } else if (selected == PLACED_CAT){
         for (var i = 0; i < allRows.length;i++){
             var classStart = Date.parse(allRows[i].classStart);
             if (isNaN(classStart)) continue;
@@ -824,14 +829,14 @@ function graphSeriesData(rowData, yFieldName, startDate, endDate){
         case WAGE_CAT:{
             if (rowData.wages && rowData.wages.length > 0){
                 rowDataVal = rowData.wages[0];
-                rowSeriesBin = 'Wage at Placement';
+                rowSeriesBin = WAGE_CAT;
             }
             break;
         }
         case PLACE_CAT:{
             if (rowData.employHistory.start) {
                 rowDataVal = 1;
-                rowSeriesBin = 'Placement Rate';
+                rowSeriesBin = PLACE_CAT;
             }
             else {
                 rowSeriesBin = CALC_ASSIST;
@@ -842,7 +847,7 @@ function graphSeriesData(rowData, yFieldName, startDate, endDate){
         case GRAD_CAT:{
             if (rowData.gradDate) {
                 rowDataVal = 1;
-                rowSeriesBin = 'Graduation Rate';
+                rowSeriesBin = GRAD_CAT;
             }
             else {
                 rowSeriesBin = CALC_ASSIST;
