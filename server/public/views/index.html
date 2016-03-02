@@ -172,7 +172,7 @@
     </div>
 
     <div id="lineControlPanel" class="lineControls" ng-show="chartTab == 'line'">
-        <h5 class="dropdownHeading">Demographic Data</h5>
+        <h5 class="dropdownHeading">Line Graph Type</h5>
         <select class="lineGraphDropdown" ng-model="selectedLineGraph" ng-options="lineGraph for lineGraph in lineGraphList" ng-change="genLineGraph(smartSheetData, selectedLineGraph, startDate, endDate)"></select>
         <h5>Line Graph Legend</h5>
     </div>
