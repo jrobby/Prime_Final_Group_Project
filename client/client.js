@@ -372,6 +372,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             $scope.pieHeading = VET_CAT;
         }
 
+        $scope.pieTitle = 'Number ' + $scope.selectedDisplay + ' by ' + $scope.pieHeading;
 
         $scope.pieWageInfo = $scope.generatePieWages(dataset);
 
