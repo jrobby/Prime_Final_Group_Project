@@ -119,16 +119,26 @@ svg{
     height: 48px;
     width: 48px;
     display: block;
-    margin-left: auto;
-    margin-top: -18px;
+    /*margin-right: auto;*/
+    position: relative;
+    bottom: 85px;
+    margin-bottom: 70px;
 }
 .popUpInfo{
     display: block;
-    margin: -186px 4px 0 auto;
+    /*margin: -186px 4px 0 auto;*/
     border: 1px solid black;
     border-radius: 4px;
-    width: 130px;
-    height: 120px;
+    width: 430px;
+    height: auto;
+    border: solid black;
+    position:relative;
+    bottom: 500px;
+    right: 450px;
+    background-color: darkgrey;
+    opacity: 1;
+    word-wrap: break-word;
+
 }
 .lineGraphTitle{
     font-size: 24px;
@@ -218,13 +228,14 @@ svg {
     color: #333 ;
     display: block !important;
     font-size: 12px;
-    left: 15px;
+
+    left: 0;
     padding: 10px;
     position: absolute;
     text-align: center;
-    top: 313px;
-    width: 125px;
-    z-index: 10;
+    top: 360px;
+    width: 220px;
+    /*z-index: 10;*/
     float:left;
 }
 .legend {
@@ -244,12 +255,13 @@ h1 {
 }
 .label{
     color:black;
-    width: 250%;
+    width: 300%;
     text-align: center;
     align-content: center;
     margin:auto;
     padding: 0;
     font-size: 12px;
+    word-wrap: break-word
 }
 
 #legendArea {
@@ -261,3 +273,4 @@ h1 {
     height: 209px;
     width: 100%;
 }
+
