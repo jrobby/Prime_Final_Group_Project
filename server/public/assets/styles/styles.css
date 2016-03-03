@@ -137,12 +137,14 @@ svg{
 }
 .popUpInfo{
     font-size: 12px;
-    padding: 0 10px 10px 10px;
-    border: 1px solid black;
+    padding: 1px 10px 10px 10px;
+    box-shadow: 0 0 3px #999999;
     border-radius: 10px;
-    width: 277px;
+    width: 288px;
     height: auto;
     position: relative;
+    right: 46px;
+    top: 36px;
     background-color: #F1F1F1;
     opacity: 1;
     word-wrap: break-word;
@@ -236,11 +238,11 @@ svg {
     border-radius: 10px;
     display: block !important;
     font-size: 12px;
-    right: 1px;
+    right: 0px;
     padding: 0px;
     position: relative;
     text-align: center;
-    top: 380px;
+    top: 378px;
     width: 220px;
     float: right;
 }
