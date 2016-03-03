@@ -344,6 +344,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
     $scope.generatePieCharts = function () {
 
         d3.select("svg").remove();
+        d3.select(".tooltips").remove();
         d3.select("#pieLegend").remove(); //clear legend
 
         var adjStartDate = new Date($scope.startDate);
