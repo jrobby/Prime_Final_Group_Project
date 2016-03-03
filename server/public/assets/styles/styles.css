@@ -22,6 +22,7 @@
     -moz-box-shadow: 0 0 2px 2px lightgrey;
     -webkit-box-shadow: 0 0 1px 1px lightgrey;
     box-shadow: 0 0 2px 2px lightgrey;
+    background-color: #eaeaea;
 }
 p{
     margin-bottom: .5%;
@@ -147,7 +148,7 @@ svg{
     margin: 4px .25% 4px .25%;
     border: 1px solid lightgray;
     border-radius: 1px;
-    height: 482px;
+    height: 479px;
     float: left;
 }
 .controlPanel{
@@ -269,4 +270,9 @@ h1 {
 #pieLegend{
     height: 209px;
     width: 200px;
+}
+.nav-tabs{
+}
+.nav-tabs li a.selected{
+    background-color: #d5d5d5;
 }
