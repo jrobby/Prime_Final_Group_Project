@@ -19,6 +19,9 @@
     padding: 0;
     margin: 0 .5% 0 .5%;
     height: 491px;
+    -moz-box-shadow: 0 0 2px 2px #d3d3d3;
+    -webkit-box-shadow: 0 0 2px 2px #d3d3d3;
+    box-shadow: 0 0 2px 2px #d3d3d3;
 }
 p{
     margin-bottom: .5%;
@@ -259,13 +262,11 @@ h1 {
     font-size: 12px;
     word-wrap: break-word
 }
-
 #legendArea {
   height: 300px;
   width: 100%;
 }
-
 #pieLegend{
     height: 209px;
-    width: 100%;
+    width: 200px;
 }
