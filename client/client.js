@@ -406,7 +406,7 @@ function getAvgSalary(tempCert, allRows, startDate, endDate){
             })
             .sort(null);
 
-        var legendpop = d3.select('#chart')
+        var legendpop = d3.select('.tooltipBox')
             .append('div')
             .attr('class', 'tooltips');
 

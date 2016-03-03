@@ -222,12 +222,12 @@ svg {
     background: #eee ;
     box-shadow: 0 0 3px #999999;
     border-radius: 10px;
-    color: #333 ;
+    color: #333;
     display: block !important;
     font-size: 12px;
-    right: 15px;
+    right: 1px;
     padding: 0px;
-    position: absolute;
+    position: relative;
     text-align: center;
     top: 380px;
     width: 220px;
@@ -268,4 +268,3 @@ h1 {
     height: 209px;
     width: 100%;
 }
-
