@@ -207,6 +207,7 @@ rect {
 }
 svg {
     margin:auto;
+    position: absolute;
 }
 #pieHeading{
     margin-top:5px;
