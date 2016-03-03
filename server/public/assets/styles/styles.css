@@ -35,7 +35,7 @@ h1, h3, h4, h5 {
 /*////////////////////*/
 .totalsTable, .dataArea, .controlPanel{
     float: left;
-    height: 490px;
+    height: 488px;
 }
 .totalsTable {
     width: 33%;
@@ -127,16 +127,22 @@ svg{
     bottom: 14px;
     right: 4px;
 }
-.popUpInfo{
+.popUpContainer {
+    position: absolute;
     display: block;
+    float: left;
+    margin-left: 45px;
+    bottom: 220px;
+    z-index: 9;
+}
+.popUpInfo{
     font-size: 12px;
     padding: 0 10px 10px 10px;
     border: 1px solid black;
     border-radius: 10px;
     width: 277px;
     height: auto;
-    position: absolute;
-    bottom: 276px;
+    position: relative;
     background-color: #F1F1F1;
     opacity: 1;
     word-wrap: break-word;

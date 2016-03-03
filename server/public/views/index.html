@@ -136,6 +136,14 @@
     <div class="pieControls" ng-show="chartTab == 'pie'">
         <h3>{{pieTitle}}</h3>
         <div class="tooltipBox"></div>
+        <div class="popUpContainer" ng-show="averageShow">
+          <div class="popUpInfo">
+              <h5>Average starting wage by {{selectedDemographic}}</h5>
+              <div ng-repeat="x in pieWageInfo">
+                  {{x.name}}: ${{x.averageWage}}/hr
+              </div>
+          </div>
+        </div>
         <div id="chart"></div>
     </div>
 
@@ -144,14 +152,6 @@
     </div>
 
     <img src="../assets/img/plus_icon.png" alt="plusIcon" class="plusIcon" ng-show="chartTab == 'pie'" ng-mouseover="showAverageSalary()" ng-mouseout="hideAverageSalary()"><br>
-
-    <div ng-show="averageShow" class="popUpInfo">
-        <h5>Average starting wage by {{selectedDemographic}}</h5>
-        <div ng-repeat="x in pieWageInfo">
-            {{x.name}}: ${{x.averageWage}}/hr
-        </div>
-    </div>
-
 </div>
 <div class="verticalRule"></div>
 <!--CONTROL PANEL: CHART CONTROLS FOR PIE CHART AND LINE GRAPH-->
